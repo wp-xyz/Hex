@@ -1,0 +1,214 @@
+object RecordEditorForm: TRecordEditorForm
+  Left = 340
+  Height = 500
+  Top = 128
+  Width = 522
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'RecordEditorForm'
+  ClientHeight = 500
+  ClientWidth = 522
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '2.1.0.0'
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 460
+    Width = 510
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 0
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object MainPanel: TPanel
+    Left = 16
+    Height = 440
+    Top = 12
+    Width = 490
+    Align = alClient
+    AutoSize = True
+    BorderSpacing.Left = 16
+    BorderSpacing.Top = 12
+    BorderSpacing.Right = 16
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 440
+    ClientWidth = 490
+    TabOrder = 1
+    object lblName: TLabel
+      AnchorSideLeft.Control = MainPanel
+      AnchorSideTop.Control = MainPanel
+      Left = 0
+      Height = 15
+      Top = 0
+      Width = 152
+      Caption = 'Name of the record element:'
+      ParentColor = False
+    end
+    object edName: TEdit
+      AnchorSideLeft.Control = MainPanel
+      AnchorSideTop.Control = lblName
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = MainPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 23
+      Top = 19
+      Width = 490
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      Constraints.MinWidth = 420
+      TabOrder = 0
+    end
+    object rgDataTypes: TRadioGroup
+      AnchorSideLeft.Control = edName
+      AnchorSideTop.Control = edName
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = edName
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 131
+      Top = 58
+      Width = 490
+      Anchors = [akTop, akLeft, akRight]
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Top = 16
+      BorderSpacing.Bottom = 8
+      Caption = 'Data type'
+      ChildSizing.LeftRightSpacing = 16
+      ChildSizing.VerticalSpacing = 4
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclTopToBottomThenLeftToRight
+      ChildSizing.ControlsPerLine = 5
+      ClientHeight = 111
+      ClientWidth = 486
+      ColumnLayout = clVerticalThenHorizontal
+      Columns = 4
+      Items.Strings = (
+        'Byte'
+        'ShortInt'
+        'Word'
+        'SmallInt'
+        'LongWord'
+        'LongInt'
+        'Int64'
+        'Currency'
+        'Single'
+        'Double'
+        'Extended'
+        'Real48'
+        'ShortString'
+        'AnsiString'
+        'PChar'
+        'Char array'
+        'WideString'
+        'PWideChar'
+        'WideChar array'
+      )
+      OnClick = rgDataTypesClick
+      TabOrder = 1
+    end
+    object gbCharCount: TGroupBox
+      AnchorSideLeft.Control = rgDataTypes
+      AnchorSideTop.Control = rgDataTypes
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = rgDataTypes
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 99
+      Top = 205
+      Width = 490
+      Anchors = [akTop, akLeft, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 16
+      BorderSpacing.Bottom = 8
+      Caption = 'Character count'
+      ClientHeight = 79
+      ClientWidth = 486
+      TabOrder = 2
+      object rbUnlimited: TRadioButton
+        AnchorSideLeft.Control = gbCharCount
+        AnchorSideTop.Control = gbCharCount
+        Left = 16
+        Height = 19
+        Top = 4
+        Width = 72
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        Caption = 'Unlimited'
+        TabOrder = 0
+      end
+      object rbAtMost: TRadioButton
+        AnchorSideLeft.Control = rbUnlimited
+        AnchorSideTop.Control = rbUnlimited
+        AnchorSideTop.Side = asrBottom
+        Left = 16
+        Height = 19
+        Top = 27
+        Width = 62
+        BorderSpacing.Top = 4
+        Caption = 'At most'
+        TabOrder = 1
+      end
+      object seCharCount: TSpinEdit
+        AnchorSideLeft.Control = rbAtMost
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = rbAtMost
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Side = asrBottom
+        Left = 94
+        Height = 23
+        Top = 25
+        Width = 100
+        Alignment = taRightJustify
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 4
+        Constraints.MaxWidth = 100
+        Constraints.MinWidth = 100
+        MaxValue = 2147483647
+        MinValue = -1
+        OnChange = seCharCountChange
+        TabOrder = 2
+        Value = -1
+      end
+      object lblSizeInfo: TLabel
+        AnchorSideLeft.Control = seCharCount
+        AnchorSideTop.Control = seCharCount
+        AnchorSideTop.Side = asrBottom
+        Left = 94
+        Height = 15
+        Top = 56
+        Width = 54
+        BorderSpacing.Top = 8
+        BorderSpacing.Bottom = 8
+        Caption = 'lblSizeInfo'
+        ParentColor = False
+      end
+      object lblCharCount: TLabel
+        AnchorSideLeft.Control = seCharCount
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = seCharCount
+        AnchorSideTop.Side = asrCenter
+        Left = 198
+        Height = 15
+        Top = 29
+        Width = 54
+        BorderSpacing.Left = 4
+        Caption = 'characters'
+        ParentColor = False
+      end
+    end
+  end
+end

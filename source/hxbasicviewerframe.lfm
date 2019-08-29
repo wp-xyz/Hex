@@ -1,0 +1,26 @@
+object BasicViewerFrame: TBasicViewerFrame
+  Left = 0
+  Height = 240
+  Top = 0
+  Width = 320
+  ClientHeight = 240
+  ClientWidth = 320
+  TabOrder = 0
+  DesignLeft = 340
+  DesignTop = 128
+  object lblHeader: TLabel
+    Left = 0
+    Height = 21
+    Top = 0
+    Width = 320
+    Align = alTop
+    Caption = 'Title'
+    Color = clBtnShadow
+    Font.Color = clBtnFace
+    Font.Height = -16
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+end

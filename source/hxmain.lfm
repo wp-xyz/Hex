@@ -1,0 +1,721 @@
+object MainForm: TMainForm
+  Left = 372
+  Height = 485
+  Top = 236
+  Width = 914
+  Caption = 'MainForm'
+  ClientHeight = 465
+  ClientWidth = 914
+  Menu = MainMenu
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnShow = FormShow
+  ShowHint = True
+  LCLVersion = '2.1.0.0'
+  object PageControl: TPageControl
+    Left = 0
+    Height = 437
+    Top = 28
+    Width = 914
+    Align = alClient
+    TabOrder = 0
+    Visible = False
+    OnChange = PageControlChange
+  end
+  object CoolBar1: TCoolBar
+    Left = 0
+    Height = 28
+    Top = 0
+    Width = 914
+    AutoSize = True
+    Bands = <    
+      item
+        Control = ToolBar
+        ParentColor = False
+      end>
+    EdgeBorders = []
+    GrabStyle = gsGripper
+    object ToolBar: TToolBar
+      AnchorSideLeft.Control = CoolBar1
+      AnchorSideTop.Control = CoolBar1
+      Left = 22
+      Height = 22
+      Top = 3
+      Width = 151
+      Align = alNone
+      AutoSize = True
+      BorderSpacing.Left = 22
+      BorderSpacing.Top = 3
+      ButtonHeight = 22
+      ButtonWidth = 24
+      Caption = 'ToolBar'
+      EdgeBorders = []
+      Images = CommonData.Images
+      TabOrder = 0
+      Transparent = True
+      object tbFileOpen: TToolButton
+        Left = 1
+        Top = 0
+        Action = acFileOpen
+        DropdownMenu = RecentFilesPopup
+        Style = tbsDropDown
+      end
+      object tbFileQuit: TToolButton
+        Left = 95
+        Top = 0
+        Action = acFileQuit
+      end
+      object ToolButton1: TToolButton
+        Left = 66
+        Top = 0
+        Action = acCfgSettings
+      end
+      object ToolButton2: TToolButton
+        Left = 61
+        Height = 22
+        Top = 0
+        Caption = 'ToolButton2'
+        Style = tbsDivider
+      end
+      object ToolButton3: TToolButton
+        Left = 37
+        Top = 0
+        Action = acFileSave
+      end
+      object ToolButton4: TToolButton
+        Left = 90
+        Height = 22
+        Top = 0
+        Caption = 'ToolButton4'
+        Style = tbsDivider
+      end
+    end
+  end
+  object ActionList: TActionList
+    Images = CommonData.Images
+    OnUpdate = ActionListUpdate
+    left = 112
+    top = 163
+    object acFileNew: TAction
+      Category = 'File'
+      Caption = 'New'
+      Hint = 'New|Create new file'
+      OnExecute = acFileNewExecute
+      ShortCut = 16462
+    end
+    object acFileOpen: TAction
+      Category = 'File'
+      Caption = 'Open...'
+      Hint = 'Open|Open a file'
+      ImageIndex = 0
+      OnExecute = acFileOpenExecute
+      ShortCut = 16463
+    end
+    object acFileQuit: TAction
+      Category = 'File'
+      Caption = 'Quit'
+      Hint = 'Quit|Close application'
+      ImageIndex = 1
+      OnExecute = acFileQuitExecute
+      ShortCut = 32856
+    end
+    object acShowStatusbar: TAction
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Show statusbar'
+      Checked = True
+      Hint = 'Show/hide statusbar'
+      OnExecute = acShowStatusbarExecute
+    end
+    object acShowToolbar: TAction
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Show toolbar'
+      Checked = True
+      Hint = 'Show/hide toolbar'
+      OnExecute = acShowToolbarExecute
+    end
+    object acShowStdViewer: TAction
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Show standard viewer'
+      Checked = True
+      Hint = 'Show/hide standard viewer'
+    end
+    object acCfgSettings: TAction
+      Category = 'Config'
+      Caption = 'Settings'
+      Hint = 'Settings and configuration'
+      ImageIndex = 2
+      OnExecute = acCfgSettingsExecute
+    end
+    object acFileClose: TAction
+      Category = 'File'
+      Caption = 'Close'
+      Hint = 'Close|Close current file'
+      OnExecute = acFileCloseExecute
+    end
+    object acFileCloseAll: TAction
+      Category = 'File'
+      Caption = 'Close all'
+      Hint = 'Close all files'
+      OnExecute = acFileCloseAllExecute
+    end
+    object acFileSave: TAction
+      Category = 'File'
+      Caption = 'Save'
+      Hint = 'Save|Save current file'
+      ImageIndex = 3
+      OnExecute = acFileSaveExecute
+      ShortCut = 16467
+    end
+    object acFileSaveAs: TAction
+      Category = 'File'
+      Caption = 'Save as...'
+      Hint = 'Save as|Save file with new name'
+      ImageIndex = 4
+      OnExecute = acFileSaveAsExecute
+    end
+    object acSetBookmark0: TAction
+      Tag = 7000
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 0'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24624
+    end
+    object acSetBookmark1: TAction
+      Tag = 7001
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 1'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24625
+    end
+    object acSetBookmark2: TAction
+      Tag = 7002
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 2'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24626
+    end
+    object acSetBookmark3: TAction
+      Tag = 7003
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 3'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24627
+    end
+    object acSetBookmark4: TAction
+      Tag = 7004
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 4'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24628
+    end
+    object acSetBookmark5: TAction
+      Tag = 7005
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 5'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24629
+    end
+    object acSetBookmark6: TAction
+      Tag = 7006
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 6'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24630
+    end
+    object acSetBookmark7: TAction
+      Tag = 7007
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 7'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24631
+    end
+    object acSetBookmark8: TAction
+      Tag = 7008
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 8'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24632
+    end
+    object acSetBookmark9: TAction
+      Tag = 7009
+      Category = 'Navigation'
+      AutoCheck = True
+      Caption = 'Bookmark 9'
+      Hint = 'Set bookmark'
+      OnExecute = acBookmarkSet
+      ShortCut = 24633
+    end
+    object acGotoBookmark0: TAction
+      Tag = 7100
+      Category = 'Navigation'
+      Caption = 'Bookmark 0'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16432
+    end
+    object acGotoBookmark1: TAction
+      Tag = 7101
+      Category = 'Navigation'
+      Caption = 'Bookmark 1'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16433
+    end
+    object acGotoBookmark2: TAction
+      Tag = 7102
+      Category = 'Navigation'
+      Caption = 'Bookmark 2'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16434
+    end
+    object acGotoBookmark3: TAction
+      Tag = 7103
+      Category = 'Navigation'
+      Caption = 'Bookmark 3'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16435
+    end
+    object acGotoBookmark4: TAction
+      Tag = 7104
+      Category = 'Navigation'
+      Caption = 'Bookmark 4'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16436
+    end
+    object acGotoBookmark5: TAction
+      Tag = 7105
+      Category = 'Navigation'
+      Caption = 'Bookmark 5'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16437
+    end
+    object acGotoBookmark6: TAction
+      Tag = 7106
+      Category = 'Navigation'
+      Caption = 'Bookmark 6'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16438
+    end
+    object acGotoBookmark7: TAction
+      Tag = 7107
+      Category = 'Navigation'
+      Caption = 'Bookmark 7'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16439
+    end
+    object acGotoBookmark8: TAction
+      Tag = 7108
+      Category = 'Navigation'
+      Caption = 'Bookmark 8'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16440
+    end
+    object acGotoBookmark9: TAction
+      Tag = 7109
+      Category = 'Navigation'
+      Caption = 'Bookmark 9'
+      Enabled = False
+      Hint = 'Go to bookmark'
+      OnExecute = acBookmarkGoto
+      ShortCut = 16441
+    end
+    object acClearBookmark0: TAction
+      Tag = 7200
+      Category = 'Navigation'
+      Caption = 'Bookmark 0'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark1: TAction
+      Tag = 7201
+      Category = 'Navigation'
+      Caption = 'Bookmark 1'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark2: TAction
+      Tag = 7202
+      Category = 'Navigation'
+      Caption = 'Bookmark 2'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark3: TAction
+      Tag = 7203
+      Category = 'Navigation'
+      Caption = 'Bookmark 3'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark4: TAction
+      Tag = 7204
+      Category = 'Navigation'
+      Caption = 'Bookmark 4'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark5: TAction
+      Tag = 7205
+      Category = 'Navigation'
+      Caption = 'Bookmark 5'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark6: TAction
+      Tag = 7206
+      Category = 'Navigation'
+      Caption = 'Bookmark 6'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark7: TAction
+      Tag = 7207
+      Category = 'Navigation'
+      Caption = 'Bookmark 7'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark8: TAction
+      Tag = 7208
+      Category = 'Navigation'
+      Caption = 'Bookmark 8'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acClearBookmark9: TAction
+      Tag = 7209
+      Category = 'Navigation'
+      Caption = 'Bookmark 9'
+      Enabled = False
+      Hint = 'Clear bookmark'
+      OnExecute = acBookmarkClear
+    end
+    object acGoTo: TAction
+      Category = 'Navigation'
+      Caption = 'Go to...'
+      Hint = 'Jump to a file position'
+      OnExecute = acGoToExecute
+      ShortCut = 16455
+    end
+    object acEditEditingAllowed: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Editing allowed'
+      GroupIndex = 100
+      Hint = 'Enable editing'
+      OnExecute = acEditMode
+    end
+    object acEditEditingForbidden: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Editing forbidden'
+      Checked = True
+      GroupIndex = 100
+      Hint = 'Disable editing'
+      OnExecute = acEditMode
+    end
+    object acEditInsertMode: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Insert'
+      GroupIndex = 101
+      Hint = 'Insert mode|Activate "insert" mode'
+      OnExecute = acEditInsertOverwriteModeExecute
+    end
+    object acEditOverWriteMode: TAction
+      Category = 'Edit'
+      AutoCheck = True
+      Caption = 'Overwrite'
+      Checked = True
+      GroupIndex = 101
+      Hint = 'Overwrite mode|Activate "overwrite" mode'
+      OnExecute = acEditInsertOverwriteModeExecute
+    end
+    object acGoToRepeat: TAction
+      Category = 'Navigation'
+      Caption = 'Repeat go to'
+      Hint = 'Repeat go to'
+      OnExecute = acGoToRepeatExecute
+      ShortCut = 16466
+    end
+    object acGotoBackward: TAction
+      Category = 'Navigation'
+      Caption = 'Go to backward'
+      OnExecute = acGoToRepeatExecute
+    end
+  end
+  object MainMenu: TMainMenu
+    Images = CommonData.Images
+    left = 112
+    top = 104
+    object mnuFile: TMenuItem
+      Caption = '&File'
+      object mnuFileNew: TMenuItem
+        Action = acFileNew
+      end
+      object mnuFileOpen: TMenuItem
+        Action = acFileOpen
+      end
+      object mnuRecentlyOpened: TMenuItem
+        Caption = 'Recently opened'
+      end
+      object MenuItem5: TMenuItem
+        Caption = '-'
+      end
+      object mnuFileSave: TMenuItem
+        Action = acFileSave
+      end
+      object mnuFileSaveAs: TMenuItem
+        Action = acFileSaveAs
+      end
+      object MenuItem1: TMenuItem
+        Caption = '-'
+      end
+      object mnuFileClose: TMenuItem
+        Action = acFileClose
+      end
+      object mnuFileCloseAll: TMenuItem
+        Action = acFileCloseAll
+      end
+      object MenuItem9: TMenuItem
+        Caption = '-'
+      end
+      object mnuFileQuit: TMenuItem
+        Action = acFileQuit
+      end
+    end
+    object mnuEdit: TMenuItem
+      Caption = 'Edit'
+      object MenuItem6: TMenuItem
+        Caption = 'Edit mode'
+        object MenuItem7: TMenuItem
+          Action = acEditEditingAllowed
+          AutoCheck = True
+        end
+        object MenuItem8: TMenuItem
+          Action = acEditEditingForbidden
+          AutoCheck = True
+        end
+        object MenuItem11: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem10: TMenuItem
+          Action = acEditInsertMode
+          AutoCheck = True
+        end
+        object MenuItem12: TMenuItem
+          Action = acEditOverWriteMode
+          AutoCheck = True
+        end
+      end
+    end
+    object mnuView: TMenuItem
+      Caption = '&View'
+      object MenuItem2: TMenuItem
+        Action = acShowToolbar
+        AutoCheck = True
+      end
+      object MenuItem3: TMenuItem
+        Action = acShowStatusbar
+        AutoCheck = True
+      end
+    end
+    object mnuNavigation: TMenuItem
+      Caption = 'Navigation'
+      object mnuSetBookmarks: TMenuItem
+        Caption = 'Set bookmarks'
+        Hint = 'Set bookmarks'
+        object mnuSetBookmark0: TMenuItem
+          Action = acSetBookmark0
+          AutoCheck = True
+        end
+        object mnuSetBookmark1: TMenuItem
+          Action = acSetBookmark1
+          AutoCheck = True
+        end
+        object mnuSetBookmark2: TMenuItem
+          Action = acSetBookmark2
+          AutoCheck = True
+        end
+        object mnuSetBookmark3: TMenuItem
+          Action = acSetBookmark3
+          AutoCheck = True
+        end
+        object mnuSetBookmark4: TMenuItem
+          Action = acSetBookmark4
+          AutoCheck = True
+        end
+        object mnuSetBookmark5: TMenuItem
+          Action = acSetBookmark5
+          AutoCheck = True
+        end
+        object mnuSetBookmark6: TMenuItem
+          Action = acSetBookmark6
+          AutoCheck = True
+        end
+        object mnuSetBookmark7: TMenuItem
+          Action = acSetBookmark7
+          AutoCheck = True
+        end
+        object mnuSetBookmark8: TMenuItem
+          Action = acSetBookmark8
+          AutoCheck = True
+        end
+        object mnuSetBookmark9: TMenuItem
+          Action = acSetBookmark9
+          AutoCheck = True
+        end
+      end
+      object mnuGotoBookmarks: TMenuItem
+        Caption = 'Go to bookmarks'
+        Hint = 'Go to bookmarks'
+        object mnuGotoBookmark0: TMenuItem
+          Action = acGotoBookmark0
+        end
+        object mnuGotoBookmark1: TMenuItem
+          Action = acGotoBookmark1
+        end
+        object mnuGotoBookmark2: TMenuItem
+          Action = acGotoBookmark2
+        end
+        object mnuGotoBookmark3: TMenuItem
+          Action = acGotoBookmark3
+        end
+        object mnuGotoBookmark4: TMenuItem
+          Action = acGotoBookmark4
+        end
+        object mnuGotoBookmark5: TMenuItem
+          Action = acGotoBookmark5
+        end
+        object mnuGotoBookmark6: TMenuItem
+          Action = acGotoBookmark6
+        end
+        object mnuGotoBookmark7: TMenuItem
+          Action = acGotoBookmark7
+        end
+        object mnuGotoBookmark8: TMenuItem
+          Action = acGotoBookmark8
+        end
+        object mnuGotoBookmark9: TMenuItem
+          Action = acGotoBookmark9
+        end
+      end
+      object mnuClearBookmarks: TMenuItem
+        Caption = 'Clear bookmarks'
+        Hint = 'Clear bookmarks'
+        object mnuClearBookmark0: TMenuItem
+          Action = acClearBookmark0
+        end
+        object mnuClearBookmark1: TMenuItem
+          Action = acClearBookmark1
+        end
+        object mnuClearBookmark2: TMenuItem
+          Action = acClearBookmark2
+        end
+        object mnuClearBookmark3: TMenuItem
+          Action = acClearBookmark3
+        end
+        object mnuClearBookmark4: TMenuItem
+          Action = acClearBookmark4
+        end
+        object mnuClearBookmark5: TMenuItem
+          Action = acClearBookmark5
+        end
+        object mnuClearBookmark6: TMenuItem
+          Action = acClearBookmark6
+        end
+        object mnuClearBookmark7: TMenuItem
+          Action = acClearBookmark7
+        end
+        object mnuClearBookmark8: TMenuItem
+          Action = acClearBookmark8
+        end
+        object mnuClearBookmark9: TMenuItem
+          Action = acClearBookmark9
+        end
+      end
+      object MenuItem4: TMenuItem
+        Caption = '-'
+      end
+      object mnuGoto: TMenuItem
+        Action = acGoTo
+      end
+      object MenuItem13: TMenuItem
+        Action = acGoToRepeat
+      end
+      object MenuItem14: TMenuItem
+        Action = acGotoBackward
+      end
+    end
+    object mnuConfig: TMenuItem
+      Caption = 'Configuration'
+      object mnuGlobalSettings: TMenuItem
+        Action = acCfgSettings
+      end
+    end
+    object mnuHelp: TMenuItem
+      Caption = 'Help'
+      object mnuHelpAbout: TMenuItem
+        Caption = 'About...'
+      end
+    end
+  end
+  object OpenDialog: TOpenDialog
+    left = 386
+    top = 104
+  end
+  object RecentFilesPopup: TPopupMenu
+    left = 112
+    top = 232
+  end
+  object SaveDialog: TSaveDialog
+    left = 386
+    top = 163
+  end
+end

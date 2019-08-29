@@ -1,0 +1,37 @@
+object HexEditorFrame: THexEditorFrame
+  Left = 0
+  Height = 240
+  Top = 0
+  Width = 567
+  ClientHeight = 240
+  ClientWidth = 567
+  TabOrder = 0
+  DesignLeft = 340
+  DesignTop = 128
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 217
+    Width = 567
+    Panels = <    
+      item
+        Width = 40
+      end    
+      item
+        Width = 40
+      end    
+      item
+        Width = 80
+      end    
+      item
+        Width = 180
+      end    
+      item
+        Width = 100
+      end    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+end
