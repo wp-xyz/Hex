@@ -2939,8 +2939,8 @@ var
   LBytGray: byte;
 begin
   aColor := ColorToRGB(aColor);
-  LBytGray := Hi(GetRValue(aColor) * 74 + GetGValue(aColor) * 146 +
-    GetBValue(aColor) * 36);
+  LBytGray := Hi(Word(GetRValue(aColor) * 74 + GetGValue(aColor) * 146 +
+    GetBValue(aColor) * 36));
   Result := RGB(LBytGray, LBytGray, LBytGray);
 end;
 

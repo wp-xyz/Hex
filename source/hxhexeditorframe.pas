@@ -226,7 +226,7 @@ begin
   FHexEditor.BytesPerRow := HexParams.BytesPerRow;
   FHexEditor.DrawGutter3D := false;
   FHexEditor.Font.Size := 9;
-  FHexEditor.GraySelectionIfNotFocused := true;
+//  FHexEditor.GraySelectionIfNotFocused := true;
   FHexEditor.OffsetFormat := HexParams.GetOffsetFormat;
   FHexEditor.ReadOnlyView := true;
   FHexEditor.ReadOnlyFile := true;
