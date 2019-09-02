@@ -76,12 +76,14 @@ begin
 
   case FViewers.Count of
     1: AViewer.Align := alClient;
-    2: if (FPosition = vpLeft) or (FPosition = vpRight) then begin
+    2: if (FPosition = vpLeft) or (FPosition = vpRight) then
+       begin
          TBasicViewerFrame(FViewers[0]).Align := alTop;
          TBasicViewerFrame(FViewers[0]).Height := Height div 2;
          AViewer.Align := alClient;
          AddSplitter(alTop);
-       end else begin
+       end else
+       begin
          TBasicViewerFrame(FViewers[0]).Align := alLeft;
          TBasicViewerFrame(FViewers[0]).Width := Width div 2;
          AViewer.Align := alClient;
@@ -94,7 +96,8 @@ begin
          AViewer.Height := Height div 3;
          AddSplitter(alTop);
          AddSplitter(alBottom);
-       end else begin
+       end else
+       begin
          TBasicViewerFrame(FViewers[0]).Width := Width div 3;
          AViewer.Align := alRight;
          AViewer.Width := Width div 3;
@@ -139,16 +142,19 @@ begin
          FSplitters.Delete(0);
          TBasicViewerFrame(FViewers[0]).Align := alClient;
        end;
-    3: if AViewer = TBasicViewerFrame(FViewers[0]) then begin
+    3: if AViewer = TBasicViewerFrame(FViewers[0]) then
+       begin
          FViewers.Delete(idx);
          TSplitter(FSplitters[0]).Free;
          FSplitters.Delete(0);
        end else
-       if AViewer = TBasicViewerFrame(FViewers[2]) then begin
+       if AViewer = TBasicViewerFrame(FViewers[2]) then
+       begin
          FViewers.Delete(idx);
          TSplitter(FSplitters[1]).Free;
          FSplitters.Delete(1);
-       end else begin
+       end else
+       begin
          FViewers.Delete(idx);
          TSplitter(FSplitters[1]).Free;
          FSplitters.Delete(1);
@@ -193,10 +199,12 @@ begin
     else raise Exception.Create('[TViewerPanel.SetAlign] This Align value is not allowed.');
   end;
 
-  if FSplitter = nil then begin
+  if FSplitter = nil then
+  begin
     FSplitter := TSplitter.Create(self);
     FSplitter.Parent := Parent;
   end;
+
   FSplitter.Align := Align;
   case Align of
     alLeft: FSplitter.Left := Left + Width + 1;
@@ -209,7 +217,8 @@ end;
 procedure TViewerPanel.SetVisible(AValue: Boolean);
 begin
    inherited SetVisible(AValue);
-   if Visible then begin
+   if Visible then
+   begin
      FSplitter.Show;
      case Align of
        alLeft: FSplitter.Left := Left + Width + 1;

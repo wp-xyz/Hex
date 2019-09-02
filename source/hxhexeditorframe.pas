@@ -128,7 +128,8 @@ var
 begin
   AParams := HexParams;
 
-  if Assigned(HexEditor) then begin
+  if Assigned(HexEditor) then
+  begin
     AParams.ViewOnly := HexEditor.ReadOnlyView;
     AParams.WriteProtected := HexEditor.ReadOnlyFile;
     AParams.AllowInsertMode := HexEditor.AllowInsertMode;
@@ -163,28 +164,18 @@ begin
   AParams.RightPanelWidth := FRightPanel.Width;
   AParams.BottomPanelHeight := FBottomPanel.Height;
 
-  if Assigned(FNumViewer) then begin
+  if Assigned(FNumViewer) then
+  begin
     AParams.NumViewerVisible := GetShowNumViewer;
     AParams.NumViewerPosition := GetNumViewerPosition;
-    {
-    if FNumViewer.Align in [alLeft, alRight] then
-      AParams.NumViewerWidth := FNumViewer.Width
-    else if FNumViewer.Align in [alBottom, alTop] then
-      AParams.NumViewerHeight := FNumViewer.Height;
-    }
     for i:=0 to High(AParams.NumViewerColWidths) do
       AParams.NumViewerColWidths[i] := FNumViewer.ColWidths[i];
   end;
 
-  if Assigned(FRecordViewer) then begin
+  if Assigned(FRecordViewer) then
+  begin
     AParams.RecordViewerVisible := GetShowRecordViewer;
     AParams.RecordViewerPosition := GetRecordViewerPosition;
-    {
-    if FRecordViewer.Align in [alLeft, alRight] then
-      AParams.RecordViewerWidth := FRecordViewer.Width
-    else if FRecordViewer.Align in [alBottom, alTop] then
-      AParams.RecordViewerHeight := FRecordViewer.Height;
-    }
     for i:=0 to High(AParams.RecordViewerColWidths) do
       AParams.RecordViewerColWidths[i] := FRecordViewer.ColWidths[i];
   end;
@@ -194,7 +185,8 @@ procedure THexEditorFrame.ApplyParams(const AParams: THexParams);
 var
   i: Integer;
 begin
-  if Assigned(HexEditor) then begin
+  if Assigned(HexEditor) then
+  begin
     HexEditor.ReadOnlyView := AParams.ViewOnly;
     HexEditor.ReadOnlyFile := AParams.WriteProtected;
     HexEditor.AllowInsertMode := AParams.AllowInsertMode;
@@ -234,14 +226,16 @@ begin
   FBottomPanel.Height := AParams.BottomPanelHeight;
 
   ShowNumViewer := AParams.NumViewerVisible;         // this creates the NumViewer
-  if Assigned(FNumViewer) then begin
+  if Assigned(FNumViewer) then
+  begin
     SetNumViewerPosition(AParams.NumViewerPosition);
     for i := 0 to High(AParams.NumViewerColWidths) do
       FNumViewer.ColWidths[i] := AParams.NumViewerColWidths[i];
   end;
 
   ShowRecordViewer := AParams.RecordViewerVisible;   // this creates the RecordViewer
-  if Assigned(FRecordViewer) then begin
+  if Assigned(FRecordViewer) then
+  begin
     SetRecordViewerPosition(AParams.RecordViewerPosition);
     for i := 0 to High(AParams.RecordViewerColWidths) do
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];
@@ -382,7 +376,8 @@ end;
 
 procedure THexEditorFrame.InsertMode(const AEnable: Boolean);
 begin
-  if Assigned(FHexEditor) then begin
+  if Assigned(FHexEditor) then
+  begin
     FHexEditor.InsertMode := AEnable;
     UpdateStatusBar;
   end;
@@ -415,7 +410,8 @@ end;
 
 procedure THexEditorFrame.OpenFile(const AFileName: string; WriteProtected: boolean);
 begin
-  if Assigned(HexEditor) then begin
+  if Assigned(HexEditor) then
+  begin
     HexEditor.LoadFromFile(AFileName);
     HexEditor.ReadOnlyFile := WriteProtected;
     UpdateCaption;
@@ -443,8 +439,10 @@ end;
 
 procedure THexEditorFrame.SaveFileAs(const AFileName: string);
 begin
-  if Assigned(HexEditor) then begin
-    if not CanSaveFileAs(AFileName) then begin
+  if Assigned(HexEditor) then
+  begin
+    if not CanSaveFileAs(AFileName) then
+    begin
       MessageDlg(Format(SReadOnlyFile, [AFileName]), mtError, [mbOK], 0);
       exit;
     end;
@@ -502,20 +500,7 @@ begin
 
   oldPanel.Updatelayout;
   newPanel.UpdateLayout;
-  (*
-  case FRecordViewer.Align of
-    alLeft, alRight:
-      HexParams.RecordViewerWidth := FRecordViewer.Width;
-    alBottom, alTop:
-      HexParams.RecordViewerHeight := FRecordViewer.Height;
-  end;
 
-  with (FRecordViewer.Parent as TViewerPanel) do
-    DeleteViewer(FRecordViewer);
-
-  with GetViewerPanel(AValue) do
-    AddViewer(FRecordViewer);
-                       *)
   StatusBar.Top := Height * 2;
 end;
 
@@ -538,33 +523,20 @@ begin
     FreeAndNil(FRecordViewer);
     HexParams.RecordViewerVisible := false;
   end;
-(*
-  if AValue and (FRecordViewer = nil) then
-    CreateRecordViewer;
-
-  if AValue then
-
-  if not AValue then
-    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
-  FRecordViewer.Visible := AValue;
-    FRecordViewerSplitter.Visible := AValue;
-    FixViewerSplitterPosition(FRecordViewer, FRecordViewerSplitter);
-    if AValue then
-      FRecordViewer.UpdateData(HexEditor);
-  end;
-  *)
 end;
 
 procedure THexEditorFrame.SetShowNumViewer(AValue: Boolean);
 begin
-  if AValue then begin
+  if AValue then
+  begin
     // Show number viewer
     if Assigned(FNumViewer) then
       exit;
     CreateNumViewer;
     FNumViewer.UpdateData(HexEditor);
     HexParams.NumViewerVisible := true;
-  end else begin
+  end else
+  begin
     // Hide number viewer
     if not Assigned(FNumViewer) then
       exit;
@@ -572,22 +544,12 @@ begin
     FreeAndNil(FNumViewer);
     HexParams.NumViewerVisible := false;
   end;
-  (*
-  if AValue and (FNumViewer = nil) then
-    CreateNumViewer;
-  if FNumViewer <> nil then begin
-    FNumViewer.Visible := AValue;
-    FNumViewerSplitter.Visible := AValue;
-    FixViewerSplitterPosition(FNumViewer, FNumViewerSplitter);
-    if AValue then
-      FNumViewer.UpdateData(HexEditor);
-  end;
-  *)
 end;
 
 procedure THexEditorFrame.UpdateCaption;
 begin
-  if Assigned(FHexEditor) then begin
+  if Assigned(FHexEditor) then
+  begin
     Caption := ExtractFilename(FHexEditor.FileName);
     if FHexEditor.Modified then
       Caption := '* ' + Caption //Format(SWriteProtectedCaption, [Caption]);
@@ -609,7 +571,8 @@ var
   hexprefix: String;
 begin
   inherited;
-  if Assigned(HexEditor) then begin
+  if Assigned(HexEditor) then
+  begin
     hexprefix := GetOffsetDisplayHexPrefix(HexEditor.OffsetFormat);
 
     Statusbar.Panels[0].Text := IfThen(HexEditor.Modified, 'MOD', '');
@@ -631,8 +594,10 @@ begin
       inc(p);
     end;
 
-    if sbSel in FStatusbarItems then begin
-      if HexEditor.SelCount <> 0 then begin
+    if sbSel in FStatusbarItems then
+    begin
+      if HexEditor.SelCount <> 0 then
+      begin
         i1 := Min(HexEditor.SelStart, HexEditor.SelEnd);
         i2 := Max(HexEditor.SelStart, HexEditor.SelEnd);
         n := HexEditor.SelCount;
@@ -647,13 +612,15 @@ begin
       inc(p);
     end;
 
-    if sbSize in FStatusbarItems then begin
+    if sbSize in FStatusbarItems then
+    begin
       s := Format('%.0n', [1.0 * HexEditor.DataSize]);
       StatusBar.Panels[p].Text := Format(SMaskSize, [s]);
       inc(p);
     end;
 
-    while p < Statusbar.Panels.Count do begin
+    while p < Statusbar.Panels.Count do
+    begin
       StatusBar.Panels[p].Text := '';
       inc(p);
     end;
@@ -672,7 +639,8 @@ begin
   p := 2;
   if sbPos in FStatusbarItems then
   begin
-    if Assigned(HexEditor) then begin
+    if Assigned(HexEditor) then
+    begin
       case FStatusbarPosDisplay of
         odbDec: s := Format('%.0n', [1.0*HexEditor.DataSize]);
         odbHex: s := Format('%s%x', [hexprefix, HexEditor.DataSize]);
@@ -685,8 +653,10 @@ begin
     inc(p);
   end;
 
-  if sbSel in FStatusbarItems then begin
-    if Assigned(FHexEditor) then begin
+  if sbSel in FStatusbarItems then
+  begin
+    if Assigned(FHexEditor) then
+    begin
       n := HexEditor.DataSize;
       case FStatusbarSelDisplay of
         odbDec: s := Format('%.0n ... %.0n (%.0n)', [1.0*n, 1.0*n, 1.0*n]);
@@ -699,8 +669,10 @@ begin
     inc(p);
   end;
 
-  if sbSize in FStatusbarItems then begin
-    if Assigned(HexEditor) then begin
+  if sbSize in FStatusbarItems then
+  begin
+    if Assigned(HexEditor) then
+    begin
       s := Format('%.0n', [1.0 * HexEditor.DataSize]);
       s := Format(SMaskSize, [s]);
       StatusBar.Panels[p].Width := StatusBar.Canvas.TextWidth(s) + 10;

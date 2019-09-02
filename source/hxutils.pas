@@ -32,11 +32,13 @@ function BEToN(AValue: Double): Double; overload;
 function BEToN(AValue: Extended): Extended; overload;
 function BEToN(AValue: Real48): Real48; overload;
 function BEToN(AValue: Currency): Currency; overload;
+function BEToN(AValue: WideString): WideString; overload;
 function LEToN(AValue: Single): Single; overload;
 function LEToN(AValue: Double): Double; overload;
 function LEToN(AValue: Extended): Extended; overload;
 function LEToN(AValue: Real48): Real48; overload;
 function LEToN(AValue: Currency): Currency; overload;
+function LEToN(AValue: WideString): WideString; overload;
 
 
 implementation
@@ -74,14 +76,16 @@ var
   ws: TWindowState;
   L, T, W, H: integer;
 begin
-  with AIniFile do begin
+  with AIniFile do
+  begin
     s := ReadString(ASection, 'WindowState', '');
     if s = '' then
       ws := AForm.WindowState
     else
       ws := TWindowState(GetEnumValue(TypeInfo(TWindowState), s));
     AForm.WindowState := ws;
-    if ws = wsNormal then begin
+    if ws = wsNormal then
+    begin
       L := ReadInteger(ASection, 'Left', AForm.Left);
       T := ReadInteger(ASection, 'Top',  AForm.Top);
       W := ReadInteger(ASection, 'Width',  AForm.Width);
@@ -99,7 +103,8 @@ var
   sa: TStringArray;
   dt: TDataType;
 begin
-  with HexParams do begin
+  with HexParams do
+  begin
     ViewOnly := AIniFile.ReadBool('Params', 'ViewOnly', ViewOnly);
     WriteProtected := AIniFile.ReadBool('Params', 'WriteProtected', WriteProtected);
     AllowInsertMode := AIniFile.ReadBool('Params', 'AllowInsertMode', AllowInsertMode);
@@ -152,7 +157,8 @@ begin
     //NumViewerWidth := AIniFile.ReadInteger('Params', 'NumViewer.Width', NumViewerWidth);
 
     s := UpperCase(AIniFile.ReadString('Params', 'NumViewer.DataTypes', ''));
-    if s <> '' then begin
+    if s <> '' then
+    begin
       s := ';' + s + ';';
       NumViewerDataTypes := [];
       for dt := dtFirstNumericDataType to dtLastNumericDataType do
@@ -161,7 +167,8 @@ begin
     end;
 
     s := AIniFile.ReadString('Params', 'NumViewer.ColWidths', '');
-    if s <> '' then begin
+    if s <> '' then
+    begin
       sa := s.Split(',');
       for i:=0 to High(sa) do
         if i <= High(NumViewerColWidths) then
@@ -176,7 +183,8 @@ begin
     //RecordViewerWidth := AIniFile.ReadInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
 
     s := AIniFile.ReadString('Params', 'RecordViewer.ColWidths', '');
-    if s <> '' then begin
+    if s <> '' then
+    begin
       sa := s.Split(',');
       for i:=0 to High(sa) do
         if i <= High(RecordViewerColWidths) then
@@ -189,11 +197,13 @@ end;
 
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: string);
 begin
-  with AIniFile do begin
+  with AIniFile do
+  begin
     EraseSection(ASection);
 
     WriteString(ASection, 'WindowState', GetEnumName(TypeInfo(TWindowState), integer(AForm.WindowState)));
-    if AForm.WindowState = wsNormal then begin
+    if AForm.WindowState = wsNormal then
+    begin
       WriteInteger(ASection, 'Left',   AForm.Left);
       WriteInteger(ASection, 'Top',    AForm.Top);
       WriteInteger(ASection, 'Width',  AForm.Width);
@@ -208,7 +218,8 @@ var
   dt: TDataType;
   i: Integer;
 begin
-  with HexParams do begin
+  with HexParams do
+  begin
     AIniFile.EraseSection('Params');
 
     AIniFile.WriteBool('Params', 'ViewOnly',
@@ -425,6 +436,24 @@ begin
 end;
 {$ENDIF}
 
+function BEToN(AValue: WideString): WideString; overload;
+{$IFDEF ENDIAN_BIG}
+begin
+  Result := AValue;
+end;
+{$ELSE}
+var
+  i: Integer;
+  w: Word;
+begin
+  for i := 1 to Length(AValue) do begin
+    w := PWord(@AValue[i])^;
+    Swap(w);
+    AValue[i] := WideChar(w);
+  end;
+end;
+{$ENDIF}
+
 function LEToN(AValue: Single): Single; overload;
 {$IFDEF ENDIAN_LITTLE}
 begin
@@ -495,6 +524,24 @@ var
   i: Integer;
 begin
   for i:=0 to 7 do TData(Result)[7-i] := TData(Value)[i];
+end;
+{$ENDIF}
+
+function LEToN(AValue: WideString): WideString; overload;
+{$IFDEF ENDIAN_LITTLE}
+begin
+  Result := AValue;
+end;
+{$ELSE}
+var
+  i: Integer;
+  w: Word;
+begin
+  for i := 1 to Length(AValue) do begin
+    w := PWord(@AValue[i])^;
+    Swap(w);
+    AValue[i] := WideChar(w);
+  end;
 end;
 {$ENDIF}
 

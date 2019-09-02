@@ -43,13 +43,6 @@ uses
 constructor TBasicViewerFrame.Create(AOwner: TComponent);
 begin
   inherited;
-  {
-  FGrid := CreateViewerGrid;
-  FGrid.Name := '';
-  FGrid.Parent := Self;
-  FGrid.Align := alClient;
-  FGrid.Options := FGrid.Options + [goEditing, goColSizing, goDrawFocusSelected];
-  }
 end;
 
 { AIndex is relative to the Grid.Columns, i.e. excluding the FixedCols }

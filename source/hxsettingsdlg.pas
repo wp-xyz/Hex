@@ -167,7 +167,8 @@ var
   cmd: string;
 begin
   AParams := HexParams;
-  with AParams do begin
+  with AParams do
+  begin
     { PageControl }
     SettingsPageIndex := PageControl.ActivePage.PageIndex;
 
@@ -271,15 +272,18 @@ procedure TSettingsForm.ParamsToControls(const AParams: THexParams);
 var
   i : integer;
 begin
-  with AParams do begin
+  with AParams do
+  begin
     for i := 0 to PageControl.PageCount-1 do
-      if PageControl.Pages[i].PageIndex = SettingsPageIndex then begin
+      if PageControl.Pages[i].PageIndex = SettingsPageIndex then
+      begin
         PageControl.ActivePage := PageControl.Pages[i];
         break;
       end;
 
     for i:=0 to PageControl.ActivePage.ControlCount-1 do
-      if PageControl.ActivePage.Controls[i] is TWinControl then begin
+      if PageControl.ActivePage.Controls[i] is TWinControl then
+      begin
         ActiveControl := PageControl.ActivePage.Controls[i] as TWinControl;
         break;
       end;
@@ -329,14 +333,16 @@ begin
     //RgTranslation.ItemIndex := ord(Translation);
 
     for i:=0 to cbBytesPerRow.Items.Count-1 do begin
-      if StrToInt(cbBytesPerRow.Items[i]) = BytesPerRow then begin
+      if StrToInt(cbBytesPerRow.Items[i]) = BytesPerRow then
+      begin
         cbBytesPerRow.ItemIndex := i;
         break;
       end;
     end;
 
     for i:=0 to cbBytesPerColumn.Items.Count-1 do begin
-      if StrToInt(cbbytesPerColumn.Items[i]) = BytesPerColumn then begin
+      if StrToInt(cbbytesPerColumn.Items[i]) = BytesPerColumn then
+      begin
         cbBytesPerColumn.ItemIndex := i;
         break;
       end;
@@ -348,7 +354,8 @@ begin
       cbHexPrefix.ItemIndex := 0  // 'none'
     else
       for i := 0 to cbHexPrefix.Items.Count-1 do
-        if Pos(OffsetDisplayHexPrefix, cbHexPrefix.Items[i]) = 1 then begin
+        if Pos(OffsetDisplayHexPrefix, cbHexPrefix.Items[i]) = 1 then
+        begin
           cbHexPrefix.ItemIndex := i;
           break;
         end;
@@ -370,7 +377,8 @@ var
   dt: TDataType;
   i: integer;
 begin
-  with AParams do begin
+  with AParams do
+  begin
     cbNumViewerVisible.Checked := NumViewerVisible;
     cmbNumViewerPosition.ItemIndex := ord(NumViewerPosition);
     for dt := dtFirstNumericDataType to dtLastNumericDataType do

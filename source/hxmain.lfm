@@ -41,7 +41,7 @@ object MainForm: TMainForm
       Left = 22
       Height = 22
       Top = 3
-      Width = 151
+      Width = 119
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22

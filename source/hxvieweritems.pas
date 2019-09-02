@@ -49,8 +49,7 @@ type
 implementation
 
 uses
-  Math, StrUtils,
-  hxUtils;
+  StrUtils;
 
 { TDataItem }
 
@@ -90,97 +89,6 @@ begin
     3: Result := IfThen(BigEndian, 'BE', 'LE');
   end;
 end;
-                             (*
-function TDataItem.GetValueAsString(var Buffer): String;
-var
-  dbl: Double;
-  P: Pointer;
-  us: UnicodeString;
-begin
-  try
-    case FDataType of
-      dtByte:
-        Result := IntToStr(PByte(@Buffer)^);
-      dtShortInt:
-        Result := IntToStr(ShortInt(PByte(@Buffer)^));
-      dtWord:
-        if BigEndian then
-          Result := IntToStr(BEToN(PWord(@Buffer)^))
-        else
-          Result := IntToStr(LEToN(PWord(@Buffer)^));
-      dtSmallInt:
-        if BigEndian then
-          Result := IntToStr(SmallInt(BEToN(PWord(@Buffer)^)))
-        else
-          Result := IntToStr(SmallInt(LEToN(PWord(@Buffer)^)));
-      dtLongWord:
-        if BigEndian then
-          Result := IntToStr(BEToN(PDWord(@Buffer)^))
-        else
-          Result := IntToStr(LEToN(PDWord(@Buffer)^));
-      dtLongInt:
-        if BigEndian then
-          Result := IntToStr(LongInt(BEToN(PDWord(@Buffer)^)))
-        else
-          Result := IntToStr(LongInt(LEToN(PDWord(@Buffer)^)));
-      dtInt64:
-        if BigEndian then
-          Result := IntToStr(BEToN(PInt64(@Buffer)^))
-        else
-          Result := IntToStr(LEToN(PInt64(@Buffer)^));
-      dtCurrency:
-        if BigEndian then
-          Result := CurrToStr(BEToN(PInt64(@Buffer)^))
-        else
-          Result := CurrToStr(PCurrency(@Buffer)^);
-      dtSingle: // to do: Bigendian of floating point types
-        Result := Format('%.9g', [PSingle(@Buffer)^]);
-      dtDouble:
-        Result := Format('%.9g', [PDouble(@Buffer)^]);
-      dtExtended:
-        Result := Format('%.9g', [PExtended(@Buffer)^]);
-      dtReal48:
-        begin
-          if BigEndian then
-            dbl := BEToN(PReal48(@Buffer)^)
-          else
-            dbl := LEToN(PReal48(@Buffer)^);
-          Result := Format('%.9g', [dbl]);
-        end;
-      dtAnsiString:
-        begin
-          P := @Buffer;
-          SetLength(Result, PByte(P)^);
-          inc(P);
-          Move(P^, Result[1], Length(Result));
-        end;
-      dtWideString:
-        begin
-          P := @Buffer;
-          SetLength(us, PWord(P)^);
-          inc(P, 2);
-          Move(P^, us[1], Length(us)*2);
-          Result := us;
-        end;
-      dtCharArray:
-        begin
-          SetLength(Result, DataSize);
-          Move(Buffer, Result[1], DataSize);
-        end;
-      dtWideCharArray:
-        begin
-          SetLength(us, DataSize div 2);
-          Move(Buffer, us[1], DataSize);
-          Result := us;
-        end;
-      // to do: C-strings
-      else
-        raise Exception.Create('[TStdViewerItem.GetValueAsString] DataType not supported');
-    end;
-  except
-    Result := 'not valid';
-  end;
-end;        *)
 
 class function TDataItem.IsBoolean(AIndex: Integer): Boolean;
 begin

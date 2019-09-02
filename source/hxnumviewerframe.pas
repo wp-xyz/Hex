@@ -27,7 +27,6 @@ type
   { TNumViewerFrame }
 
   TNumViewerFrame = class(TBasicViewerFrame)
-    procedure cbHighlightDataChange(Sender: TObject);
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;
@@ -98,7 +97,8 @@ var
   i: Integer;
   item: TDataItem;
 begin
-  for i := 0 to FDataList.Count - 1 do begin
+  for i := 0 to FDataList.Count - 1 do
+  begin
     item := FDataList[i] as FDataItemClass;
     item.Offset := HexEditor.GetCursorPos;
   end;
@@ -152,14 +152,6 @@ end;
 {------------------------------------------------------------------------------}
 {                             TNumViewerFrame                                  }
 {------------------------------------------------------------------------------}
-
-procedure TNumViewerFrame.cbHighlightDataChange(Sender: TObject);
-begin
-  (*
-  FGrid.HighlightInHexEditor := cbHighlightData.Checked;
-  FGrid.HighlightDataInHexEditor(FGrid.Row);
-  *)
-end;
 
 function TNumViewerFrame.CreateViewerGrid: TViewerGrid;
 begin

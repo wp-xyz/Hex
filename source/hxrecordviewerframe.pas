@@ -90,7 +90,7 @@ type
     function RecordViewerGrid: TRecordViewerGrid; inline;
     procedure RestoreToolButtons;
     procedure SetParent(AValue: TWinControl); override;
-  private
+  public
     constructor Create(AOwner: TComponent); override;
   end;
 
@@ -115,7 +115,8 @@ end;
 
 destructor TRecordViewerGrid.Destroy;
 begin
-  if (HexEditor is THxHexEditor) then begin
+  if (HexEditor is THxHexEditor) then
+  begin
     HexEditor.SelCount := 0;
     THxHexEditor(HexEditor).SecondSelStart := -1;
     THxHexEditor(HexEditor).SecondSelEnd := -1;
@@ -215,7 +216,8 @@ begin
     if IsForWideString then begin
       Pw := PWideChar(@buf[0]);
       PwEnd := Pw + (n + 1) div 2;
-      while Pw < PwEnd do begin
+      while Pw < PwEnd do
+      begin
         if (Pw^ = #0) then
           exit;
         inc(Pw);
@@ -225,7 +227,8 @@ begin
     begin
       P := PChar(@buf[0]);
       PEnd := P + n + 1;
-      while P < PEnd do begin
+      while P < PEnd do
+      begin
         if P^ = #0 then
           exit;
         inc(P);
@@ -247,7 +250,8 @@ var
 begin
   FRecordStart := HexEditor.GetCursorPos;
   P := FRecordStart;
-  for i := 0 to FDataList.Count - 1 do begin
+  for i := 0 to FDataList.Count - 1 do
+  begin
     item := FDataList[i] as FDataItemClass;
     item.Offset := P;
     n := item.DataSize;
@@ -424,7 +428,8 @@ end;
 function TRecordViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
 begin
   Result := inherited SelectCell(ACol, ARow);
-  if Result and Assigned(HexEditor) and (HexEditor.DataSize > 0) then begin
+  if Result and Assigned(HexEditor) and (HexEditor.DataSize > 0) then
+  begin
     HexEditor.SelStart := HexEditor.GetCursorPos;
     UpdateData(HexEditor);
     UpdateSelection(ARow);
@@ -473,7 +478,8 @@ procedure TRecordViewerFrame.acAddExecute(Sender: TObject);
 var
   item: TRecordDataItem = nil;
 begin
-  if RecordEditor('New record element', item) then begin
+  if RecordEditor('New record element', item) then
+  begin
     RecordViewerGrid.AddItem(item);
   end;
 end;
@@ -493,14 +499,16 @@ var
 begin
   r := FGrid.Row;
   item := RecordViewerGrid.RowItems[r];
-  if RecordEditor('Edit record element', item) then begin
+  if RecordEditor('Edit record element', item) then
+  begin
     RecordViewerGrid.RowItems[r] := item;
   end;
 end;
 
 procedure TRecordViewerFrame.acLoadExecute(Sender: TObject);
 begin
-  with OpenDialog do begin
+  with OpenDialog do
+  begin
     InitialDir := ExtractFileDir(FileName);
     FileName := ExtractFileName(FileName);
     if Execute then
@@ -530,7 +538,8 @@ end;
 
 procedure TRecordViewerFrame.acSaveAsExecute(Sender: TObject);
 begin
-  with SaveDialog do begin
+  with SaveDialog do
+  begin
     InitialDir := ExtractFileDir(FileName);
     FileName := ExtractFileName(FileName);
     if Execute then
@@ -576,13 +585,15 @@ var
 begin
   case Toolbar.Align of
     alLeft, alRight:
-      for i:=High(FToolButtons) downto 0 do begin
+      for i := High(FToolButtons) downto 0 do
+      begin
         if FToolButtons[i].Style = tbsDivider then
           FToolButtons[i].Height := 5;
         Toolbar.ButtonList.Exchange(i, 0);
       end;
     alTop, alBottom:
-      for i:=High(FToolButtons) downto 0 do begin
+      for i := High(FToolButtons) downto 0 do
+      begin
         if FToolButtons[i].Style = tbsDivider then
           FToolButtons[i].Width := 5;
         Toolbar.ButtonList.Exchange(i, 0);

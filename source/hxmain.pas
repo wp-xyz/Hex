@@ -279,13 +279,14 @@ begin
   F := GetActiveHexEditorFrame;
   D := TSettingsForm.Create(nil);
   try
+    params := HexParams;
     if Assigned(F) then
-      F.ActiveParams(params{%H-})
-    else
-      params := HexParams;
+      F.ActiveParams(params{%H-});
     D.ParamsToControls(params);
-    if D.ShowModal = mrOK then begin
+    if D.ShowModal = mrOK then
+    begin
       D.ParamsFromControls(params);
+      HexParams.SettingsPageIndex := params.SettingsPageIndex;
       if Assigned(F) then
         F.ApplyParams(params)
       else
@@ -331,20 +332,24 @@ var
   F: THexEditorFrame;
   res: Integer;
 begin
-  for i := PageControl.PageCount-1 downto 0 do begin
+  for i := PageControl.PageCount-1 downto 0 do
+  begin
     F := GetHexEditorFrame(i);
-    if F.HexEditor.Modified then begin
+    if F.HexEditor.Modified then
+    begin
       PageControl.ActivePageIndex := i;
       PageControlChange(nil);
       res := MessageDlg(SCloseModified, mtConfirmation, [mbYes, mbNo, mbCancel], 0);
       case res of
         mrYes:
-          with SaveDialog do begin
+          with SaveDialog do
+          begin
             InitialDir := ExtractFileDir(F.Filename);
             FileName := ExtractFileName(F.Filename);
             DefaultExt := '';
             Filter := 'All files (*.*)|*.*';
-            if Execute then begin
+            if Execute then
+            begin
               Application.ProcessMessages;
               F.SaveFileAs(FileName);
             end else
@@ -377,12 +382,14 @@ begin
     if F.HexEditor.Modified then begin
       if MessageDlg(SCloseModified, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
         exit;
-      with SaveDialog do begin
+      with SaveDialog do
+      begin
         InitialDir := ExtractFileDir(F.Filename);
         FileName := ExtractFileName(F.Filename);
         DefaultExt := '';
         Filter := 'All files (*.*)|*.*';
-        if Execute then begin
+        if Execute then
+        begin
           Application.ProcessMessages;
           F.SaveFileAs(FileName);
         end else
@@ -419,7 +426,8 @@ begin
     FileName := '*.*';
     Filter := 'All files (*.*)|*.*';
     DefaultExt := '';
-    if Execute then begin
+    if Execute then
+    begin
       Application.ProcessMessages;
       for i:=0 to Files.Count-1 do
         CreateEditor(Files[i], ofReadOnly in Options);
@@ -438,13 +446,16 @@ var
 begin
   inherited;
   F := GetActiveHexEditorFrame;
-  if Assigned(F) then begin
-    with SaveDialog do begin
+  if Assigned(F) then
+  begin
+    with SaveDialog do
+    begin
       InitialDir := ExtractFileDir(F.Filename);
       FileName := ExtractFileName(F.Filename);
       DefaultExt := '';
       Filter := 'All files (*.*)|*.*';
-      if Execute then begin
+      if Execute then
+      begin
         Application.ProcessMessages;
         F.SaveFileAs(FileName);
         HexEditorChanged(self);  // Remove "modified" tag from PageControl tab
@@ -469,13 +480,15 @@ var
   n: Integer;
 begin
   F := GetActiveHexEditorFrame;
-  if Assigned(F) then begin
+  if Assigned(F) then
+  begin
     if (F.HexEditor = nil) or (not F.HexEditor.HasFile) then
       exit;
 
     dlg := TGotoForm.Create(nil);
     try
-      if dlg.ShowModal = mrOK then begin
+      if dlg.ShowModal = mrOK then
+      begin
         if GotoParams.JumpAbs then
           n := GotoParams.PosAbs
         else
@@ -496,7 +509,8 @@ begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) and Assigned(F.HexEditor) then //and not (GotoParams.JumpAbs) then
   begin
-    if Sender = acGotoRepeat then begin     // jump forward
+    if Sender = acGotoRepeat then      // jump forward
+    begin
       if GotoParams.JumpAbs then
         n := GotoParams.PosAbs
       else
@@ -542,7 +556,8 @@ var
   i: Integer;
   F: THexEditorFrame;
 begin
-  for i := 0 to PageControl.PageCount-1 do begin
+  for i := 0 to PageControl.PageCount-1 do
+  begin
     F := GetHexEditorFrame(i);
     F.ApplyParams(AParams);
   end;
@@ -556,7 +571,8 @@ procedure TMainForm.CreateEditor(const AFileName: String; WriteProtected: Boolea
     ef: THexEditorFrame;
   begin
     n := 0;
-    for i:=0 to PageControl.PageCount-1 do begin
+    for i:=0 to PageControl.PageCount-1 do
+    begin
       ef := GetHexEditorFrame(i);
       if ef.HexEditor.HasFile then
         inc(n);
@@ -578,7 +594,8 @@ begin
     F.Parent := page;
     F.Align := alClient;
     F.OnChange := @HexEditorChanged;
-    if AFileName <> '' then begin
+    if AFileName <> '' then
+    begin
       F.OpenFile(AFileName, WriteProtected);
       FRecentFilesManager.AddToRecent(AFileName);
     end else
@@ -599,9 +616,11 @@ var
   s: string;
   i: integer;
 begin
-  for i:=1 to ParamCount do begin
+  for i:=1 to ParamCount do
+  begin
     s := UpperCase(ParamStr(i));
-    if (s[1]='/') or (s[1]='-') then begin
+    if (s[1]='/') or (s[1]='-') then
+    begin
       //
     end else
       if FileExists(ParamStr(i)) then CreateEditor(ParamStr(i), HexParams.WriteProtected);
@@ -630,8 +649,6 @@ begin
   FRecentFilesManager.IniSection := 'RecentFiles';
 
   ReadIni;
-
-
   UpdateCmds;
 end;
 
@@ -774,7 +791,8 @@ begin
   end;
   acEditOverWriteMode.Enabled := acEditInsertMode.Enabled;
 
-  for i := 0 to ActionList.ActionCount-1 do begin
+  for i := 0 to ActionList.ActionCount-1 do
+  begin
     ac := TAction(ActionList[i]);
     if InRange(ac.tag, TAG_SET_BOOKMARK, TAG_SET_BOOKMARK + 10) then
       ac.Enabled := Hex_ok;

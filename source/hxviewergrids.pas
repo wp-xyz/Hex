@@ -300,7 +300,10 @@ begin
           begin
             SetLength(ws, len);
             HexEditor.ReadBuffer(ws[1], AItem.Offset+2, len);
-            // To do: fix big endian of wide string characters
+            if AItem.BigEndian then
+              ws := BEToN(ws)
+            else
+              ws := LEToN(ws);
             Result := '''' + UTF8Encode(ws) + '''';
           end else
             Result := '*** STRING TOO LONG ***';
@@ -310,12 +313,20 @@ begin
           len := -AItem.DataSize;
           SetLength(ws, len div 2);
           HexEditor.ReadBuffer(ws[1], AItem.Offset, len);
+          if AItem.BigEndian then
+            ws := BEToN(ws)
+          else
+            ws := LEToN(ws);
           Result := '''' + UTF8Encode(ws) + '''';
         end;
       dtWideCharArray:
         begin
           SetLength(ws, AItem.DataSize div 2);
           Move(buffer[0], ws[1], AItem.DataSize);
+          if AItem.BigEndian then
+            ws := BEToN(ws)
+          else
+            ws := LEToN(ws);
           Result := '''' + UTF8Decode(ws) + '''';
         end;
 

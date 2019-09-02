@@ -59,7 +59,8 @@ begin
   try
     F.Caption := ACaption;
     F.DataItemToControls(AItem);
-    if F.ShowModal = mrOK then begin
+    if F.ShowModal = mrOK then
+    begin
       F.ControlsToDataItem(AItem);
       Result := true;
     end else
@@ -173,7 +174,8 @@ var
   msg: String;
   C: TWinControl;
 begin
-  if not ValidData(msg, C) then begin
+  if not ValidData(msg, C) then
+  begin
     C.SetFocus;
     MessageDlg(msg, mtError, [mbOK], 0);
     ModalResult := mrNone;
