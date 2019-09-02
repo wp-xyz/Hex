@@ -8,8 +8,8 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager, hxDataModule,
-  hxBasicViewerFrame, hxnumviewerframe, hxRecordViewerFrame,
-  hxSettingsDlg, hxGotoDlg, hxRecordEditorForm, hxViewerItems, hxViewerGrids;
+  hxBasicViewerFrame, hxnumviewerframe, hxRecordViewerFrame, hxSettingsDlg,
+  hxGotoDlg, hxRecordEditorForm, hxViewerItems, hxViewerGrids, hxViewerPanel;
 
 {$R *.res}
 

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, ActnList,
-  ComCtrls, StdCtrls, MPHexEditor,
+  ComCtrls, StdCtrls, ExtCtrls, MPHexEditor,
   hxGlobal, hxBasicViewerFrame, hxViewerItems, hxViewerGrids;
 
 type
@@ -16,6 +16,7 @@ type
   TRecordViewerGrid = class(TViewerGrid)
   private
     FFileName: String;
+    FRecordStart: Integer;
     FRecordSize: Integer;
     function GetItem(ARow: Integer): TRecordDataItem;
     procedure SetItem(ARow: Integer; AItem: TRecordDataitem);
@@ -23,8 +24,11 @@ type
     procedure DefineColumns; override;
     function DistanceToZero(AOffset: Integer; IsForWideString: Boolean): Integer;
     procedure DoUpdateData; override;
+    function SelectCell(ACol, ARow: Integer): Boolean; override;
+    procedure UpdateSelection(ARow: Integer);
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     procedure AddItem(AItem: TRecordDataItem);
     procedure Advance(ADirection: Integer);
     procedure DeleteItem(ARow: Integer);
@@ -78,10 +82,16 @@ type
     procedure acSaveAsExecute(Sender: TObject);
     procedure acSaveExecute(Sender: TObject);
     procedure ActionListUpdate(AAction: TBasicAction; var {%H-}Handled: Boolean);
+  private
+    FToolButtons: array of TToolButton;  // stores original order of toolbuttons
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;
     function RecordViewerGrid: TRecordViewerGrid; inline;
+    procedure RestoreToolButtons;
+    procedure SetParent(AValue: TWinControl); override;
+  private
+    constructor Create(AOwner: TComponent); override;
   end;
 
 
@@ -91,7 +101,7 @@ implementation
 
 uses
   TypInfo, Math,
-  hxRecordEditorForm;
+  hxHexEditor, hxRecordEditorForm;
 
 {------------------------------------------------------------------------------}
 {                           TRecordViewerGrid                                  }
@@ -101,6 +111,16 @@ constructor TRecordViewerGrid.Create(AOwner: TComponent);
 begin
   FDataItemClass := TRecordDataItem;
   inherited Create(AOwner);
+end;
+
+destructor TRecordViewerGrid.Destroy;
+begin
+  if (HexEditor is THxHexEditor) then begin
+    HexEditor.SelCount := 0;
+    THxHexEditor(HexEditor).SecondSelStart := -1;
+    THxHexEditor(HexEditor).SecondSelEnd := -1;
+  end;
+  inherited;
 end;
 
 procedure TRecordViewerGrid.AddItem(AItem: TRecordDataItem);
@@ -116,12 +136,11 @@ var
 begin
   P := HexEditor.GetCursorPos;
   inc(P, ADirection * FRecordSize);
-  if P < 0 then
-    exit;
-  if P > HexEditor.DataSize then
+  if (P < 0) or (P >= HexEditor.DataSize) then
     exit;
   HexEditor.SelStart := P;
-  UpdateData(Hexeditor);
+  UpdateData(HexEditor);
+  UpdateSelection(Row);
 end;
 
 { Property indexes of TRecordDataItem:
@@ -139,12 +158,14 @@ begin
     lCol.Title.Caption := 'Name';
     lCol.Width := 120;
     lCol.SizePriority := 0;
+    lCol.ReadOnly := true;
 
     lCol := Columns.Add;
     lCol.Tag := 0;  // inherited TDataItem property with index 0: DataType
     lCol.Title.Caption := 'Data type';
     lCol.Width := 80;
     lCol.SizePriority := 0;
+    lCol.ReadOnly := true;
 
     lCol := Columns.Add;
     lCol.Tag := 1;  // inherited TDataItem property with index 1: Data size
@@ -152,12 +173,14 @@ begin
     lCol.Alignment := taRightJustify;
     lCol.Width := 24;
     lCol.SizePriority := 0;
+    lCol.ReadOnly := true;
 
     lCol := Columns.Add;
     lCol.Tag := -1;  // Value column
     lCol.Title.Caption := 'Value';
     lCol.Width := 100;
     lCol.SizePriority := 1;  // Expand column to fill rest of grid width
+    lCol.ReadOnly := true;
   finally
     Columns.EndUpdate;
   end;
@@ -217,13 +240,13 @@ procedure TRecordViewerGrid.DoUpdateData;
 var
   i: Integer;
   item: TDataItem;
-  P, P0: Integer;
+  P: Integer;
   b: Byte = 0;
   w: Word = 0;
   n: Integer;
 begin
-  P := HexEditor.GetCursorPos;
-  P0 := P;
+  FRecordStart := HexEditor.GetCursorPos;
+  P := FRecordStart;
   for i := 0 to FDataList.Count - 1 do begin
     item := FDataList[i] as FDataItemClass;
     item.Offset := P;
@@ -264,7 +287,7 @@ begin
     item.DataSize := n;
     inc(P, n);
   end;
-  FRecordSize := P - P0;
+  FRecordSize := P - FRecordStart;
   Invalidate;
 end;
 
@@ -398,16 +421,53 @@ begin
   end;
 end;
 
+function TRecordViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
+begin
+  Result := inherited SelectCell(ACol, ARow);
+  if Result and Assigned(HexEditor) and (HexEditor.DataSize > 0) then begin
+    HexEditor.SelStart := HexEditor.GetCursorPos;
+    UpdateData(HexEditor);
+    UpdateSelection(ARow);
+  end;
+end;
+
 procedure TRecordViewerGrid.SetItem(ARow: Integer; AItem: TRecordDataItem);
 begin
   (FDataList[ARow - FixedRows] as TRecordDataItem).Assign(AItem);
   UpdateData(HexEditor);
 end;
 
+procedure TRecordViewerGrid.UpdateSelection(ARow: Integer);
+var
+  P: Integer;
+  item: TDataItem;
+begin
+  P := FRecordStart + FRecordSize - 1;
+  if P >= HexEditor.DataSize then
+    exit;
+  HexEditor.SelEnd := P;
+  if (HexEditor is THxHexEditor) and (ARow >= FixedRows) then
+  begin
+    item := FDataList[ARow - FixedRows] as TDataItem;
+    THxHexEditor(HexEditor).SecondSelStart := item.Offset;
+    THxHexEditor(HexEditor).SecondSelEnd := item.Offset + abs(item.DataSize) - 1;
+  end;
+end;
+
 
 {------------------------------------------------------------------------------}
 {                            TRecordViewerFrame                                }
 {------------------------------------------------------------------------------}
+
+constructor TRecordViewerFrame.Create(AOwner: TComponent);
+var
+  i: Integer;
+begin
+  inherited Create(AOwner);
+  SetLength(FToolButtons, Toolbar.ButtonCount);
+  for i:=0 to Toolbar.ButtonCount-1 do
+    FToolButtons[i] := Toolbar.Buttons[i];
+end;
 
 procedure TRecordViewerFrame.acAddExecute(Sender: TObject);
 var
@@ -508,6 +568,41 @@ end;
 function TRecordViewerFrame.RecordViewerGrid: TRecordViewerGrid;
 begin
   Result := (FGrid as TRecordViewerGrid);
+end;
+
+procedure TRecordViewerFrame.RestoreToolButtons;
+var
+  i: Integer;
+begin
+  case Toolbar.Align of
+    alLeft, alRight:
+      for i:=High(FToolButtons) downto 0 do begin
+        if FToolButtons[i].Style = tbsDivider then
+          FToolButtons[i].Height := 5;
+        Toolbar.ButtonList.Exchange(i, 0);
+      end;
+    alTop, alBottom:
+      for i:=High(FToolButtons) downto 0 do begin
+        if FToolButtons[i].Style = tbsDivider then
+          FToolButtons[i].Width := 5;
+        Toolbar.ButtonList.Exchange(i, 0);
+      end;
+  end;
+end;
+
+procedure TRecordViewerFrame.SetParent(AValue: TWinControl);
+begin
+  inherited SetParent(AValue);
+  if (Parent <> nil) then begin
+    case Parent.Align of
+      alLeft, alRight:
+        Toolbar.Align := alTop;
+      alTop, alBottom:
+        Toolbar.Align := alLeft;
+    end;
+    ToolBar.AutoSize := true;
+    RestoreToolButtons;
+  end;
 end;
 
 end.

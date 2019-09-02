@@ -355,7 +355,8 @@ end;
 procedure TViewerGrid.UpdateData(AHexEditor: TMPHexEditor);
 begin
   FHexEditor := AHexEditor;
-  DoUpdateData;
+  if Assigned(FHexEditor) then
+    DoUpdateData;
 end;
 
 

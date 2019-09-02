@@ -2,15 +2,4 @@ inherited NumViewerFrame: TNumViewerFrame
   inherited lblHeader: TLabel
     Caption = ' Numeric Viewer'
   end
-  object cbHighlightData: TCheckBox[1]
-    Left = 0
-    Height = 19
-    Top = 221
-    Width = 320
-    Align = alBottom
-    BorderSpacing.Top = 4
-    Caption = 'Select viewer data'
-    OnChange = cbHighlightDataChange
-    TabOrder = 0
-  end
 end

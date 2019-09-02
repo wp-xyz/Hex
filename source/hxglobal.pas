@@ -136,17 +136,21 @@ type
     StatusbarPosDisplay : TOffsetDisplayBase;
     StatusbarSelDisplay : TOffsetDisplayBase;
 
+    LeftPanelWidth: Integer;
+    RightPanelWidth: Integer;
+    BottomPanelHeight: Integer;
+
     NumViewerVisible: Boolean;
     NumViewerPosition: TViewerPosition;
-    NumViewerHeight: Integer;
-    NumViewerWidth: Integer;
+    //NumViewerHeight: Integer;
+    //NumViewerWidth: Integer;
     NumViewerDataTypes: TDataTypes;
     NumViewerColWidths: TNumViewerColWidths;
 
     RecordViewerVisible: Boolean;
     RecordViewerPosition: TViewerPosition;
-    RecordViewerHeight: Integer;
-    RecordViewerWidth: Integer;
+    //RecordViewerHeight: Integer;
+    //RecordViewerWidth: Integer;
     RecordViewerColWidths: TRecordViewerColWidths;
 
     SettingsPageIndex: Integer;
@@ -186,17 +190,21 @@ var
     StatusbarPosDisplay: odbDec;
     StatusbarSelDisplay: odbDec;
 
+    LeftPanelWidth: 250;
+    RightPanelWidth: 250;
+    BottomPanelHeight: 250;
+
     NumViewerVisible: true;
     NumViewerPosition: vpRight;
-    NumViewerHeight: 250;
-    NumViewerWidth: 250;
+//    NumViewerHeight: 250;
+//    NumViewerWidth: 250;
     NumViewerDataTypes: AllNumericDataTypes;
     NumViewerColWidths: (70, 40, 24);
 
     RecordViewerVisible: false;
     RecordViewerPosition: vpBottom;
-    RecordViewerHeight: 250;
-    RecordViewerWidth: 250;
+//    RecordViewerHeight: 250;
+//    RecordViewerWidth: 250;
     RecordViewerColWidths: (100, 70, 40);
 
     SettingsPageIndex: 0

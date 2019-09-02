@@ -33,7 +33,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="17">
+    <Units Count="18">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -144,6 +144,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerGrids"/>
       </Unit16>
+      <Unit17>
+        <Filename Value="hxviewerpanel.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hxViewerPanel"/>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -18,6 +18,7 @@ type
     procedure DefineColumns; override;
     procedure DoUpdateData; override;
     procedure PopulateDataList; override;
+    function SelectCell(ACol, ARow: Integer): Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -26,7 +27,6 @@ type
   { TNumViewerFrame }
 
   TNumViewerFrame = class(TBasicViewerFrame)
-    cbHighlightData: TCheckBox;
     procedure cbHighlightDataChange(Sender: TObject);
   protected
     function CreateViewerGrid: TViewerGrid; override;
@@ -64,6 +64,7 @@ begin
     lCol.Title.Caption := 'Data type';
     lCol.Width := 80;
     lCol.SizePriority := 0;
+    lCol.ReadOnly := true;
 
     lCol := Columns.Add;
     lCol.Tag := 1;  // TDataItem property with index 1: Data size
@@ -72,6 +73,7 @@ begin
     lCol.Alignment := taRightJustify;
     lCol.Width := 40;
     lCol.SizePriority := 0;
+    lCol.ReadOnly := true;
 
     lCol := Columns.Add;
     lCol.Tag := 3;  // TDataItem property with index 3: BigEndian
@@ -85,6 +87,7 @@ begin
     lCol.Tag := -1;  // Value column
     lCol.Title.Caption := 'Value';
     lCol.SizePriority := 1;  // Expand column to fill rest of grid width
+    lCol.ReadOnly := true;
   finally
     Columns.EndUpdate;
   end;
@@ -129,6 +132,20 @@ begin
     FDataList.Add(TDataItem.Create(dtExtended, 10, HexParams.BigEndian));
   if (dtReal48 in HexParams.NumViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtReal48, 6, HexParams.BigEndian));
+end;
+
+function TNumViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
+var
+  item: TDataItem;
+begin
+  Result := inherited SelectCell(ACol, ARow);
+  if Result and Assigned(HexEditor) and (ARow >= FixedRows) and (HexEditor.DataSize > 0) then
+  begin
+    HexEditor.SelStart := HexEditor.GetCursorPos;
+    UpdateData(HexEditor);
+    item := FDataList[ARow - FixedRows] as TDataItem;
+    HexEditor.SelEnd := HexEditor.SelStart + abs(item.DataSize) - 1;
+  end;
 end;
 
 

@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, Graphics,
   Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
   MPHexEditor,
-  hxGlobal, hxNumViewerFrame, hxRecordViewerFrame;
+  hxGlobal, hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame,
+  hxViewerPanel;
 
 type
 
@@ -17,11 +18,13 @@ type
   THexEditorFrame = class(TFrame)
     StatusBar: TStatusBar;
   private
+    FCenterPanel: TPanel;
+    FLeftPanel: TViewerPanel;
+    FRightPanel: TViewerPanel;
+    FBottomPanel: TViewerPanel;
     FHexEditor: TMPHexEditor;
     FNumViewer: TNumViewerFrame;
-    FNumViewerSplitter: TSplitter;
     FRecordViewer: TRecordViewerFrame;
-    FRecordViewerSplitter: TSplitter;
     FStatusbarItems: TStatusbarItems;
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
@@ -47,12 +50,14 @@ type
     procedure CreateHexEditor;
     procedure CreateNumViewer;
     procedure CreateRecordViewer;
-    procedure FixViewerSplitterPosition(AViewer: TControl; ASplitter: TSplitter);
+//    procedure FixViewerSplitterPosition(AViewer: TControl; ASplitter: TSplitter);
+    function GetViewerPanel(APosition: TViewerPosition): TViewerPanel;
     procedure HexEditorChanged(Sender: TObject);
     procedure SetParent(AParent: TWinControl); override;
     procedure UpdateStatusBarPanelWidths;
 
   public
+    constructor Create(AOwner: TComponent); override;
     procedure ActiveParams(var AParams: THexParams);
     procedure ApplyParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
@@ -88,7 +93,34 @@ implementation
 
 uses
   StrUtils,
-  hxStrings, hxUtils;
+  hxStrings, hxUtils, hxHexEditor;
+
+constructor THexEditorFrame.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FLeftPanel := TViewerPanel.Create(self);
+  FLeftPanel.Parent := self;
+  FLeftPanel.Align := alLeft;
+  FLeftPanel.Visible := false;
+  FLeftPanel.Width := 250;
+
+  FRightPanel := TViewerPanel.Create(self);
+  FRightPanel.Parent := self;
+  FRightPanel.Align := alRight;
+  FRightPanel.Visible := false;
+  FRightPanel.Width := 250;
+
+  FCenterPanel := TPanel.Create(self);  // This is for the HexEditor
+  FCenterPanel.Parent := self;
+  FCenterPanel.Align := alClient;
+
+  FBottomPanel := TViewerPanel.Create(self);
+  FBottomPanel.Parent := FCenterPanel;
+  FBottomPanel.Align := alBottom;
+  FBottomPanel.Height := 250;
+  FBottomPanel.Visible := false;
+end;
 
 procedure THexEditorFrame.ActiveParams(var AParams: THexParams);
 var
@@ -127,13 +159,19 @@ begin
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
 
+  AParams.LeftPanelWidth := FLeftPanel.Width;
+  AParams.RightPanelWidth := FRightPanel.Width;
+  AParams.BottomPanelHeight := FBottomPanel.Height;
+
   if Assigned(FNumViewer) then begin
     AParams.NumViewerVisible := GetShowNumViewer;
     AParams.NumViewerPosition := GetNumViewerPosition;
+    {
     if FNumViewer.Align in [alLeft, alRight] then
       AParams.NumViewerWidth := FNumViewer.Width
     else if FNumViewer.Align in [alBottom, alTop] then
       AParams.NumViewerHeight := FNumViewer.Height;
+    }
     for i:=0 to High(AParams.NumViewerColWidths) do
       AParams.NumViewerColWidths[i] := FNumViewer.ColWidths[i];
   end;
@@ -141,10 +179,12 @@ begin
   if Assigned(FRecordViewer) then begin
     AParams.RecordViewerVisible := GetShowRecordViewer;
     AParams.RecordViewerPosition := GetRecordViewerPosition;
+    {
     if FRecordViewer.Align in [alLeft, alRight] then
       AParams.RecordViewerWidth := FRecordViewer.Width
     else if FRecordViewer.Align in [alBottom, alTop] then
       AParams.RecordViewerHeight := FRecordViewer.Height;
+    }
     for i:=0 to High(AParams.RecordViewerColWidths) do
       AParams.RecordViewerColWidths[i] := FRecordViewer.ColWidths[i];
   end;
@@ -189,22 +229,20 @@ begin
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
 
-  ShowNumViewer := AParams.NumViewerVisible;
+  FLeftPanel.Width := AParams.LeftPanelWidth;
+  FRightPanel.Width := AParams.RightPanelWidth;
+  FBottomPanel.Height := AParams.BottomPanelHeight;
+
+  ShowNumViewer := AParams.NumViewerVisible;         // this creates the NumViewer
   if Assigned(FNumViewer) then begin
-    FNumViewer.Width := AParams.NumViewerWidth;
-    FNumViewer.Height := AParams.NumViewerHeight;
     SetNumViewerPosition(AParams.NumViewerPosition);
     for i := 0 to High(AParams.NumViewerColWidths) do
       FNumViewer.ColWidths[i] := AParams.NumViewerColWidths[i];
   end;
 
-  ShowRecordViewer := AParams.RecordViewerVisible;
+  ShowRecordViewer := AParams.RecordViewerVisible;   // this creates the RecordViewer
   if Assigned(FRecordViewer) then begin
     SetRecordViewerPosition(AParams.RecordViewerPosition);
-    if FRecordViewer.Align in [alLeft, alRight] then
-      FRecordViewer.Width := AParams.RecordViewerWidth
-    else if FRecordViewer.Align in [alBottom, alTop] then
-      FRecordViewer.Height := AParams.RecordViewerHeight;
     for i := 0 to High(AParams.RecordViewerColWidths) do
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];
   end;
@@ -219,8 +257,8 @@ end;
 
 procedure THexEditorFrame.CreateHexEditor;
 begin
-  FHexEditor := TMPHexEditor.Create(self);
-  FHexEditor.Parent := self;
+  FHexEditor := THxHexEditor.Create(self);
+  FHexEditor.Parent := FCenterPanel;
   FHexEditor.Align := alClient;
   FHexEditor.BytesPerColumn := HexParams.BytesPerColumn;
   FHexEditor.BytesPerRow := HexParams.BytesPerRow;
@@ -240,42 +278,25 @@ begin
 end;
 
 procedure THexEditorFrame.CreateNumViewer;
+var
+  panel: TViewerPanel;
 begin
   FNumViewer.Free;
   FNumViewer := TNumViewerFrame.Create(self);
   FNumViewer.Name := '';
-  FNumViewer.Parent := Self;
-  FNumViewer.Width := HexParams.NumViewerWidth;
-  FNumViewer.Align := alRight;
-  FNumViewerSplitter := TSplitter.Create(self);
-  FNumViewerSplitter.Parent := self;
-  FNumViewerSplitter.Align := FNumViewer.Align;
+  panel := GetViewerPanel(HexParams.NumViewerPosition);
+  panel.AddViewer(FNumViewer);
 end;
 
 procedure THexEditorFrame.CreateRecordViewer;
+var
+  panel: TViewerPanel;
 begin
   FRecordViewer.Free;
   FRecordViewer := TRecordViewerFrame.Create(self);
   FRecordViewer.Name := '';
-  FRecordViewer.Parent := Self;
-  FRecordViewer.Width := HexParams.RecordViewerWidth;
-  FRecordViewer.Align := alRight;
-  FRecordViewerSplitter := TSplitter.Create(self);
-  FRecordViewerSplitter.Parent := self;
-  FRecordViewerSplitter.Align := FRecordViewer.Align;
-end;
-
-procedure THexEditorFrame.FixViewerSplitterPosition(AViewer: TControl;
-  ASplitter: TSplitter);
-begin
-  case ASplitter.Align of
-    alLeft:
-      ASplitter.Left := AViewer.Left + AViewer.Width + 1;
-    alRight:
-      ASplitter.Left := AViewer.Left - 1;
-    alBottom:
-      ASplitter.top :=  AViewer.Top - 1;
-  end;
+  panel := GetViewerPanel(HexParams.RecordViewerPosition);
+  panel.AddViewer(FRecordViewer);
 end;
 
 function THexEditorFrame.GetFileName: String;
@@ -306,12 +327,10 @@ end;
 
 function THexEditorFrame.GetNumViewerPosition: TViewerPosition;
 begin
-  if FNumViewer.Align = alLeft then
-    Result := vpLeft
-  else if FNumViewer.Align = alRight then
-    Result := vpRight
+  if FNumViewer.Parent is TViewerPanel then
+    Result := TViewerPanel(FNumViewer.Parent).Position
   else
-    Result := vpBottom;
+    raise Exception.Create('[THexEditorFrame.GetNumViewerPosition] Unknown parent.');
 end;
 
 function THexEditorFrame.GetOffsetDisplayHexPrefix(AOffsetFormat: String): String;
@@ -330,17 +349,24 @@ end;
 
 function THexEditorFrame.GetRecordViewerPosition: TViewerPosition;
 begin
-  if FRecordViewer.Align = alLeft then
-    Result := vpLeft
-  else if FRecordViewer.Align = alRight then
-    Result := vpRight
+  if FRecordViewer.Parent is TViewerPanel then
+    Result := TVIewerPanel(FRecordViewer.Parent).Position
   else
-    Result := vpBottom;
+    raise Exception.Create('[THexEditorFrame.GetRecordViewerPositon] Unknown parent.');
 end;
 
 function THexEditorFrame.GetShowRecordViewer: Boolean;
 begin
   Result := (FRecordViewer <> nil) and FRecordViewer.Visible;
+end;
+
+function THexEditorFrame.GetViewerPanel(APosition: TViewerPosition): TViewerPanel;
+begin
+  case APosition of
+    vpLeft: Result := FLeftPanel;
+    vpRight: Result := FRightPanel;
+    vpBottom: Result := FBottomPanel;
+  end;
 end;
 
 procedure THexEditorFrame.HexEditorChanged(Sender: TObject);
@@ -433,6 +459,22 @@ begin
   end;
 end;
 
+procedure THexEditorFrame.SetNumViewerPosition(AValue: TViewerPosition);
+var
+  oldPanel, newPanel: TViewerPanel;
+begin
+  oldPanel := FNumViewer.Parent as TViewerPanel;
+  newPanel := GetViewerPanel(AValue);
+
+  oldPanel.DeleteViewer(FNumViewer);
+  newPanel.AddViewer(FNumViewer);
+
+  oldPanel.UpdateLayout;
+  newPanel.UpdateLayout;
+
+  StatusBar.Top := Height * 2;
+end;
+
 procedure THexEditorFrame.SetOnChange(AValue: TNotifyEvent);
 begin
   FOnChange := AValue;
@@ -449,7 +491,18 @@ begin
 end;
 
 procedure THexEditorFrame.SetRecordViewerPosition(AValue: TViewerPosition);
+var
+  oldPanel, newPanel: TViewerPanel;
 begin
+  oldPanel := FRecordViewer.Parent as TViewerPanel;
+  newPanel := GetViewerPanel(AValue);
+
+  oldPanel.DeleteViewer(FRecordViewer);
+  newPanel.AddViewer(FRecordViewer);
+
+  oldPanel.Updatelayout;
+  newPanel.UpdateLayout;
+  (*
   case FRecordViewer.Align of
     alLeft, alRight:
       HexParams.RecordViewerWidth := FRecordViewer.Width;
@@ -457,47 +510,69 @@ begin
       HexParams.RecordViewerHeight := FRecordViewer.Height;
   end;
 
-  case AValue of
-    vpLeft:
-      begin
-        FRecordViewer.Align := alLeft;
-        FRecordViewer.Width := HexParams.RecordViewerWidth;
-        FRecordViewer.Toolbar.Align := alTop;
-      end;
-    vpRight:
-      begin
-        FRecordViewer.Align := alRight;
-        FRecordViewer.Width := HexParams.RecordViewerWidth;
-        FRecordViewer.ToolBar.Align := alTop;
-      end;
-    vpBottom :
-      begin
-        FRecordViewer.Align := alBottom;
-        FRecordViewer.Height := HexParams.RecordViewerHeight;
-        FRecordViewer.ToolBar.Align := alLeft;
-      end;
-  end;
-  FRecordViewer.ToolBar.AutoSize := true;
-  FRecordViewerSplitter.Align := FRecordViewer.Align;
-  FixViewerSplitterPosition(FRecordViewer, FRecordViewerSplitter);
+  with (FRecordViewer.Parent as TViewerPanel) do
+    DeleteViewer(FRecordViewer);
+
+  with GetViewerPanel(AValue) do
+    AddViewer(FRecordViewer);
+                       *)
   StatusBar.Top := Height * 2;
 end;
 
 procedure THexEditorFrame.SetShowRecordViewer(AValue: Boolean);
 begin
+  if AValue then
+  begin
+    // Show record viewer
+    if Assigned(FRecordViewer) then
+      exit;
+    CreateRecordViewer;
+    FRecordViewer.UpdateData(HexEditor);
+    HexParams.RecordViewerVisible := true;
+  end else
+  begin
+    // Hide record viewer
+    if not Assigned(FRecordViewer) then
+      exit;
+    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
+    FreeAndNil(FRecordViewer);
+    HexParams.RecordViewerVisible := false;
+  end;
+(*
   if AValue and (FRecordViewer = nil) then
     CreateRecordViewer;
-  if FRecordViewer <> nil then begin
-    FRecordViewer.Visible := AValue;
+
+  if AValue then
+
+  if not AValue then
+    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
+  FRecordViewer.Visible := AValue;
     FRecordViewerSplitter.Visible := AValue;
     FixViewerSplitterPosition(FRecordViewer, FRecordViewerSplitter);
     if AValue then
       FRecordViewer.UpdateData(HexEditor);
   end;
+  *)
 end;
 
 procedure THexEditorFrame.SetShowNumViewer(AValue: Boolean);
 begin
+  if AValue then begin
+    // Show number viewer
+    if Assigned(FNumViewer) then
+      exit;
+    CreateNumViewer;
+    FNumViewer.UpdateData(HexEditor);
+    HexParams.NumViewerVisible := true;
+  end else begin
+    // Hide number viewer
+    if not Assigned(FNumViewer) then
+      exit;
+    (FNumViewer.Parent as TViewerPanel).DeleteViewer(FNumViewer);
+    FreeAndNil(FNumViewer);
+    HexParams.NumViewerVisible := false;
+  end;
+  (*
   if AValue and (FNumViewer = nil) then
     CreateNumViewer;
   if FNumViewer <> nil then begin
@@ -507,37 +582,7 @@ begin
     if AValue then
       FNumViewer.UpdateData(HexEditor);
   end;
-end;
-
-procedure THexEditorFrame.SetNumViewerPosition(AValue: TViewerPosition);
-begin
-  case FNumViewer.Align of
-    alLeft, alRight:
-      HexParams.NumViewerWidth := FNumViewer.Width;
-    alBottom:
-      HexParams.NumViewerHeight := FNumViewer.Height;
-  end;
-
-  case AValue of
-    vpLeft:
-      begin
-        FNumViewer.Align := alLeft;
-        FNumViewer.Width := HexParams.NumViewerWidth;
-      end;
-    vpRight:
-      begin
-        FNumViewer.Align := alRight;
-        FNumViewer.Width := HexParams.NumViewerWidth;
-      end;
-    vpBottom :
-      begin
-        FNumViewer.Align := alBottom;
-        FNumViewer.Height := HexParams.NumViewerHeight;
-      end;
-  end;
-  FNumViewerSplitter.Align := FNumViewer.Align;
-  FixViewerSplitterPosition(FNumViewer, FNumViewerSplitter);
-  StatusBar.Top := Height * 2;
+  *)
 end;
 
 procedure THexEditorFrame.UpdateCaption;

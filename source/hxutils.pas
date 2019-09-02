@@ -140,12 +140,16 @@ begin
     CharFieldForegroundColor := TColor(AIniFile.ReadInteger('Params',
       'CharFieldForegroundColor', Integer(CharFieldForegroundColor)));
 
+    LeftPanelWidth := AIniFile.ReadInteger('Params', 'LeftPanelWidth', LeftPanelWidth);
+    RightPanelWidth := AIniFile.ReadInteger('Params', 'RightPanelWidth', RightPanelWidth);
+    BottomPanelHeight := AIniFile.ReadInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
+
     NumViewerVisible := AIniFile.ReadBool('Params', 'NumViewer.Visible', NumViewerVisible);
     s := AIniFile.ReadString('Params', 'NumViewer.Position', '');
     if s <> '' then
       NumViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
-    NumViewerHeight := AIniFile.ReadInteger('Params', 'NumViewer.Height', NumViewerHeight);
-    NumViewerWidth := AIniFile.ReadInteger('Params', 'NumViewer.Width', NumViewerWidth);
+    //NumViewerHeight := AIniFile.ReadInteger('Params', 'NumViewer.Height', NumViewerHeight);
+    //NumViewerWidth := AIniFile.ReadInteger('Params', 'NumViewer.Width', NumViewerWidth);
 
     s := UpperCase(AIniFile.ReadString('Params', 'NumViewer.DataTypes', ''));
     if s <> '' then begin
@@ -168,8 +172,8 @@ begin
     s := AIniFile.ReadString('Params', 'RecordViewer.Position', '');
     if s <> '' then
       RecordViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
-    RecordViewerHeight := AIniFile.ReadInteger('Params', 'RecordViewer.Height', RecordViewerHeight);
-    RecordViewerWidth := AIniFile.ReadInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
+    //RecordViewerHeight := AIniFile.ReadInteger('Params', 'RecordViewer.Height', RecordViewerHeight);
+    //RecordViewerWidth := AIniFile.ReadInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
 
     s := AIniFile.ReadString('Params', 'RecordViewer.ColWidths', '');
     if s <> '' then begin
@@ -254,14 +258,20 @@ begin
     AIniFile.WriteInteger('Params', 'CharFieldForegroundColor',
       Integer(CharFieldForegroundColor));
 
+    AIniFile.WriteInteger('Params', 'LeftPanelWidth', LeftPaneLWidth);
+    AIniFile.WriteInteger('Params', 'RightPanelWidth', RightPanelWidth);
+    AIniFile.WriteInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
+
     AIniFile.WriteBool('Params', 'NumViewer.Visible',
       NumViewerVisible);
     AIniFile.WriteString('Params', 'NumViewer.Position',
       GetEnumName(TypeInfo(TViewerPosition), integer(NumViewerPosition)));
+    {
     if NumViewerPosition in [vpLeft, vpRight] then
       AIniFile.WriteInteger('Params', 'NumViewer.Width', NumViewerWidth);
     if NumViewerPosition in [vpBottom] then
       AIniFile.WriteInteger('Params', 'NumViewer.Height', NumViewerHeight);
+      }
     s := '';
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
       if dt in NumViewerDataTypes then s := s + DataTypeNames[dt] + ';';
@@ -276,10 +286,12 @@ begin
       RecordViewerVisible);
     AIniFile.WriteString('Params', 'RecordViewer.Position',
       GetEnumName(TypeInfo(TViewerPosition), integer(RecordViewerPosition)));
+    {
     if RecordViewerPosition in [vpLeft, vpRight] then
       AIniFile.WriteInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
     if RecordViewerPosition in [vpBottom] then
       AIniFile.WriteInteger('Params', 'RecordViewer.Height', RecordViewerHeight);
+    }
 
     s := IntToStr(HexParams.RecordViewerColWidths[0]);
     for i := 1 to High(TRecordViewerColWidths) do
