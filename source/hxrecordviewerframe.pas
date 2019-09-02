@@ -6,8 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, ActnList,
-  ComCtrls, StdCtrls, ExtCtrls, MPHexEditor,
-  hxGlobal, hxBasicViewerFrame, hxViewerItems, hxViewerGrids;
+  ComCtrls, StdCtrls, ExtCtrls,
+  MPHexEditor,
+  hxGlobal, hxViewerItems, hxViewerGrids, hxGridViewerFrame;
 
 type
 
@@ -42,7 +43,7 @@ type
 
   { TRecordViewerFrame }
 
-  TRecordViewerFrame = class(TBasicViewerFrame)
+  TRecordViewerFrame = class(TGridViewerFrame)
     acAdd: TAction;
     acEdit: TAction;
     acSaveAs: TAction;

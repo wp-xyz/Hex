@@ -27,10 +27,10 @@ type               (*
     FSplitter: TSplitter;
     FPosition: TViewerPosition;
     function GetPosition: TViewerPosition;
-    procedure SetAlign(AValue: TAlign); override;
   protected
     procedure AddSplitter(AAlign: TAlign);
     procedure RemoveSplitters;
+    procedure SetAlign(AValue: TAlign); override;
     procedure SetVisible(AValue: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -70,6 +70,18 @@ begin
   if FViewers.Count = MAX_VIEWERS then
     raise Exception.CreateFmt('[TViewerPanel.Add] Only %d viewers supported.', [MAX_VIEWERS]);
 
+  WriteLn(AViewer.ClassName);
+  if AViewer.Parent = nil then
+    WriteLn('NO PARENT')
+  else begin
+    WriteLn(AViewer.Parent.ClassName);
+    WriteLn('Parent.Height: ', AViewer.parent.Height);
+  end;
+  WriteLn('Height: ', Height);
+  WriteLn('Self.Height: ', Self.Height);
+  WriteLn('AViewer.Height: ', AViewer.Height);
+  WriteLn;
+
   FViewers.Add(AViewer);
   AViewer.Parent := self;
   RemoveSplitters;
@@ -78,16 +90,16 @@ begin
     1: AViewer.Align := alClient;
     2: if (FPosition = vpLeft) or (FPosition = vpRight) then
        begin
-         TBasicViewerFrame(FViewers[0]).Align := alTop;
-         TBasicViewerFrame(FViewers[0]).Height := Height div 2;
-         AViewer.Align := alClient;
-         AddSplitter(alTop);
+         AViewer.Height := Height div 2;
+         AViewer.Align := alBottom;
+         AddSplitter(alBottom);
+         TBasicViewerFrame(FViewers[0]).Align := alClient;
        end else
        begin
-         TBasicViewerFrame(FViewers[0]).Align := alLeft;
-         TBasicViewerFrame(FViewers[0]).Width := Width div 2;
-         AViewer.Align := alClient;
-         AddSplitter(alLeft);
+         AViewer.Width := Width div 2;
+         AViewer.Align := alRight;
+         AddSplitter(alRight);
+         TBasicViewerFrame(FViewers[0]).Align := alClient;
        end;
     3: if (FPosition = vpLeft) or (FPosition = vpRight) then
        begin

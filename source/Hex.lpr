@@ -7,9 +7,10 @@ uses
   cthreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager, hxDataModule,
-  hxBasicViewerFrame, hxnumviewerframe, hxRecordViewerFrame, hxSettingsDlg,
-  hxGotoDlg, hxRecordEditorForm, hxViewerItems, hxViewerGrids, hxViewerPanel;
+  Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager,
+  hxDataModule, hxViewerItems, hxViewerGrids, hxViewerPanel,
+  hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame,
+  hxSettingsDlg, hxGotoDlg, hxRecordEditorForm, hxGridViewerFrame;
 
 {$R *.res}
 

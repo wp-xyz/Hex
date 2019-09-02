@@ -175,12 +175,15 @@ begin
           TryStrToInt(sa[i], NumViewerColWidths[i]);
     end;
 
+    ObjectViewerVisible := AIniFile.ReadBool('Params', 'ObjectViewer.Visible', ObjectViewerVisible);
+    s := AIniFile.ReadString('Params', 'ObjectViewer.Position', '');
+    if s <> '' then
+      ObjectViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
+
     RecordViewerVisible := AIniFile.ReadBool('Params', 'RecordViewer.Visible', RecordViewerVisible);
     s := AIniFile.ReadString('Params', 'RecordViewer.Position', '');
     if s <> '' then
       RecordViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
-    //RecordViewerHeight := AIniFile.ReadInteger('Params', 'RecordViewer.Height', RecordViewerHeight);
-    //RecordViewerWidth := AIniFile.ReadInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
 
     s := AIniFile.ReadString('Params', 'RecordViewer.ColWidths', '');
     if s <> '' then
@@ -292,6 +295,11 @@ begin
     for i := 1 to High(TNumViewerColWidths) do
       s := s + ',' + IntToStr(HexParams.NumViewerColWidths[i]);
     AIniFile.WriteString('Params', 'NumViewer.ColWidths', s);
+
+    AIniFile.WriteBool('Params', 'ObjectViewer.Visible',
+      ObjectViewerVisible);
+    AIniFile.WriteString('Params', 'ObjectViewer.Position',
+      GetEnumName(TypeInfo(TViewerPosition), integer(ObjectViewerPosition)));
 
     AIniFile.WriteBool('Params', 'RecordViewer.Visible',
       RecordViewerVisible);

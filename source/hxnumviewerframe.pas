@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Grids,
   MPHexEditor,
-  hxGlobal, hxViewerGrids, hxBasicViewerFrame;
+  hxGlobal, hxViewerGrids, hxGridViewerFrame;
 
 type
 
@@ -26,7 +26,7 @@ type
 
   { TNumViewerFrame }
 
-  TNumViewerFrame = class(TBasicViewerFrame)
+  TNumViewerFrame = class(TGridViewerFrame)
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;

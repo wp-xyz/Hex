@@ -8,8 +8,8 @@ uses
   Classes, SysUtils, Graphics,
   Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
   MPHexEditor,
-  hxGlobal, hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame,
-  hxViewerPanel;
+  hxGlobal, hxViewerPanel,
+  hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
 
@@ -25,6 +25,7 @@ type
     FHexEditor: TMPHexEditor;
     FNumViewer: TNumViewerFrame;
     FRecordViewer: TRecordViewerFrame;
+    FObjectViewer: TObjectViewerFrame;
     FStatusbarItems: TStatusbarItems;
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
@@ -39,6 +40,11 @@ type
     function GetNumViewerPosition: TViewerPosition;
     procedure SetNumViewerPosition(AValue: TViewerPosition);
 
+    function GetShowObjectViewer: Boolean;
+    procedure SetShowObjectViewer(AValue: Boolean);
+    function GetObjectViewerPosition: TViewerPosition;
+    procedure SetObjectViewerPosition(AValue: TViewerPosition);
+
     function GetShowRecordViewer: Boolean;
     procedure SetShowRecordViewer(AValue: Boolean);
     function GetRecordViewerPosition: TViewerPosition;
@@ -50,6 +56,7 @@ type
     procedure CreateHexEditor;
     procedure CreateNumViewer;
     procedure CreateRecordViewer;
+    procedure CreateObjectViewer;
 //    procedure FixViewerSplitterPosition(AViewer: TControl; ASplitter: TSplitter);
     function GetViewerPanel(APosition: TViewerPosition): TViewerPanel;
     procedure HexEditorChanged(Sender: TObject);
@@ -76,10 +83,14 @@ type
       read FHexEditor;
     property NumViewerPosition: TViewerPosition
       read GetNumViewerPosition write SetNumViewerPosition;
+    property ObjectViewerPosition: TViewerPosition
+      read GetObjectViewerPosition write SetObjectViewerPosition;
     property RecordViewerPosition: TViewerPosition
       read GetRecordViewerPosition write SetRecordViewerPosition;
     property ShowNumViewer: Boolean
       read GetShowNumViewer write SetShowNumViewer;
+    property ShowObjectViewer: Boolean
+      read GetShowObjectViewer write SetShowObjectViewer;
     property ShowRecordViewer: Boolean
       read GetShowRecordViewer write SetShowRecordViewer;
     property OnChange: TNotifyEvent
@@ -172,6 +183,12 @@ begin
       AParams.NumViewerColWidths[i] := FNumViewer.ColWidths[i];
   end;
 
+  if Assigned(FObjectViewer) then
+  begin
+    AParams.ObjectViewerVisible := GetShowObjectViewer;
+    AParams.ObjectViewerPosition := GetObjectViewerPosition;
+  end;
+
   if Assigned(FRecordViewer) then
   begin
     AParams.RecordViewerVisible := GetShowRecordViewer;
@@ -231,6 +248,12 @@ begin
     SetNumViewerPosition(AParams.NumViewerPosition);
     for i := 0 to High(AParams.NumViewerColWidths) do
       FNumViewer.ColWidths[i] := AParams.NumViewerColWidths[i];
+  end;
+
+  ShowObjectViewer := AParams.ObjectViewerVisible;   // this creates the ObjectViewer
+  if Assigned(FObjectViewer) then
+  begin
+    SetObjectViewerPosition(AParams.ObjectViewerPosition);
   end;
 
   ShowRecordViewer := AParams.RecordViewerVisible;   // this creates the RecordViewer
@@ -293,6 +316,17 @@ begin
   panel.AddViewer(FRecordViewer);
 end;
 
+procedure THexEditorFrame.CreateObjectViewer;
+var
+  panel: TViewerPanel;
+begin
+  FObjectViewer.Free;
+  FObjectViewer := TObjectViewerFrame.Create(self);
+  FObjectViewer.Name := '';
+  panel := GetViewerPanel(HexParams.ObjectViewerPosition);
+  panel.AddViewer(FObjectViewer);
+end;
+
 function THexEditorFrame.GetFileName: String;
 begin
   if Assigned(FHexEditor) then
@@ -327,6 +361,14 @@ begin
     raise Exception.Create('[THexEditorFrame.GetNumViewerPosition] Unknown parent.');
 end;
 
+function THexEditorFrame.GetObjectViewerPosition: TViewerPosition;
+begin
+  if FObjectViewer.Parent is TViewerPanel then
+    Result := TViewerPanel(FObjectViewer.Parent).Position
+  else
+    raise Exception.Create('[THexEditorFrame.GetObjectViewerPosition] Unknown parent.');
+end;
+
 function THexEditorFrame.GetOffsetDisplayHexPrefix(AOffsetFormat: String): String;
 var
   p1, p2: Integer;
@@ -339,6 +381,11 @@ end;
 function THexEditorFrame.GetShowNumViewer: Boolean;
 begin
   Result := (FNumViewer <> nil) and FNumViewer.Visible;
+end;
+
+function THexEditorFrame.GetShowObjectViewer: Boolean;
+begin
+  Result := (FObjectViewer <> nil) and FObjectViewer.Visible;
 end;
 
 function THexEditorFrame.GetRecordViewerPosition: TViewerPosition;
@@ -368,6 +415,8 @@ begin
   UpdateStatusBar;
   if Assigned(FNumViewer) then
     FNumViewer.UpdateData(FHexEditor);
+  if Assigned(FObjectViewer) then
+    FObjectViewer.UpdateData(FHexEditor);
   if Assigned(FRecordViewer) then
     FRecordViewer.UpdateData(FHexEditor);
   if Assigned(FOnChange) then
@@ -473,6 +522,22 @@ begin
   StatusBar.Top := Height * 2;
 end;
 
+procedure THexEditorFrame.SetObjectViewerPosition(AValue: TViewerPosition);
+var
+  oldPanel, newPanel: TViewerPanel;
+begin
+  oldPanel := FObjectViewer.Parent as TViewerPanel;
+  newPanel := GetViewerPanel(AValue);
+
+  oldPanel.DeleteViewer(FObjectViewer);
+  newPanel.AddViewer(FObjectViewer);
+
+  oldPanel.UpdateLayout;
+  newPanel.UpdateLayout;
+
+  StatusBar.Top := Height * 2;
+end;
+
 procedure THexEditorFrame.SetOnChange(AValue: TNotifyEvent);
 begin
   FOnChange := AValue;
@@ -504,27 +569,6 @@ begin
   StatusBar.Top := Height * 2;
 end;
 
-procedure THexEditorFrame.SetShowRecordViewer(AValue: Boolean);
-begin
-  if AValue then
-  begin
-    // Show record viewer
-    if Assigned(FRecordViewer) then
-      exit;
-    CreateRecordViewer;
-    FRecordViewer.UpdateData(HexEditor);
-    HexParams.RecordViewerVisible := true;
-  end else
-  begin
-    // Hide record viewer
-    if not Assigned(FRecordViewer) then
-      exit;
-    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
-    FreeAndNil(FRecordViewer);
-    HexParams.RecordViewerVisible := false;
-  end;
-end;
-
 procedure THexEditorFrame.SetShowNumViewer(AValue: Boolean);
 begin
   if AValue then
@@ -543,6 +587,48 @@ begin
     (FNumViewer.Parent as TViewerPanel).DeleteViewer(FNumViewer);
     FreeAndNil(FNumViewer);
     HexParams.NumViewerVisible := false;
+  end;
+end;
+
+procedure THexEditorFrame.SetShowObjectViewer(AValue: Boolean);
+begin
+  if AValue then
+  begin
+    // Show object viewer
+    if Assigned(FObjectViewer) then
+      exit;
+    CreateObjectViewer;
+    FObjectViewer.UpdateData(HexEditor);
+    HexParams.ObjectViewerVisible := true;
+  end else
+  begin
+    // Hide object viewer
+    if not Assigned(FObjectViewer) then
+      exit;
+    (FObjectViewer.Parent as TViewerPanel).DeleteViewer(FObjectViewer);
+    FreeAndNil(FObjectViewer);
+    HexParams.ObjectViewerVisible := false;
+  end;
+end;
+
+procedure THexEditorFrame.SetShowRecordViewer(AValue: Boolean);
+begin
+  if AValue then
+  begin
+    // Show record viewer
+    if Assigned(FRecordViewer) then
+      exit;
+    CreateRecordViewer;
+    FRecordViewer.UpdateData(HexEditor);
+    HexParams.RecordViewerVisible := true;
+  end else
+  begin
+    // Hide record viewer
+    if not Assigned(FRecordViewer) then
+      exit;
+    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
+    FreeAndNil(FRecordViewer);
+    HexParams.RecordViewerVisible := false;
   end;
 end;
 

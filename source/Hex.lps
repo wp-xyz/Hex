@@ -4,12 +4,12 @@
     <PathDelim Value="\"/>
     <Version Value="12"/>
     <BuildModes Active="Default"/>
-    <Units Count="58">
+    <Units Count="60">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="77" Y="12"/>
+        <CursorPos X="36" Y="11"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -33,9 +33,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxHexEditorFrame"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="165"/>
-        <CursorPos Y="182"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="297"/>
+        <CursorPos X="14" Y="338"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -44,9 +44,9 @@
         <Filename Value="hxglobal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxGlobal"/>
-        <EditorIndex Value="16"/>
-        <TopLine Value="178"/>
-        <CursorPos X="84" Y="186"/>
+        <EditorIndex Value="17"/>
+        <TopLine Value="181"/>
+        <CursorPos X="39" Y="197"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
@@ -61,7 +61,7 @@
         <Filename Value="hxstrings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxStrings"/>
-        <EditorIndex Value="22"/>
+        <EditorIndex Value="24"/>
         <CursorPos X="23" Y="21"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -71,8 +71,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxUtils"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="513"/>
-        <CursorPos X="16" Y="518"/>
+        <TopLine Value="166"/>
+        <CursorPos X="32" Y="179"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -101,7 +101,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="hxDataModule"/>
-        <EditorIndex Value="21"/>
+        <EditorIndex Value="23"/>
         <CursorPos X="86" Y="10"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -113,10 +113,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxBasicViewerFrame"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="58"/>
-        <CursorPos X="3" Y="67"/>
+        <EditorIndex Value="8"/>
+        <CursorPos X="49" Y="8"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -129,11 +127,9 @@
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxNumViewerFrame"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="133"/>
-        <CursorPos X="3" Y="167"/>
+        <CursorPos X="34" Y="10"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit10>
       <Unit11>
         <Filename Value="hxsettingsdlg.pas"/>
@@ -142,10 +138,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxSettingsDlg"/>
-        <EditorIndex Value="20"/>
-        <TopLine Value="264"/>
-        <CursorPos Y="292"/>
-        <UsageCount Value="189"/>
+        <EditorIndex Value="22"/>
+        <TopLine Value="63"/>
+        <CursorPos Y="87"/>
+        <UsageCount Value="192"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit11>
@@ -159,7 +155,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="65"/>
         <CursorPos X="49" Y="54"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="157"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit12>
@@ -170,12 +166,11 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxRecordViewerFrame"/>
-        <EditorIndex Value="17"/>
-        <TopLine Value="587"/>
-        <CursorPos X="7" Y="596"/>
-        <UsageCount Value="140"/>
+        <EditorIndex Value="18"/>
+        <CursorPos X="3" Y="10"/>
+        <UsageCount Value="143"/>
         <Bookmarks Count="1">
-          <Item0 X="17" Y="431" ID="1"/>
+          <Item0 X="17" Y="432" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -187,10 +182,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxRecordEditorForm"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="220"/>
         <CursorPos X="3" Y="178"/>
-        <UsageCount Value="118"/>
+        <UsageCount Value="121"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit14>
@@ -198,30 +193,31 @@
         <Filename Value="hxvieweritems.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerItems"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <TopLine Value="25"/>
         <CursorPos X="12" Y="52"/>
-        <UsageCount Value="110"/>
+        <UsageCount Value="113"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="hxviewergrids.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerGrids"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="240"/>
         <CursorPos Y="307"/>
-        <UsageCount Value="110"/>
+        <UsageCount Value="113"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
         <Filename Value="hxviewerpanel.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerPanel"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="59"/>
-        <CursorPos X="4" Y="69"/>
-        <UsageCount Value="32"/>
+        <TopLine Value="67"/>
+        <CursorPos X="7" Y="79"/>
+        <UsageCount Value="35"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
@@ -234,10 +230,10 @@
       <Unit19>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\comctrls.pp"/>
         <UnitName Value="ComCtrls"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="20"/>
         <TopLine Value="2295"/>
         <CursorPos X="33" Y="2133"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="15"/>
         <Loaded Value="True"/>
       </Unit19>
       <Unit20>
@@ -250,19 +246,19 @@
       <Unit21>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\forms.pp"/>
         <UnitName Value="Forms"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="307"/>
         <CursorPos X="17" Y="324"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\controls.pp"/>
         <UnitName Value="Controls"/>
-        <EditorIndex Value="15"/>
-        <TopLine Value="1262"/>
-        <CursorPos X="15" Y="1280"/>
-        <UsageCount Value="20"/>
+        <EditorIndex Value="16"/>
+        <TopLine Value="1743"/>
+        <CursorPos X="14" Y="1759"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit22>
       <Unit23>
@@ -353,10 +349,10 @@
       <Unit35>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\grids.pas"/>
         <UnitName Value="Grids"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <TopLine Value="1364"/>
         <CursorPos X="47" Y="1379"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="59"/>
         <Loaded Value="True"/>
       </Unit35>
       <Unit36>
@@ -488,10 +484,10 @@
       <Unit54>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\extctrls.pp"/>
         <UnitName Value="ExtCtrls"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="366"/>
         <CursorPos X="20" Y="322"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="18"/>
         <Loaded Value="True"/>
       </Unit54>
       <Unit55>
@@ -511,133 +507,160 @@
       <Unit57>
         <Filename Value="hxhexeditor.pas"/>
         <UnitName Value="hxHexEditor"/>
-        <EditorIndex Value="19"/>
+        <EditorIndex Value="21"/>
         <TopLine Value="23"/>
         <CursorPos X="50" Y="46"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit57>
+      <Unit58>
+        <Filename Value="hxobjectviewerframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ObjectViewerFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="hxObjectViewerFrame"/>
+        <EditorIndex Value="19"/>
+        <CursorPos X="51" Y="7"/>
+        <UsageCount Value="23"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="GridViewerFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="hxGridViewerFrame"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="51"/>
+        <CursorPos X="3" Y="55"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit59>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="177" TopLine="150"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="601" Column="16" TopLine="585"/>
       </Position1>
       <Position2>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="178" TopLine="150"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="323" TopLine="316"/>
       </Position2>
       <Position3>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="179" TopLine="151"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="324" TopLine="316"/>
       </Position3>
       <Position4>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="183" TopLine="155"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="325" TopLine="316"/>
       </Position4>
       <Position5>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="184" TopLine="156"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="326" TopLine="316"/>
       </Position5>
       <Position6>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="185" TopLine="157"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="327" TopLine="316"/>
       </Position6>
       <Position7>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="186" TopLine="158"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="70" TopLine="53"/>
       </Position7>
       <Position8>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="189" TopLine="161"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="73" TopLine="53"/>
       </Position8>
       <Position9>
-        <Filename Value="hxmain.pas"/>
-        <Caret Line="286" TopLine="272"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="74" TopLine="53"/>
       </Position9>
       <Position10>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="277" TopLine="259"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="75" TopLine="53"/>
       </Position10>
       <Position11>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="278" TopLine="259"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="77" TopLine="59"/>
       </Position11>
       <Position12>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="280" TopLine="259"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="79" Column="15" TopLine="62"/>
       </Position12>
       <Position13>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="281" TopLine="259"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="91" TopLine="65"/>
       </Position13>
       <Position14>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="284" TopLine="259"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="338" Column="14" TopLine="297"/>
       </Position14>
       <Position15>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="285" TopLine="259"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="70" Column="3" TopLine="62"/>
       </Position15>
       <Position16>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="287" TopLine="259"/>
+        <Filename Value="hxbasicviewerframe.pas"/>
+        <Caret Line="71" Column="33" TopLine="71"/>
       </Position16>
       <Position17>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="288" TopLine="260"/>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <Caret Line="82"/>
       </Position17>
       <Position18>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="292" TopLine="264"/>
+        <Filename Value="hxnumviewerframe.pas"/>
+        <Caret Line="10" Column="34"/>
       </Position18>
       <Position19>
-        <Filename Value="hxhexeditorframe.pas"/>
-        <Caret Line="677" Column="5" TopLine="655"/>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <Caret Line="9" Column="15"/>
       </Position19>
       <Position20>
-        <Filename Value="hxmain.pas"/>
-        <Caret Line="289" Column="62" TopLine="272"/>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <Caret Line="8" Column="64"/>
       </Position20>
       <Position21>
-        <Filename Value="hxmain.pas"/>
-        <Caret Line="284" TopLine="272"/>
+        <Filename Value="hxrecordviewerframe.pas"/>
+        <Caret Line="10" Column="3"/>
       </Position21>
       <Position22>
-        <Filename Value="hxutils.pas"/>
-        <Caret Line="34" Column="45" TopLine="18"/>
+        <Filename Value="hxbasicviewerframe.pas"/>
+        <Caret Line="10" TopLine="2"/>
       </Position22>
       <Position23>
-        <Filename Value="hxutils.pas"/>
-        <Caret Line="456" TopLine="424"/>
+        <Filename Value="hxbasicviewerframe.pas"/>
+        <Caret Line="18" Column="31"/>
       </Position23>
       <Position24>
-        <Filename Value="hxvieweritems.pas"/>
-        <Caret Line="22" Column="24" TopLine="9"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="34" TopLine="13"/>
       </Position24>
       <Position25>
-        <Filename Value="hxvieweritems.pas"/>
-        <Caret Line="86" Column="3" TopLine="84"/>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <Caret Line="20" Column="34" TopLine="3"/>
       </Position25>
       <Position26>
-        <Filename Value="hxvieweritems.pas"/>
-        <Caret Line="42" Column="14" TopLine="22"/>
+        <Filename Value="hxgridviewerframe.pas"/>
+        <Caret Line="55" Column="3" TopLine="51"/>
       </Position26>
       <Position27>
-        <Filename Value="hxvieweritems.pas"/>
-        <Caret Line="127" Column="3" TopLine="100"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="30" TopLine="13"/>
       </Position27>
       <Position28>
-        <Filename Value="hxvieweritems.pas"/>
-        <Caret Line="52" Column="12" TopLine="25"/>
+        <Filename Value="hxbasicviewerframe.pas"/>
+        <Caret Line="25" Column="52"/>
       </Position28>
       <Position29>
-        <Filename Value="hxbasicviewerframe.pas"/>
-        <Caret Line="46" TopLine="19"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="38" Column="23" TopLine="13"/>
       </Position29>
       <Position30>
-        <Filename Value="hxbasicviewerframe.pas"/>
-        <Caret Line="25" Column="17" TopLine="20"/>
+        <Filename Value="hxviewerpanel.pas"/>
+        <Caret Line="76" Column="30" TopLine="68"/>
       </Position30>
     </JumpHistory>
     <RunParams>

@@ -15,6 +15,7 @@ type
 
   TSettingsForm = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     btnRestoreDefaults: TButton;
     ButtonPanel: TButtonPanel;
     cbBytesPerRow: TComboBox;
@@ -22,6 +23,7 @@ type
     cbOffsetDisplayBase: TComboBox;
     cbHexPrefix: TComboBox;
     cbRecordViewerVisible: TCheckBox;
+    cbObjectViewerVisible: TCheckBox;
     cbViewOnly: TCheckBox;
     cbWriteProtected: TCheckBox;
     cbAllowInsertMode: TCheckBox;
@@ -35,6 +37,7 @@ type
     clbCurrentOffsetBackground: TColorButton;
     clbOffsetForeground: TColorButton;
     clbCurrentOffsetForeground: TColorButton;
+    cmbObjectViewerPosition: TComboBox;
     cmbRulerNumberBase: TComboBox;
     cbRulerVisible: TCheckBox;
     cbNumViewerVisible: TCheckBox;
@@ -56,6 +59,7 @@ type
     gbNumViewer: TGroupBox;
     gbRecordViewer: TGroupBox;
     gbNumViewerDataTypes: TGroupBox;
+    gbObjectViewer: TGroupBox;
     lblCurrentOffsetColor: TLabel;
     lblChangedColor: TLabel;
     lblEvenColumnForegroundColor: TLabel;
@@ -79,8 +83,9 @@ type
     pgEditor: TTabSheet;
     rgByteOrder: TRadioGroup;
     procedure btnRestoreDefaultsClick(Sender: TObject);
-    procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbNumViewerVisibleChange(Sender: TObject);
+    procedure cbObjectViewerVisibleChange(Sender: TObject);
+    procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbViewOnlyChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -115,11 +120,6 @@ begin
   PageControl.ActivePageIndex := idx;
 end;
 
-procedure TSettingsForm.cbRecordViewerVisibleChange(Sender: TObject);
-begin
-  cmbRecordViewerPosition.Enabled := cbRecordViewerVisible.Checked;
-end;
-
 procedure TSettingsForm.cbNumViewerVisibleChange(Sender: TObject);
 var
   dt: TDataType;
@@ -127,6 +127,16 @@ begin
   cmbNumViewerPosition.Enabled := cbNumViewerVisible.Checked;
   for dt := dtFirstNumericDataType to dtLastNumericDataType do
     FDataTypeCheckboxes[dt].Enabled := cbNumViewerVisible.Checked;
+end;
+
+procedure TSettingsForm.cbObjectViewerVisibleChange(Sender: TObject);
+begin
+  cmbObjectViewerPosition.Enabled := cbObjectViewerVisible.Checked;
+end;
+
+procedure TSettingsForm.cbRecordViewerVisibleChange(Sender: TObject);
+begin
+  cmbRecordViewerPosition.Enabled := cbRecordViewerVisible.Checked;
 end;
 
 procedure TSettingsForm.cbViewOnlyChange(Sender: TObject);
@@ -221,6 +231,11 @@ begin
       if FDataTypeCheckBoxes[dt].Checked then Include(NumViewerDataTypes, dt);
     cbNumViewerVisibleChange(nil);
 
+    { ObjectViewer }
+    ObjectViewerVisible := cbObjectViewerVisible.Checked;
+    ObjectViewerPosition := TViewerPosition(cmbObjectViewerPosition.ItemIndex);
+    cbObjectViewerVisibleChange(nil);
+
     { RecordViewer }
     RecordViewerVisible := cbRecordViewerVisible.Checked;
     RecordViewerPosition := TViewerPosition(cmbRecordViewerPosition.ItemIndex);
@@ -293,7 +308,6 @@ begin
   SetFormatData(AParams);
   SetColorData(AParams);
   SetViewerData(AParams);
-  //SetRipperData(AParams);
 //  SetWinData(WinParams);
 end;
 
@@ -383,6 +397,9 @@ begin
     cmbNumViewerPosition.ItemIndex := ord(NumViewerPosition);
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
       FDataTypeCheckboxes[dt].Checked := dt in NumViewerDataTypes;
+
+    cbObjectViewerVisible.Checked := ObjectViewerVisible;
+    cmbObjectViewerPosition.ItemIndex := ord(ObjectViewerPosition);
 
     cbRecordViewerVisible.Checked := RecordViewerVisible;
     cmbRecordViewerPosition.ItemIndex := ord(RecordViewerPosition);

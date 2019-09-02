@@ -142,15 +142,14 @@ type
 
     NumViewerVisible: Boolean;
     NumViewerPosition: TViewerPosition;
-    //NumViewerHeight: Integer;
-    //NumViewerWidth: Integer;
     NumViewerDataTypes: TDataTypes;
     NumViewerColWidths: TNumViewerColWidths;
 
+    ObjectViewerVisible: Boolean;
+    ObjectViewerPosition: TViewerPosition;
+
     RecordViewerVisible: Boolean;
     RecordViewerPosition: TViewerPosition;
-    //RecordViewerHeight: Integer;
-    //RecordViewerWidth: Integer;
     RecordViewerColWidths: TRecordViewerColWidths;
 
     SettingsPageIndex: Integer;
@@ -196,15 +195,14 @@ var
 
     NumViewerVisible: true;
     NumViewerPosition: vpRight;
-//    NumViewerHeight: 250;
-//    NumViewerWidth: 250;
     NumViewerDataTypes: AllNumericDataTypes;
     NumViewerColWidths: (70, 40, 24);
 
+    ObjectViewerVisible: false;
+    ObjectViewerPosition: vpRight;
+
     RecordViewerVisible: false;
     RecordViewerPosition: vpBottom;
-//    RecordViewerHeight: 250;
-//    RecordViewerWidth: 250;
     RecordViewerColWidths: (100, 70, 40);
 
     SettingsPageIndex: 0
