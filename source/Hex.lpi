@@ -28,15 +28,18 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="OMultiPanel_Design"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="OMultiPanel_Design"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
-    <Units Count="20">
+    <Units Count="21">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -167,9 +170,17 @@
         <Filename Value="hxabout.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="AboutForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxAbout"/>
       </Unit19>
+      <Unit20>
+        <Filename Value="hxpascalrecordform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PascalRecordForm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="hxPascalRecordForm"/>
+      </Unit20>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

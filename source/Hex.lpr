@@ -7,10 +7,10 @@ uses
   cthreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager,
-  hxDataModule, hxViewerItems, hxViewerGrids,
-  hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame,
-  hxSettingsDlg, hxGotoDlg, hxRecordEditorForm, hxGridViewerFrame, hxAbout;
+  Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager, hxDataModule,
+  hxViewerItems, hxViewerGrids, hxBasicViewerFrame, hxNumViewerFrame,
+  hxRecordViewerFrame, hxObjectViewerFrame, hxSettingsDlg, hxGotoDlg,
+  hxRecordEditorForm, hxGridViewerFrame, hxAbout, hxPascalRecordForm;
 
 {$R *.res}
 
@@ -21,6 +21,7 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TCommonData, CommonData);
   Application.CreateForm(TAboutForm, AboutForm);
+  Application.CreateForm(TPascalRecordForm, PascalRecordForm);
   Application.Run;
 end.
 

@@ -71,7 +71,7 @@ const
   DataTypeNames: array[TDataType] of string = (
     'Byte', 'ShortInt', 'Word', 'SmallInt', 'LongWord', 'LongInt', 'Int64',
     'Currency',
-    'Single', 'Double', 'Extended', 'Real',
+    'Single', 'Double', 'Extended', 'Real48',
     'ShortString', 'AnsiString', 'PChar', 'Char array',
     'WideString', 'PWideChar', 'WideChar array'
   );

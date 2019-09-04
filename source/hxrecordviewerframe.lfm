@@ -91,6 +91,18 @@ inherited RecordViewerFrame: TRecordViewerFrame
       Top = 2
       Action = acNextRecord
     end
+    object ToolButton15: TToolButton
+      Left = 251
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton15'
+      Style = tbsDivider
+    end
+    object ToolButton16: TToolButton
+      Left = 256
+      Top = 2
+      Action = acMakePascalRecord
+    end
   end
   object ActionList: TActionList[2]
     Images = CommonData.Images
@@ -161,6 +173,12 @@ inherited RecordViewerFrame: TRecordViewerFrame
       Hint = 'Go forward|Move forward by to next record'
       ImageIndex = 13
       OnExecute = acNextRecordExecute
+    end
+    object acMakePascalRecord: TAction
+      Category = 'Record'
+      Caption = 'Write Pascal record'
+      ImageIndex = 14
+      OnExecute = acMakePascalRecordExecute
     end
   end
   object OpenDialog: TOpenDialog[3]

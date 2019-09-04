@@ -34,6 +34,7 @@ type
     procedure Advance(ADirection: Integer);
     procedure DeleteItem(ARow: Integer);
     procedure LoadRecordFromFile(const AFileName: String);
+    procedure MakePascalRecord(AList: TStrings);
     procedure MoveItemDown;
     procedure MoveItemUp;
     procedure SaveRecordToFile(const AFileName: String);
@@ -54,6 +55,7 @@ type
     acSave: TAction;
     acPrevRecord: TAction;
     acNextRecord: TAction;
+    acMakePascalRecord: TAction;
     ActionList: TActionList;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
@@ -64,6 +66,8 @@ type
     ToolButton12: TToolButton;
     ToolButton13: TToolButton;
     ToolButton14: TToolButton;
+    ToolButton15: TToolButton;
+    ToolButton16: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -76,6 +80,7 @@ type
     procedure acDeleteExecute(Sender: TObject);
     procedure acEditExecute(Sender: TObject);
     procedure acLoadExecute(Sender: TObject);
+    procedure acMakePascalRecordExecute(Sender: TObject);
     procedure acMoveDownExecute(Sender: TObject);
     procedure acMoveUpExecute(Sender: TObject);
     procedure acNextRecordExecute(Sender: TObject);
@@ -102,7 +107,7 @@ implementation
 
 uses
   TypInfo, Math,
-  hxHexEditor, hxRecordEditorForm;
+  hxHexEditor, hxRecordEditorForm, hxPascalRecordForm;
 
 {------------------------------------------------------------------------------}
 {                           TRecordViewerGrid                                  }
@@ -377,6 +382,47 @@ begin
   UpdateData(HexEditor);
 end;
 
+procedure TRecordViewerGrid.MakePascalRecord(AList: TStrings);
+const
+  SPACE = '  ';
+  LONG_SPACE = '    ';
+var
+  i: Integer;
+  item: TRecordDataItem;
+begin
+  AList.BeginUpdate;
+  try
+    AList.Add('type');
+    AList.Add(SPACE + '%s = packed record');
+    for i:=0 to FDataList.Count-1 do begin
+      item := FDataList[i] as TRecordDataItem;
+      case item.DataType of
+        dtShortString:
+          AList.Add(LONG_SPACE + item.Name + ': String[' + IntToStr(item.DataSize-1) + '];');
+        dtAnsiString:
+          begin
+            AList.Add(LONG_SPACE + item.Name + 'Len: Word;');
+            AList.Add(LONG_SPACE + item.Name + ': String;');
+          end;
+        dtCharArray:
+          AList.Add(LONG_SPACE + item.Name + ': Array[0..' + IntToStr(item.DataSize-1) + '] of Char;');
+        dtWideString:
+          begin
+            AList.Add(LONG_SPACE + item.Name + 'Len: Word;');
+            AList.Add(LONG_SPACE + item.Name + ': WideString;');
+          end;
+        dtWideCharArray:
+          AList.Add(LONG_SPACE + item.Name + ': Array[0..' + IntToStr(item.DataSize div 2 - 1) + '] of WideChar;');
+        else
+          AList.Add(LONG_SPACE + item.Name + ': ' + DataTypeNames[item.Datatype] + ';');
+      end;
+    end;
+    AList.Add(SPACE + 'end;');
+  finally
+    AList.EndUpdate;
+  end;
+end;
+
 procedure TRecordViewerGrid.MoveItemDown;
 begin
   if Row = RowCount - 1 then
@@ -514,6 +560,20 @@ begin
     FileName := ExtractFileName(FileName);
     if Execute then
       RecordViewerGrid.LoadRecordFromFile(FileName);
+  end;
+end;
+
+procedure TRecordViewerFrame.acMakePascalRecordExecute(Sender: TObject);
+var
+  F: TPascalRecordForm;
+begin
+  F := TPascalRecordForm.Create(nil);
+  try
+    F.Position := poMainFormCenter;
+    RecordViewerGrid.MakePascalRecord(F.Code);
+    F.ShowModal;
+  finally
+    F.Free;
   end;
 end;
 
