@@ -7,8 +7,8 @@ interface
 uses
   Classes, SysUtils, Graphics,
   Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
-  MPHexEditor,
-  hxGlobal, hxViewerPanel,
+  MPHexEditor, OMultiPanel,
+  hxGlobal,
   hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
@@ -16,12 +16,14 @@ type
   { THexEditorFrame }
 
   THexEditorFrame = class(TFrame)
+    MainPanel: TOMultiPanel;
+    LeftPanel: TOMultiPanel;
+    CenterPanel: TOMultiPanel;
+    BottomPanel: TOMultiPanel;
+    HexPanel: TPanel;
+    RightPanel: TOMultiPanel;
     StatusBar: TStatusBar;
   private
-    FCenterPanel: TPanel;
-    FLeftPanel: TViewerPanel;
-    FRightPanel: TViewerPanel;
-    FBottomPanel: TViewerPanel;
     FHexEditor: TMPHexEditor;
     FNumViewer: TNumViewerFrame;
     FRecordViewer: TRecordViewerFrame;
@@ -57,11 +59,13 @@ type
     procedure CreateNumViewer;
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
-//    procedure FixViewerSplitterPosition(AViewer: TControl; ASplitter: TSplitter);
-    function GetViewerPanel(APosition: TViewerPosition): TViewerPanel;
+    function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
+    function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     procedure HexEditorChanged(Sender: TObject);
     procedure SetParent(AParent: TWinControl); override;
+    procedure SetViewerPosition(AViewer: TBasicViewerFrame; AValue: TViewerPosition);
     procedure UpdateStatusBarPanelWidths;
+    procedure UpdateViewerPanelVisible(APanel: TOMultiPanel);
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -109,28 +113,6 @@ uses
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
   inherited;
-
-  FLeftPanel := TViewerPanel.Create(self);
-  FLeftPanel.Parent := self;
-  FLeftPanel.Align := alLeft;
-  FLeftPanel.Visible := false;
-  FLeftPanel.Width := 250;
-
-  FRightPanel := TViewerPanel.Create(self);
-  FRightPanel.Parent := self;
-  FRightPanel.Align := alRight;
-  FRightPanel.Visible := false;
-  FRightPanel.Width := 250;
-
-  FCenterPanel := TPanel.Create(self);  // This is for the HexEditor
-  FCenterPanel.Parent := self;
-  FCenterPanel.Align := alClient;
-
-  FBottomPanel := TViewerPanel.Create(self);
-  FBottomPanel.Parent := FCenterPanel;
-  FBottomPanel.Align := alBottom;
-  FBottomPanel.Height := 250;
-  FBottomPanel.Visible := false;
 end;
 
 procedure THexEditorFrame.ActiveParams(var AParams: THexParams);
@@ -171,9 +153,9 @@ begin
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
 
-  AParams.LeftPanelWidth := FLeftPanel.Width;
-  AParams.RightPanelWidth := FRightPanel.Width;
-  AParams.BottomPanelHeight := FBottomPanel.Height;
+  AParams.LeftPanelWidth := LeftPanel.Width;
+  AParams.RightPanelWidth := RightPanel.Width;
+  AParams.BottomPanelHeight := BottomPanel.Height;
 
   if Assigned(FNumViewer) then
   begin
@@ -238,9 +220,9 @@ begin
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
 
-  FLeftPanel.Width := AParams.LeftPanelWidth;
-  FRightPanel.Width := AParams.RightPanelWidth;
-  FBottomPanel.Height := AParams.BottomPanelHeight;
+  LeftPanel.Width := AParams.LeftPanelWidth;
+  RightPanel.Width := AParams.RightPanelWidth;
+  BottomPanel.Height := AParams.BottomPanelHeight;
 
   ShowNumViewer := AParams.NumViewerVisible;         // this creates the NumViewer
   if Assigned(FNumViewer) then
@@ -265,6 +247,10 @@ begin
   end;
 
   UpdateStatusbarPanelWidths;
+  UpdateViewerPanelVisible(LeftPanel);
+  UpdateViewerPanelVisible(RightPanel);
+  UpdateViewerPanelVisible(BottomPanel);
+  MainPanel.ResizeControls;
 end;
 
 function THexEditorFrame.CanSaveFileAs(const AFileName: String): Boolean;
@@ -275,7 +261,7 @@ end;
 procedure THexEditorFrame.CreateHexEditor;
 begin
   FHexEditor := THxHexEditor.Create(self);
-  FHexEditor.Parent := FCenterPanel;
+  FHexEditor.Parent := HexPanel;
   FHexEditor.Align := alClient;
   FHexEditor.BytesPerColumn := HexParams.BytesPerColumn;
   FHexEditor.BytesPerRow := HexParams.BytesPerRow;
@@ -296,35 +282,56 @@ end;
 
 procedure THexEditorFrame.CreateNumViewer;
 var
-  panel: TViewerPanel;
+  panel: TOMultiPanel;
 begin
   FNumViewer.Free;
   FNumViewer := TNumViewerFrame.Create(self);
   FNumViewer.Name := '';
   panel := GetViewerPanel(HexParams.NumViewerPosition);
-  panel.AddViewer(FNumViewer);
+  with (panel.Parent as TOMultiPanel) do begin
+    FindPanel(panel).Visible := true;
+    ResizeControls;
+  end;
+  FNumViewer.Parent := panel;
+  with panel.PanelCollection.Add do
+    Control := FNumViewer;
+  UpdateViewerPanelVisible(panel);
 end;
 
 procedure THexEditorFrame.CreateRecordViewer;
 var
-  panel: TViewerPanel;
+  panel: TOMultiPanel;
 begin
   FRecordViewer.Free;
   FRecordViewer := TRecordViewerFrame.Create(self);
   FRecordViewer.Name := '';
   panel := GetViewerPanel(HexParams.RecordViewerPosition);
-  panel.AddViewer(FRecordViewer);
+  with (panel.Parent as TOMultiPanel) do begin
+    FindPanel(panel).Visible := true;
+    ResizeControls;
+  end;
+  FRecordViewer.Parent := panel;
+  with panel.PanelCollection.Add do
+    Control := FRecordViewer;
+  UpdateViewerPanelVisible(panel);
 end;
 
 procedure THexEditorFrame.CreateObjectViewer;
 var
-  panel: TViewerPanel;
+  panel: TOMultiPanel;
 begin
   FObjectViewer.Free;
   FObjectViewer := TObjectViewerFrame.Create(self);
   FObjectViewer.Name := '';
   panel := GetViewerPanel(HexParams.ObjectViewerPosition);
-  panel.AddViewer(FObjectViewer);
+  with (panel.Parent as TOMultiPanel) do begin
+    FindPanel(panel).Visible := true;
+    ResizeControls;
+  end;
+  FObjectViewer.Parent := panel;
+  with panel.PanelCollection.Add do
+    Control := FObjectViewer;
+  UpdateViewerPanelVisible(panel);
 end;
 
 function THexEditorFrame.GetFileName: String;
@@ -355,18 +362,12 @@ end;
 
 function THexEditorFrame.GetNumViewerPosition: TViewerPosition;
 begin
-  if FNumViewer.Parent is TViewerPanel then
-    Result := TViewerPanel(FNumViewer.Parent).Position
-  else
-    raise Exception.Create('[THexEditorFrame.GetNumViewerPosition] Unknown parent.');
+  Result := GetViewerPosition(FNumViewer);
 end;
 
 function THexEditorFrame.GetObjectViewerPosition: TViewerPosition;
 begin
-  if FObjectViewer.Parent is TViewerPanel then
-    Result := TViewerPanel(FObjectViewer.Parent).Position
-  else
-    raise Exception.Create('[THexEditorFrame.GetObjectViewerPosition] Unknown parent.');
+  Result := GetViewerPosition(FObjectViewer);
 end;
 
 function THexEditorFrame.GetOffsetDisplayHexPrefix(AOffsetFormat: String): String;
@@ -390,10 +391,7 @@ end;
 
 function THexEditorFrame.GetRecordViewerPosition: TViewerPosition;
 begin
-  if FRecordViewer.Parent is TViewerPanel then
-    Result := TVIewerPanel(FRecordViewer.Parent).Position
-  else
-    raise Exception.Create('[THexEditorFrame.GetRecordViewerPositon] Unknown parent.');
+  Result := GetViewerPosition(FRecordViewer);
 end;
 
 function THexEditorFrame.GetShowRecordViewer: Boolean;
@@ -401,13 +399,26 @@ begin
   Result := (FRecordViewer <> nil) and FRecordViewer.Visible;
 end;
 
-function THexEditorFrame.GetViewerPanel(APosition: TViewerPosition): TViewerPanel;
+function THexEditorFrame.GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
 begin
   case APosition of
-    vpLeft: Result := FLeftPanel;
-    vpRight: Result := FRightPanel;
-    vpBottom: Result := FBottomPanel;
+    vpLeft: Result := LeftPanel;
+    vpRight: Result := RightPanel;
+    vpBottom: Result := BottomPanel;
+    else raise Exception.Create('[THexEditorFrame.GetViewerPanel] Unsupported ViewerPosition.');
   end;
+end;
+
+function THexEditorFrame.GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
+begin
+  if AViewer.Parent = LeftPanel then
+    Result := vpLeft
+  else if AViewer.Parent = RightPanel then
+    Result := vpRight
+  else if AViewer.Parent = BottomPanel then
+    Result := vpBottom
+  else
+    raise Exception.Create('[THexEditorFrame.GetViewerPosition] Unsupported Parent.');
 end;
 
 procedure THexEditorFrame.HexEditorChanged(Sender: TObject);
@@ -507,35 +518,13 @@ begin
 end;
 
 procedure THexEditorFrame.SetNumViewerPosition(AValue: TViewerPosition);
-var
-  oldPanel, newPanel: TViewerPanel;
 begin
-  oldPanel := FNumViewer.Parent as TViewerPanel;
-  newPanel := GetViewerPanel(AValue);
-
-  oldPanel.DeleteViewer(FNumViewer);
-  newPanel.AddViewer(FNumViewer);
-
-  oldPanel.UpdateLayout;
-  newPanel.UpdateLayout;
-
-  StatusBar.Top := Height * 2;
+  SetViewerPosition(FNumViewer, AValue);
 end;
 
 procedure THexEditorFrame.SetObjectViewerPosition(AValue: TViewerPosition);
-var
-  oldPanel, newPanel: TViewerPanel;
 begin
-  oldPanel := FObjectViewer.Parent as TViewerPanel;
-  newPanel := GetViewerPanel(AValue);
-
-  oldPanel.DeleteViewer(FObjectViewer);
-  newPanel.AddViewer(FObjectViewer);
-
-  oldPanel.UpdateLayout;
-  newPanel.UpdateLayout;
-
-  StatusBar.Top := Height * 2;
+  SetViewerPosition(FObjectViewer, AValue);
 end;
 
 procedure THexEditorFrame.SetOnChange(AValue: TNotifyEvent);
@@ -554,22 +543,13 @@ begin
 end;
 
 procedure THexEditorFrame.SetRecordViewerPosition(AValue: TViewerPosition);
-var
-  oldPanel, newPanel: TViewerPanel;
 begin
-  oldPanel := FRecordViewer.Parent as TViewerPanel;
-  newPanel := GetViewerPanel(AValue);
-
-  oldPanel.DeleteViewer(FRecordViewer);
-  newPanel.AddViewer(FRecordViewer);
-
-  oldPanel.Updatelayout;
-  newPanel.UpdateLayout;
-
-  StatusBar.Top := Height * 2;
+  SetViewerPosition(FRecordViewer, AValue);
 end;
 
 procedure THexEditorFrame.SetShowNumViewer(AValue: Boolean);
+var
+  panel: TOMultiPanel;
 begin
   if AValue then
   begin
@@ -584,13 +564,17 @@ begin
     // Hide number viewer
     if not Assigned(FNumViewer) then
       exit;
-    (FNumViewer.Parent as TViewerPanel).DeleteViewer(FNumViewer);
+    panel := FNumViewer.Parent as TOMultiPanel;
     FreeAndNil(FNumViewer);
+    UpdateViewerPanelVisible(panel);
     HexParams.NumViewerVisible := false;
   end;
 end;
 
 procedure THexEditorFrame.SetShowObjectViewer(AValue: Boolean);
+var
+  panel: TOMultiPanel;
+  idx: Integer;
 begin
   if AValue then
   begin
@@ -605,13 +589,16 @@ begin
     // Hide object viewer
     if not Assigned(FObjectViewer) then
       exit;
-    (FObjectViewer.Parent as TViewerPanel).DeleteViewer(FObjectViewer);
+    panel := FObjectViewer.Parent as TOMultiPanel;
     FreeAndNil(FObjectViewer);
+    UpdateViewerPanelVisible(panel);
     HexParams.ObjectViewerVisible := false;
   end;
 end;
 
 procedure THexEditorFrame.SetShowRecordViewer(AValue: Boolean);
+var
+  panel: TOMultiPanel;
 begin
   if AValue then
   begin
@@ -626,10 +613,36 @@ begin
     // Hide record viewer
     if not Assigned(FRecordViewer) then
       exit;
-    (FRecordViewer.Parent as TViewerPanel).DeleteViewer(FRecordViewer);
+    panel := FRecordViewer.Parent as TOMultiPanel;
     FreeAndNil(FRecordViewer);
+    UpdateViewerPanelVisible(panel);
     HexParams.RecordViewerVisible := false;
   end;
+end;
+
+procedure THexEditorFrame.SetViewerPosition(AViewer: TBasicViewerFrame;
+  AValue: TViewerPosition);
+var
+  oldPanel, newPanel: TOMultiPanel;
+  idx: Integer;
+begin
+  if csDestroying in ComponentState then
+    exit;
+
+  // Remove from old panel
+  oldPanel := AViewer.Parent as TOMultiPanel;
+  idx := oldPanel.PanelCollection.IndexOf(AViewer);
+  oldPanel.PanelCollection.Delete(idx);
+
+  // Insert into new panel
+  newPanel := GetViewerPanel(AValue);
+  AViewer.Parent := newPanel;
+  newPanel.PanelCollection.AddControl(AViewer);
+
+  UpdateViewerPanelVisible(newPanel);
+  if oldPanel <> newPanel then UpdateViewerPanelVisible(oldPanel);
+
+  StatusBar.Top := Height * 2;
 end;
 
 procedure THexEditorFrame.UpdateCaption;
@@ -765,6 +778,29 @@ begin
     end else
       Statusbar.Panels[p].Width := 150;
   end;
+end;
+
+procedure THexEditorFrame.UpdateViewerPanelVisible(APanel: TOMultiPanel);
+var
+  i: Integer;
+  hasControls: Boolean;
+  item: TOMultiPanelItem;
+  parentPanel: TOMultiPanel;
+begin
+  hasControls := false;
+  for i := 0 to APanel.PanelCollection.Count-1 do
+    if APanel.PanelCollection[i].Visible and Assigned(APanel.PanelCollection[i].Control) then begin
+      hasControls := true;
+      break;
+    end;
+
+  parentPanel := APanel.Parent as TOMultiPanel;
+  item := parentPanel.FindPanel(APanel);
+  if Assigned(item) then
+    item.Visible := hasControls;
+
+  APanel.ResizeControls;
+  parentPanel.ResizeControls;
 end;
 
 

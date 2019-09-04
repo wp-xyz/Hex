@@ -1,18 +1,18 @@
 object HexEditorFrame: THexEditorFrame
   Left = 0
-  Height = 240
+  Height = 395
   Top = 0
-  Width = 567
-  ClientHeight = 240
-  ClientWidth = 567
+  Width = 812
+  ClientHeight = 395
+  ClientWidth = 812
   TabOrder = 0
   DesignLeft = 340
   DesignTop = 128
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 217
-    Width = 567
+    Top = 372
+    Width = 812
     Panels = <    
       item
         Width = 40
@@ -33,5 +33,100 @@ object HexEditorFrame: THexEditorFrame
         Width = 50
       end>
     SimplePanel = False
+  end
+  object MainPanel: TOMultiPanel
+    Left = 0
+    Height = 372
+    Top = 0
+    Width = 812
+    PanelCollection = <    
+      item
+        Control = LeftPanel
+        Position = 0.25
+        Visible = False
+        Index = 0
+      end    
+      item
+        Control = CenterPanel
+        Position = 0.75
+        Visible = True
+        Index = 1
+      end    
+      item
+        Control = RightPanel
+        Position = 1
+        Visible = False
+        Index = 2
+      end>
+    MinPosition = 0.02
+    Align = alClient
+    TabOrder = 1
+    object LeftPanel: TOMultiPanel
+      Left = 0
+      Height = 372
+      Top = 0
+      Width = 203
+      PanelType = ptVertical
+      PanelCollection = <>
+      MinPosition = 0.02
+      Anchors = []
+      TabOrder = 0
+      Visible = False
+    end
+    object CenterPanel: TOMultiPanel
+      Left = 206
+      Height = 372
+      Top = 0
+      Width = 403
+      PanelType = ptVertical
+      PanelCollection = <      
+        item
+          Control = HexPanel
+          Position = 0.75
+          Visible = True
+          Index = 0
+        end      
+        item
+          Control = BottomPanel
+          Position = 1
+          Visible = False
+          Index = 1
+        end>
+      MinPosition = 0.02
+      Anchors = []
+      TabOrder = 1
+      object BottomPanel: TOMultiPanel
+        Left = 0
+        Height = 90
+        Top = 282
+        Width = 403
+        PanelCollection = <>
+        MinPosition = 0.02
+        Anchors = []
+        TabOrder = 1
+        Visible = False
+      end
+      object HexPanel: TPanel
+        Left = 0
+        Height = 279
+        Top = 0
+        Width = 403
+        Anchors = []
+        BevelOuter = bvNone
+        TabOrder = 0
+      end
+    end
+    object RightPanel: TOMultiPanel
+      Left = 612
+      Height = 372
+      Top = 0
+      Width = 200
+      PanelType = ptVertical
+      PanelCollection = <>
+      MinPosition = 0.02
+      Anchors = []
+      TabOrder = 2
+      Visible = False
+    end
   end
 end
