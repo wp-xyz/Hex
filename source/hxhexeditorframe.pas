@@ -143,6 +143,7 @@ begin
     AParams.BytesPerRow := HexEditor.BytesPerRow;
     AParams.BytesPerColumn := HexEditor.BytesPerColumn;
     AParams.HexLowercase := HexEditor.HexLowercase;
+    AParams.MaskChar := HexEditor.MaskChar;
 
     AParams.BackgroundColor := HexEditor.Colors.Background;
     AParams.ActiveFieldBackgroundColor := HexEditor.Colors.ActiveFieldBackground;
@@ -211,6 +212,7 @@ begin
     HexEditor.BytesPerRow := AParams.BytesPerRow;
     HexEditor.BytesPerColumn := AParams.BytesPerColumn;
     HexEditor.HexLowercase := AParams.HexLowerCase;
+    HexEditor.MaskChar := AParams.MaskChar;
 
     HexEditor.Colors.Background := AParams.BackgroundColor;
     HexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;
@@ -285,6 +287,8 @@ begin
   FHexEditor.DrawGutter3D := false;
   FHexEditor.Font.Size := 9;
 //  FHexEditor.GraySelectionIfNotFocused := true;
+  FHexEditor.HexLowercase := HexParams.HexLowercase;
+  FHexEditor.MaskChar := HexParams.MaskChar;
   FHexEditor.OffsetFormat := HexParams.GetOffsetFormat;
   FHexEditor.ReadOnlyView := true;
   FHexEditor.ReadOnlyFile := true;

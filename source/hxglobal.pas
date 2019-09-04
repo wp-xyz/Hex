@@ -119,6 +119,7 @@ type
     BytesPerRow: Integer;
     BytesPerColumn: Integer;
     HexLowerCase: Boolean;
+    MaskChar: Char;
 
     BackgroundColor: TColor;
     ActiveFieldBackgroundColor: TColor;
@@ -173,6 +174,7 @@ var
     BytesPerRow: 16;
     BytesPerColumn: 1;
     HexLowercase: false;
+    MaskChar: '.';
 
     BackgroundColor: clWindow;
     ActiveFieldBackgroundColor: clWindow;

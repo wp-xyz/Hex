@@ -103,7 +103,7 @@
       <Unit10>
         <Filename Value="hxdataviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="dataViewerFrame"/>
+        <ComponentName Value="DataViewerFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxDataViewerFrame"/>

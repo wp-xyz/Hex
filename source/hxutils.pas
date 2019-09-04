@@ -122,6 +122,7 @@ begin
     BytesPerRow := AIniFile.ReadInteger('Params', 'BytesPerRow', BytesPerRow);
     BytesPerColumn := AIniFile.ReadInteger('Params', 'BytesPerColumn', BytesPerColumn);
     HexLowercase := AIniFile.ReadBool('Params', 'HexLowercase', HexLowercase);
+    MaskChar := char(AIniFile.ReadInteger('Params', 'MaskChar', ord(MaskChar)));
 
     BackgroundColor := TColor(AIniFile.ReadInteger('Params',
       'BackgroundColor', Integer(BackgroundColor)));
@@ -249,6 +250,7 @@ begin
       BytesPerColumn);
     AIniFile.WriteBool('Params', 'HexLowercase',
       HexLowercase);
+    AIniFile.WriteInteger('Params', 'MaskChar', ord(MaskChar));
 
     AIniFile.WriteInteger('Params', 'BackgroundColor',
       Integer(BackgroundColor));

@@ -40,10 +40,10 @@ object SettingsForm: TSettingsForm
     Height = 386
     Top = 6
     Width = 522
-    ActivePage = pgViewer
+    ActivePage = pgFormat
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 1
     object pgEditor: TTabSheet
       Caption = 'Editor'
@@ -153,7 +153,7 @@ object SettingsForm: TSettingsForm
         Caption = 'Offset display base'
         ParentColor = False
       end
-      object Label4: TLabel
+      object lblHexIndicator: TLabel
         AnchorSideTop.Control = cbHexPrefix
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = cbHexPrefix
@@ -251,11 +251,11 @@ object SettingsForm: TSettingsForm
       end
       object cbRulerVisible: TCheckBox
         AnchorSideLeft.Control = cbBytesPerColumn
-        AnchorSideTop.Control = cbHexPrefix
+        AnchorSideTop.Control = edMaskChar
         AnchorSideTop.Side = asrBottom
         Left = 144
         Height = 19
-        Top = 166
+        Top = 195
         Width = 54
         BorderSpacing.Top = 32
         Caption = 'Visible'
@@ -269,7 +269,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Control = cbRulerVisible
         Left = 101
         Height = 15
-        Top = 168
+        Top = 197
         Width = 27
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 16
@@ -282,7 +282,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 144
         Height = 23
-        Top = 191
+        Top = 220
         Width = 100
         BorderSpacing.Top = 6
         ItemHeight = 15
@@ -302,7 +302,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Control = cmbRulerNumberBase
         Left = 29
         Height = 15
-        Top = 195
+        Top = 224
         Width = 99
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 16
@@ -321,6 +321,34 @@ object SettingsForm: TSettingsForm
         BorderSpacing.Left = 60
         Caption = 'Lowercase hex characters'
         TabOrder = 6
+      end
+      object edMaskChar: TEdit
+        AnchorSideLeft.Control = cbHexPrefix
+        AnchorSideTop.Control = cbHexPrefix
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = cbHexPrefix
+        AnchorSideRight.Side = asrBottom
+        Left = 144
+        Height = 23
+        Top = 140
+        Width = 100
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 6
+        MaxLength = 1
+        TabOrder = 7
+      end
+      object lblMaskChar: TLabel
+        AnchorSideTop.Control = edMaskChar
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = cbHexPrefix
+        Left = 48
+        Height = 15
+        Top = 144
+        Width = 80
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 16
+        Caption = 'Mask character'
+        ParentColor = False
       end
     end
     object pgColors: TTabSheet

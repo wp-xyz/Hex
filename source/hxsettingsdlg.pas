@@ -57,10 +57,12 @@ type
     cbDataViewerExtended: TCheckBox;
     clbBackground: TColorButton;
     cmbRecordViewerPosition: TComboBox;
+    edMaskChar: TEdit;
     gbDataViewer: TGroupBox;
     gbRecordViewer: TGroupBox;
     gbDataViewerDataTypes: TGroupBox;
     gbObjectViewer: TGroupBox;
+    lblMaskChar: TLabel;
     lblCurrentOffsetColor: TLabel;
     lblChangedColor: TLabel;
     lblEvenColumnForegroundColor: TLabel;
@@ -75,7 +77,7 @@ type
     lblBytesPerRow: TLabel;
     lblBytesPerColumn: TLabel;
     lblOffsetDisplayBase: TLabel;
-    Label4: TLabel;
+    lblHexIndicator: TLabel;
     lblActiveFieldBackground: TLabel;
     PageControl: TPageControl;
     pgColors: TTabSheet;
@@ -201,6 +203,10 @@ begin
 
     RulerVisible := cbRulerVisible.Checked;
     RulerNumberBase := TOffsetDisplayBase(cmbRulerNumberBase.ItemIndex+1);
+    if edMaskChar.Text = '' then
+      MaskChar := ' '
+    else
+      MaskChar := edMaskChar.Text[1];
 
     HexLowerCase := cbHexLowercase.Checked;
 
@@ -379,6 +385,7 @@ begin
 
     cbRulerVisible.Checked := RulerVisible;
     cmbRulerNumberBase.ItemIndex := ord(RulerNumberBase) - 1;
+    edMaskChar.Text := String(MaskChar);
 
     cbHexLowercase.Checked := HexLowerCase;
 
