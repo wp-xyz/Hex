@@ -89,6 +89,7 @@
         <Filename Value="thirdparty\mphexeditor.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MPHexEditor"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -153,7 +154,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="65"/>
         <CursorPos X="49" Y="54"/>
-        <UsageCount Value="167"/>
+        <UsageCount Value="170"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit12>
@@ -166,7 +167,7 @@
         <UnitName Value="hxRecordViewerFrame"/>
         <EditorIndex Value="21"/>
         <CursorPos X="3" Y="10"/>
-        <UsageCount Value="153"/>
+        <UsageCount Value="156"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit13>
@@ -180,7 +181,7 @@
         <EditorIndex Value="17"/>
         <TopLine Value="220"/>
         <CursorPos X="3" Y="178"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="134"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit14>
@@ -191,7 +192,7 @@
         <EditorIndex Value="15"/>
         <TopLine Value="25"/>
         <CursorPos X="12" Y="52"/>
-        <UsageCount Value="123"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
@@ -201,7 +202,7 @@
         <EditorIndex Value="13"/>
         <TopLine Value="240"/>
         <CursorPos Y="307"/>
-        <UsageCount Value="123"/>
+        <UsageCount Value="126"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -213,7 +214,7 @@
         <UnitName Value="hxObjectViewerFrame"/>
         <EditorIndex Value="22"/>
         <CursorPos X="51" Y="7"/>
-        <UsageCount Value="33"/>
+        <UsageCount Value="36"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit17>
@@ -227,7 +228,7 @@
         <EditorIndex Value="8"/>
         <TopLine Value="51"/>
         <CursorPos X="3" Y="55"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="33"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit18>
@@ -237,7 +238,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="67"/>
         <CursorPos X="7" Y="79"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="46"/>
         <Loaded Value="True"/>
       </Unit19>
       <Unit20>
@@ -245,7 +246,7 @@
         <EditorIndex Value="11"/>
         <TopLine Value="653"/>
         <CursorPos X="24" Y="667"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit20>
       <Unit21>
@@ -254,7 +255,7 @@
         <EditorIndex Value="23"/>
         <TopLine Value="2295"/>
         <CursorPos X="33" Y="2133"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
@@ -270,7 +271,7 @@
         <EditorIndex Value="16"/>
         <TopLine Value="307"/>
         <CursorPos X="17" Y="324"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit23>
       <Unit24>
@@ -279,7 +280,7 @@
         <EditorIndex Value="19"/>
         <TopLine Value="1298"/>
         <CursorPos X="15" Y="1313"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit24>
       <Unit25>
@@ -373,7 +374,7 @@
         <EditorIndex Value="14"/>
         <TopLine Value="1364"/>
         <CursorPos X="47" Y="1379"/>
-        <UsageCount Value="64"/>
+        <UsageCount Value="65"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -508,7 +509,7 @@
         <EditorIndex Value="18"/>
         <TopLine Value="366"/>
         <CursorPos X="20" Y="322"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
       </Unit56>
       <Unit57>
@@ -531,7 +532,7 @@
         <EditorIndex Value="24"/>
         <TopLine Value="23"/>
         <CursorPos X="50" Y="46"/>
-        <UsageCount Value="19"/>
+        <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit59>
       <Unit60>
@@ -546,7 +547,7 @@
         <EditorIndex Value="12"/>
         <TopLine Value="761"/>
         <CursorPos X="30" Y="779"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit61>
       <Unit62>
@@ -555,11 +556,10 @@
         <ComponentName Value="AboutForm"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxAbout"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="40"/>
-        <CursorPos X="10" Y="50"/>
-        <UsageCount Value="21"/>
+        <TopLine Value="46"/>
+        <CursorPos X="55" Y="61"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit62>

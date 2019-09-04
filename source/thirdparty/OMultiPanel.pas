@@ -46,7 +46,7 @@ interface
 uses
   {$IFNDEF FPC}Windows, {$ENDIF}
   Messages, SysUtils, Variants, Classes, Graphics, Controls,
-  Dialogs, ExtCtrls, Types, Registry, IniFiles, Contnrs
+  Dialogs, ExtCtrls, Types, Registry, IniFiles, Contnrs, Forms
   {$IFNDEF FPC}, StdCtrls{$ENDIF}
   {$IFDEF FPC}, lmessages, lcltype, lclintf{$ENDIF}
   ;
@@ -69,6 +69,13 @@ type
   public
     property PxPosition: Integer read fPxPosition;
     property PanelIndex: Integer read fPanelIndex;
+  end;
+
+  TSplitterList = class(TObjectList)
+  private
+    function GetI(const aIndex: Integer): TSplitterListItem;
+  public
+    property Items[const aIndex: Integer]: TSplitterListItem read GetI; default;
   end;
 
   TOMultiPanelCollection = class;
@@ -135,9 +142,9 @@ type
     fSplitterHoverColor: TColor;
 
     fHover: Boolean;
-    fHoverIndex: Integer;
+    fHoverIndex: Integer; // splitter index (fSplittersList)
     fSizing: Boolean;
-    fSizingIndex: Integer;
+    fSizingIndex: Integer; // splitter index (fSplittersList)
 
     fLastSizingLinePx: Integer;
     fPrevBrush: HBrush;
@@ -155,7 +162,7 @@ type
     fSplitterSize: Integer;
 
     fPanelCollection: TOMultiPanelCollection;
-    fSplittersList: TObjectList;
+    fSplittersList: TSplitterList;
     fPanelType: TPanelType;
 
     procedure SetPanelType(const Value: TPanelType);
@@ -191,11 +198,11 @@ type
     function GetSettingsSection: String; virtual;
     function GetSettingsIdent: String; virtual;
 
-    procedure CalcSizing(X, Y: Integer; var aSizing: Boolean; var aSizingIndex: Integer);
+    procedure CalcSizing(X, Y: Integer; var aSizing: Boolean; var aSizingSplitterIndex: Integer);
     function GetSizingRect(SplitterIndex: Integer): TRect;
 
     procedure Paint; override;
-    procedure DoPaintSizingBar(aCanvas: TCanvas; aIndex: Integer; aRect: TRect); virtual;
+    procedure DoPaintSizingBar(aCanvas: TCanvas; aIndex: Integer; aRect: TRect; aHover: Boolean); virtual;
     procedure InvalidateSplitter(aIndex: Integer);
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -338,6 +345,13 @@ uses Math
   {$IFDEF OMP_THEMES}, Themes{$ENDIF}
   {$IFNDEF FPC}, ShellAPI{$ENDIF};
 
+{ TSplitterList }
+
+function TSplitterList.GetI(const aIndex: Integer): TSplitterListItem;
+begin
+  Result := TSplitterListItem(inherited Items[aIndex]);
+end;
+
 { TOCustomMultiPanel }
 
 procedure TOCustomMultiPanel.AllocateLineDC;
@@ -360,7 +374,7 @@ begin
 end;
 
 procedure TOCustomMultiPanel.CalcSizing(X, Y: Integer; var aSizing: Boolean;
-  var aSizingIndex: Integer);
+  var aSizingSplitterIndex: Integer);
 
   function NextTo(Pos1, Pos2: Double): Boolean;
   begin
@@ -371,7 +385,7 @@ var
   I: Integer;
 begin
   aSizing := False;
-  aSizingIndex := -1;
+  aSizingSplitterIndex := -1;
 
   if csDesigning in ComponentState then
     Exit;
@@ -380,7 +394,7 @@ begin
   if PtInRect(GetSizingRect(I), Point(X, Y)) then
   begin
     aSizing := true;
-    aSizingIndex := TSplitterListItem(fSplittersList[I]).PanelIndex;
+    aSizingSplitterIndex := I;
     Break;
   end;
 end;
@@ -471,7 +485,7 @@ end;
 constructor TOCustomMultiPanel.Create(AOwner: TComponent);
 begin
   fPanelCollection := TOMultiPanelCollection.Create(Self);
-  fSplittersList := TObjectList.Create(True);
+  fSplittersList := TSplitterList.Create(True);
   fDoubleBufferedBitmap := TBitmap.Create;
 
   inherited;
@@ -504,21 +518,22 @@ begin
   inherited;
 end;
 
-procedure TOCustomMultiPanel.DoPaintSizingBar(aCanvas: TCanvas; aIndex: Integer; aRect: TRect);
+procedure TOCustomMultiPanel.DoPaintSizingBar(aCanvas: TCanvas;
+  aIndex: Integer; aRect: TRect; aHover: Boolean);
 var
   xColor: TColor;
 begin
   if Assigned(fOnPaintSizingBar) then
   begin
-    fOnPaintSizingBar(Self, aCanvas, aRect, fHover and (fHoverIndex = aIndex));
+    fOnPaintSizingBar(Self, aCanvas, aRect, aHover);
   end else
   if Assigned(OMP_OnPaintSizingBar) then
   begin
-    OMP_OnPaintSizingBar(Self, aCanvas, aRect, fHover and (fHoverIndex = aIndex));
+    OMP_OnPaintSizingBar(Self, aCanvas, aRect, aHover);
   end else
   begin
     aCanvas.Brush.Style := bsSolid;
-    if fHover and (fHoverIndex = aIndex) then
+    if aHover then
       xColor := SplitterHoverColor
     else
       xColor := SplitterColor;
@@ -549,7 +564,8 @@ begin
   begin
     xRect := Rect(Left, Top + Y-fSplitterSize div 2, Width, fSplitterSize);
     fLastSizingLinePx := Y;
-  end;
+  end else
+    Exit;
   {$IFDEF FPC}
   xRect.TopLeft := Parent.ClientToScreen(xRect.TopLeft);
   xRect.Right:=xRect.Left+xRect.Right;
@@ -599,13 +615,7 @@ end;
 function TOCustomMultiPanel.GetSizingRect(SplitterIndex: Integer): TRect;
 var Px: Integer;
 begin
-  if SplitterIndex >= fSplittersList.Count then
-  begin
-    Result := Rect(0, 0, 0, 0);
-    exit;
-  end;
-
-  Px := TSplitterListItem(fSplittersList[SplitterIndex]).PxPosition;
+  Px := fSplittersList[SplitterIndex].PxPosition;
   if fPanelType = ptHorizontal then
     Result := Rect(Px, 0, Px+fSplitterSize, ClientHeight)
   else
@@ -620,12 +630,9 @@ end;
 function TOCustomMultiPanel.GetSplitterPosition(Index: Integer): Integer;
 begin
   if Index < fSplittersList.Count then
-  begin
-    Result := TSplitterListItem(fSplittersList[Index]).PxPosition;
-  end else
-  begin
+    Result := fSplittersList[Index].PxPosition
+  else
     Result := 0;
-  end;
 end;
 
 {$IFNDEF FPC}
@@ -742,9 +749,12 @@ begin
     CalcSizing(X, Y, fSizing, fSizingIndex);
 
     if fSizing then
+    begin
       AllocateLineDC;
+      Screen.Cursor := Cursor;
 
-    DrawSizingLine(X, Y);
+      DrawSizingLine(X, Y);
+    end;
   end else
     inherited;
 end;
@@ -766,7 +776,7 @@ begin
     else
       Pos := Y/ClientHeight;
 
-    PanelCollection[fSizingIndex].CheckPosition(Pos);
+    PanelCollection[fSplittersList[fSizingIndex].PanelIndex].CheckPosition(Pos);
 
     if PanelType = ptHorizontal then
       Pos := Pos*ClientWidth
@@ -789,9 +799,9 @@ begin
     if fSizing or xHover then
     begin
       if (fPanelType = ptHorizontal) then
-        Cursor := crSizeWE
+        Cursor := crHSplit
       else if (fPanelType = ptVertical) then
-        Cursor := crSizeNS;
+        Cursor := crVSplit;
     end else
       Cursor := crDefault;
     {$ENDIF}
@@ -800,6 +810,8 @@ end;
 
 procedure TOCustomMultiPanel.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
+var
+  xNewPosition: Double;
 begin
   inherited;
 
@@ -814,11 +826,12 @@ begin
       SendMessage(Handle, WM_SetRedraw, 0, 0);
       {$ENDIF}
       try
-
+        Screen.Cursor := crDefault;
         if PanelType = ptHorizontal then
-          PanelCollection[fSizingIndex].Position := X/ClientWidth
+          xNewPosition := X/ClientWidth
         else
-          PanelCollection[fSizingIndex].Position := Y/ClientHeight;
+          xNewPosition := Y/ClientHeight;
+        PanelCollection[fSplittersList[fSizingIndex].PanelIndex].Position := xNewPosition;
       finally
         ReleaseLineDC;
         {$IFDEF MSWINDOWS}
@@ -901,7 +914,7 @@ begin
   for I := 0 to fSplittersList.Count-1 do
   begin
     xR := GetSizingRect(I);
-    DoPaintSizingBar(xC, I, xR);
+    DoPaintSizingBar(xC, I, xR, fHover and (fHoverIndex = I));
   end;
 
   xC.Unlock;
@@ -996,15 +1009,6 @@ begin
       if PanelType = ptHorizontal then
       begin
         xDefaultSize := Round(xPanel.Position*ClientWidth)-xPosAbs;//MUST NOT BE CLIENT WIDTH!!!
-        if not(csDesigning in ComponentState) then
-        for L := I+1 to PanelCollection.Count-1 do
-        begin
-          if not PanelCollection[L].Visible then
-            xDefaultSize := Round(PanelCollection[L].Position*ClientWidth)-xPosAbs
-          else
-            Break;
-        end;
-
         xPanel.Control.SetBounds(xPosAbs, 0, xDefaultSize, ClientHeight);
         if xPanel.Control.Width <> xDefaultSize then
           xPanel.SetPositionOnlyWithCheck((xPosAbs+xPanel.Control.Width)/Max(ClientWidth, 1));//  <- Causes Stact Ovreflow when Position := ...; used
@@ -1183,6 +1187,8 @@ begin
 end;
 
 procedure TOMultiPanelItem.CheckPosition(var Value: Double);
+var
+  xNeighbour: Integer;
 begin
   if not(
      not (csLoading in MPOwner.ComponentState) and
@@ -1202,10 +1208,17 @@ begin
   if (Index = Collection.Count-2) and (Value > 1-MPOwner.MinPosition) then
     Value := 1-MPOwner.MinPosition;
 
-  if(Index > 0) and (MPCollection[Index-1].Position+MPOwner.MinPosition > Value) then
-    Value := MPCollection[Index-1].Position + MPOwner.MinPosition;
-  if(Index < Collection.Count-1) and (MPCollection[Index+1].Position-MPOwner.MinPosition < Value) then
-    Value := MPCollection[Index+1].Position - MPOwner.MinPosition;
+  xNeighbour := Index-1;
+  while (xNeighbour>=0) and not MPCollection[xNeighbour].Visible do
+    Dec(xNeighbour);
+  if(xNeighbour >= 0) and (MPCollection[xNeighbour].Position+MPOwner.MinPosition > Value) then
+    Value := MPCollection[xNeighbour].Position + MPOwner.MinPosition;
+
+  xNeighbour := Index+1;
+  while (xNeighbour<=Collection.Count-1) and not MPCollection[xNeighbour].Visible do
+    Inc(xNeighbour);
+  if(xNeighbour <= Collection.Count-1) and (MPCollection[xNeighbour].Position-MPOwner.MinPosition < Value) then
+    Value := MPCollection[xNeighbour].Position - MPOwner.MinPosition;
 end;
 
 constructor TOMultiPanelItem.Create(ACollection: TCollection);
