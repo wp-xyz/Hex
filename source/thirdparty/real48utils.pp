@@ -26,7 +26,6 @@ type
   end;
   PDoubleRec = ^TDoubleRec;
 
-
   //Real48
   //S1 F39 E8[Bias 129]
   TReal48Rec = bitpacked record
@@ -40,16 +39,21 @@ type
 
 function Double2Real(d : double) : real48;
 
+operator explicit (r:Real48) d:double; inline;
+operator explicit (d:double) r:Real48; inline;
 operator := (d:double) r:real48; inline;
+operator := (r:real48) d:double; inline;
+operator +(const r1:Real48) r:Real48;inline;
 operator +(const r1:Real48;const r2:Real48) r:Real48;inline;
+operator -(const r1:Real48) r:Real48;inline;
 operator -(const r1:Real48;const r2:Real48) r:Real48;inline;
 operator *(const r1:Real48;const r2:Real48) r:Real48;inline;
 operator /(const r1:Real48;const r2:Real48) r:Real48;inline;
-operator =(const r1:Real48;const r2:Real48) r:boolean;inline;
-operator <(const r1:Real48;const r2:Real48) r:boolean;inline;
-operator >(const r1:Real48;const r2:Real48) r:boolean;inline;
-operator >=(const r1:Real48;const r2:Real48) r:boolean;inline;
-operator <=(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator =(const r1:Real48;const r2:Real48) b:boolean;inline;
+operator <(const r1:Real48;const r2:Real48) b:boolean;inline;
+operator >(const r1:Real48;const r2:Real48) b:boolean;inline;
+operator >=(const r1:Real48;const r2:Real48) b:boolean;inline;
+operator <=(const r1:Real48;const r2:Real48) b:boolean;inline;
 
 implementation
 
@@ -72,54 +76,79 @@ begin
   double2real:=res;
 end;
 
+operator explicit (r:Real48) d:double;inline;
+begin
+ d := Real2Double(r);
+end;
+
+operator explicit (d:double) r:Real48;inline;
+begin
+ r := Double2Real(d);
+end;
+
 operator := (d:double) r:real48; inline;
 begin
  r := Double2Real(d);
 end;
 
+operator := (r:real48) d:double; inline;
+begin
+ d := Real2Double(r);
+end;
+
 operator +(const r1:Real48;const r2:Real48) r:Real48;inline;
 begin
- r := Double(r1)+Double(r2);
+ r := double(r1)+double(r2);
+end;
+
+operator -(const r1:Real48) r:Real48;inline;
+begin
+ r := -double(r1);
+end;
+
+operator +(const r1:Real48) r:Real48;inline;
+begin
+ r := double(r1);
 end;
 
 operator -(const r1:Real48;const r2:Real48) r:Real48;inline;
 begin
- r := Double(r1)-Double(r2);
+ r := double(r1)-double(r2);
 end;
 
 operator *(const r1:Real48;const r2:Real48) r:Real48;inline;
 begin
- r := Double(r1)*Double(r2);
+ r := double(r1)*double(r2);
 end;
 
 operator /(const r1:Real48;const r2:Real48) r:Real48;inline;
 begin
- r := Double(r1)/Double(r2);
+ r := double(r1)/double(r2);
 end;
 
-operator =(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator =(const r1:Real48;const r2:Real48) b:boolean;inline;
 begin
- r := Double(r1)=Double(r2);
+ b := double(r1)=double(r2);
 end;
 
-operator <(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator <(const r1:Real48;const r2:Real48) b:boolean;inline;
 begin
- r := Double(r1)<Double(r2);
+ b := double(r1)<double(r2);
 end;
 
-operator >(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator >(const r1:Real48;const r2:Real48) b:boolean;inline;
 begin
- r := Double(r1)>Double(r2);
+ b := double(r1)>double(r2);
 end;
 
-operator >=(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator >=(const r1:Real48;const r2:Real48) b:boolean;inline;
 begin
- r := Double(r1)>=Double(r2);
+ b := double(r1)>=double(r2);
 end;
 
-operator <=(const r1:Real48;const r2:Real48) r:boolean;inline;
+operator <=(const r1:Real48;const r2:Real48) b:boolean;inline;
 begin
- r := Double(r1)<=Double(r2);
+ b := double(r1)<=double(r2);
 end;
 
 end.
