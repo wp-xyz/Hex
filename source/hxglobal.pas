@@ -47,7 +47,7 @@ type
   PReal48 = ^real48;
 
   TColWidths = array of Integer;
-  TNumViewerColWidths = array[0..2] of Integer;      // Does no contain Value column
+  TDataViewerColWidths = array[0..2] of Integer;     // Does no contain Value column
   TRecordViewerColWidths = array[0..2] of Integer;   // Does no contain Value column
 
   EHexError = class(Exception);
@@ -141,10 +141,10 @@ type
     //RightPanelWidth: Integer;
     //BottomPanelHeight: Integer;
 
-    NumViewerVisible: Boolean;
-    NumViewerPosition: TViewerPosition;
-    NumViewerDataTypes: TDataTypes;
-    NumViewerColWidths: TNumViewerColWidths;
+    DataViewerVisible: Boolean;
+    DataViewerPosition: TViewerPosition;
+    DataViewerDataTypes: TDataTypes;
+    DataViewerColWidths: TDataViewerColWidths;
 
     ObjectViewerVisible: Boolean;
     ObjectViewerPosition: TViewerPosition;
@@ -195,10 +195,10 @@ var
     //RightPanelWidth: 250;
     //BottomPanelHeight: 250;
 
-    NumViewerVisible: true;
-    NumViewerPosition: vpRight;
-    NumViewerDataTypes: AllNumericDataTypes;
-    NumViewerColWidths: (70, 40, 24);
+    DataViewerVisible: true;
+    DataViewerPosition: vpRight;
+    DataViewerDataTypes: AllNumericDataTypes;
+    DataViewerColWidths: (70, 40, 24);
 
     ObjectViewerVisible: false;
     ObjectViewerPosition: vpRight;

@@ -1,4 +1,4 @@
-unit hxNumViewerFrame;
+unit hxDataViewerFrame;
 
 {$mode objfpc}{$H+}
 
@@ -11,9 +11,9 @@ uses
 
 type
 
-  { TNumViewerGrid }
+  { TDataViewerGrid }
 
-  TNumViewerGrid = class(TViewerGrid)
+  TDataViewerGrid = class(TViewerGrid)
   protected
     procedure DefineColumns; override;
     procedure DoUpdateData; override;
@@ -24,9 +24,9 @@ type
   end;
 
 
-  { TNumViewerFrame }
+  { TDataViewerFrame }
 
-  TNumViewerFrame = class(TGridViewerFrame)
+  TDataViewerFrame = class(TGridViewerFrame)
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;
@@ -41,16 +41,16 @@ uses
   hxViewerItems;
 
 {------------------------------------------------------------------------------}
-{                              TNumViewerGrid                                  }
+{                              TDataViewerGrid                                  }
 {------------------------------------------------------------------------------}
 
-constructor TNumViewerGrid.Create(AOwner: TComponent);
+constructor TDataViewerGrid.Create(AOwner: TComponent);
 begin
   FDataItemClass := TDataItem;
   inherited Create(AOwner);
 end;
 
-procedure TNumViewerGrid.DefineColumns;
+procedure TDataViewerGrid.DefineColumns;
 var
   lCol: TGridColumn;
 begin
@@ -92,7 +92,7 @@ begin
   end;
 end;
 
-procedure TNumViewerGrid.DoUpdateData;
+procedure TDataViewerGrid.DoUpdateData;
 var
   i: Integer;
   item: TDataItem;
@@ -105,36 +105,36 @@ begin
   Invalidate;
 end;
 
-procedure TNumViewerGrid.PopulateDataList;
+procedure TDataViewerGrid.PopulateDataList;
 begin
   FDataList.Clear;
-  if (dtByte in HexParams.NumViewerDataTypes) then
+  if (dtByte in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtByte, 1, HexParams.BigEndian));
-  if (dtShortInt in HexParams.NumViewerDataTypes) then
+  if (dtShortInt in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtShortInt, 1, HexParams.BigEndian));
-  if (dtWord in HexParams.NumViewerDataTypes) then
+  if (dtWord in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtWord, 2, HexParams.BigEndian));
-  if (dtSmallInt in HexParams.NumViewerDataTypes) then
+  if (dtSmallInt in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtSmallInt, 2, HexParams.BigEndian));
-  if (dtLongWord in HexParams.NumViewerDataTypes) then
+  if (dtLongWord in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtLongWord, 4, HexParams.BigEndian));
-  if (dtLongInt in HexParams.NumViewerDataTypes) then
+  if (dtLongInt in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtLongInt, 4, HexParams.BigEndian));
-  if (dtInt64 in HexParams.NumViewerDataTypes) then
+  if (dtInt64 in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtInt64, 8, HexParams.BigEndian));
-  if (dtCurrency in HexParams.NumViewerDataTypes) then
+  if (dtCurrency in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtCurrency, 8, HexParams.BigEndian));
-  if (dtSingle in HexParams.NumViewerDataTypes) then
+  if (dtSingle in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtSingle, 4, HexParams.BigEndian));
-  if (dtDouble in HexParams.NumViewerDataTypes) then
+  if (dtDouble in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtDouble, 8, HexParams.BigEndian));
-  if (dtExtended in HexParams.NumViewerDataTypes) and (SizeOf(Extended) = 10) then
+  if (dtExtended in HexParams.DataViewerDataTypes) and (SizeOf(Extended) = 10) then
     FDataList.Add(TDataItem.Create(dtExtended, 10, HexParams.BigEndian));
-  if (dtReal48 in HexParams.NumViewerDataTypes) then
+  if (dtReal48 in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtReal48, 6, HexParams.BigEndian));
 end;
 
-function TNumViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
+function TDataViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
 var
   item: TDataItem;
 begin
@@ -150,17 +150,17 @@ end;
 
 
 {------------------------------------------------------------------------------}
-{                             TNumViewerFrame                                  }
+{                             TDataViewerFrame                                  }
 {------------------------------------------------------------------------------}
 
-function TNumViewerFrame.CreateViewerGrid: TViewerGrid;
+function TDataViewerFrame.CreateViewerGrid: TViewerGrid;
 begin
-  Result := TNumViewerGrid.Create(self);
+  Result := TDataViewerGrid.Create(self);
 end;
 
-function TNumViewerFrame.GetDefaultColWidths(AIndex: Integer): Integer;
+function TDataViewerFrame.GetDefaultColWidths(AIndex: Integer): Integer;
 begin
-  Result := DefaultHexParams.NumViewerColWidths[AIndex];
+  Result := DefaultHexParams.DataViewerColWidths[AIndex];
 end;
 
 end.

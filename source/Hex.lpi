@@ -101,12 +101,12 @@
         <UnitName Value="hxBasicViewerFrame"/>
       </Unit9>
       <Unit10>
-        <Filename Value="hxnumviewerframe.pas"/>
+        <Filename Value="hxdataviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="NumViewerFrame"/>
+        <ComponentName Value="dataViewerFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <UnitName Value="hxNumViewerFrame"/>
+        <UnitName Value="hxDataViewerFrame"/>
       </Unit10>
       <Unit11>
         <Filename Value="hxsettingsdlg.pas"/>

@@ -40,10 +40,10 @@ object SettingsForm: TSettingsForm
     Height = 386
     Top = 6
     Width = 522
-    ActivePage = pgFormat
+    ActivePage = pgViewer
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 1
+    TabIndex = 3
     TabOrder = 1
     object pgEditor: TTabSheet
       Caption = 'Editor'
@@ -623,7 +623,7 @@ object SettingsForm: TSettingsForm
       Caption = 'Viewer'
       ClientHeight = 358
       ClientWidth = 514
-      object gbNumViewer: TGroupBox
+      object gbDataViewer: TGroupBox
         AnchorSideLeft.Control = pgViewer
         AnchorSideTop.Control = pgViewer
         Left = 16
@@ -633,13 +633,13 @@ object SettingsForm: TSettingsForm
         AutoSize = True
         BorderSpacing.Left = 16
         BorderSpacing.Top = 16
-        Caption = 'Numeric viewer'
+        Caption = 'Data viewer'
         ClientHeight = 222
         ClientWidth = 229
         TabOrder = 0
-        object cbNumViewerVisible: TCheckBox
-          AnchorSideLeft.Control = gbNumViewer
-          AnchorSideTop.Control = gbNumViewer
+        object cbDataViewerVisible: TCheckBox
+          AnchorSideLeft.Control = gbDataViewer
+          AnchorSideTop.Control = gbDataViewer
           Left = 16
           Height = 19
           Top = 4
@@ -648,16 +648,16 @@ object SettingsForm: TSettingsForm
           BorderSpacing.Top = 4
           Caption = 'Show'
           Checked = True
-          OnChange = cbNumViewerVisibleChange
+          OnChange = cbDataViewerVisibleChange
           State = cbChecked
           TabOrder = 0
         end
-        object cmbNumViewerPosition: TComboBox
-          AnchorSideLeft.Control = cbNumViewerVisible
+        object cmbDataViewerPosition: TComboBox
+          AnchorSideLeft.Control = cbDataViewerVisible
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = cbNumViewerVisible
+          AnchorSideTop.Control = cbDataViewerVisible
           AnchorSideTop.Side = asrCenter
-          AnchorSideRight.Control = gbNumViewerDataTypes
+          AnchorSideRight.Control = gbDataViewerDataTypes
           AnchorSideRight.Side = asrBottom
           Left = 89
           Height = 23
@@ -677,9 +677,9 @@ object SettingsForm: TSettingsForm
           TabOrder = 1
           Text = 'right'
         end
-        object gbNumViewerDataTypes: TGroupBox
-          AnchorSideLeft.Control = cbNumViewerVisible
-          AnchorSideTop.Control = cmbNumViewerPosition
+        object gbDataViewerDataTypes: TGroupBox
+          AnchorSideLeft.Control = cbDataViewerVisible
+          AnchorSideTop.Control = cmbDataViewerPosition
           AnchorSideTop.Side = asrBottom
           Left = 16
           Height = 169
@@ -693,9 +693,9 @@ object SettingsForm: TSettingsForm
           ClientHeight = 149
           ClientWidth = 193
           TabOrder = 2
-          object cbNumViewerByte: TCheckBox
-            AnchorSideLeft.Control = gbNumViewerDataTypes
-            AnchorSideTop.Control = gbNumViewerDataTypes
+          object cbDataViewerByte: TCheckBox
+            AnchorSideLeft.Control = gbDataViewerDataTypes
+            AnchorSideTop.Control = gbDataViewerDataTypes
             Left = 16
             Height = 19
             Top = 4
@@ -707,9 +707,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 0
           end
-          object cbNumViewerShortInt: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerByte
-            AnchorSideTop.Control = cbNumViewerByte
+          object cbDataViewerShortInt: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerByte
+            AnchorSideTop.Control = cbDataViewerByte
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -720,9 +720,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 1
           end
-          object cbNumViewerWord: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerByte
-            AnchorSideTop.Control = cbNumViewerShortInt
+          object cbDataViewerWord: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerByte
+            AnchorSideTop.Control = cbDataViewerShortInt
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -733,9 +733,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 2
           end
-          object cbNumViewerSmallInt: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerWord
-            AnchorSideTop.Control = cbNumViewerWord
+          object cbDataViewerSmallInt: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerWord
+            AnchorSideTop.Control = cbDataViewerWord
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -746,9 +746,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 3
           end
-          object cbNumViewerLongWord: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerSmallInt
-            AnchorSideTop.Control = cbNumViewerSmallInt
+          object cbDataViewerLongWord: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerSmallInt
+            AnchorSideTop.Control = cbDataViewerSmallInt
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -759,9 +759,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 4
           end
-          object cbNumViewerLongInt: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerLongWord
-            AnchorSideTop.Control = cbNumViewerLongWord
+          object cbDataViewerLongInt: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerLongWord
+            AnchorSideTop.Control = cbDataViewerLongWord
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -772,9 +772,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 5
           end
-          object cbNumViewerInt64: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerLongInt
-            AnchorSideTop.Control = cbNumViewerLongInt
+          object cbDataViewerInt64: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerLongInt
+            AnchorSideTop.Control = cbDataViewerLongInt
             AnchorSideTop.Side = asrBottom
             Left = 16
             Height = 19
@@ -786,10 +786,10 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 6
           end
-          object cbNumViewerSingle: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerLongWord
+          object cbDataViewerSingle: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerLongWord
             AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = cbNumViewerByte
+            AnchorSideTop.Control = cbDataViewerByte
             Left = 108
             Height = 19
             Top = 4
@@ -800,9 +800,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 7
           end
-          object cbNumViewerDouble: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerSingle
-            AnchorSideTop.Control = cbNumViewerSingle
+          object cbDataViewerDouble: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerSingle
+            AnchorSideTop.Control = cbDataViewerSingle
             AnchorSideTop.Side = asrBottom
             Left = 108
             Height = 19
@@ -813,9 +813,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 8
           end
-          object cbNumViewerExtended: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerDouble
-            AnchorSideTop.Control = cbNumViewerDouble
+          object cbDataViewerExtended: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerDouble
+            AnchorSideTop.Control = cbDataViewerDouble
             AnchorSideTop.Side = asrBottom
             Left = 108
             Height = 19
@@ -827,9 +827,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 9
           end
-          object cbNumViewerCurrency: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerExtended
-            AnchorSideTop.Control = cbNumViewerExtended
+          object cbDataViewerCurrency: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerExtended
+            AnchorSideTop.Control = cbDataViewerExtended
             AnchorSideTop.Side = asrBottom
             Left = 108
             Height = 19
@@ -841,9 +841,9 @@ object SettingsForm: TSettingsForm
             State = cbChecked
             TabOrder = 10
           end
-          object cbNumViewerReal48: TCheckBox
-            AnchorSideLeft.Control = cbNumViewerCurrency
-            AnchorSideTop.Control = cbNumViewerCurrency
+          object cbDataViewerReal48: TCheckBox
+            AnchorSideLeft.Control = cbDataViewerCurrency
+            AnchorSideTop.Control = cbDataViewerCurrency
             AnchorSideTop.Side = asrBottom
             Left = 108
             Height = 19
@@ -857,7 +857,7 @@ object SettingsForm: TSettingsForm
         end
       end
       object gbRecordViewer: TGroupBox
-        AnchorSideLeft.Control = gbNumViewer
+        AnchorSideLeft.Control = gbDataViewer
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = pgViewer
         AnchorSideBottom.Control = Bevel2
@@ -914,7 +914,7 @@ object SettingsForm: TSettingsForm
         end
       end
       object Bevel2: TBevel
-        AnchorSideTop.Control = gbNumViewer
+        AnchorSideTop.Control = gbDataViewer
         AnchorSideTop.Side = asrCenter
         Left = 247
         Height = 18
@@ -923,11 +923,11 @@ object SettingsForm: TSettingsForm
         Shape = bsSpacer
       end
       object gbObjectViewer: TGroupBox
-        AnchorSideLeft.Control = gbNumViewer
+        AnchorSideLeft.Control = gbDataViewer
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Bevel2
         AnchorSideTop.Side = asrBottom
-        AnchorSideBottom.Control = gbNumViewer
+        AnchorSideBottom.Control = gbDataViewer
         AnchorSideBottom.Side = asrBottom
         Left = 265
         Height = 112

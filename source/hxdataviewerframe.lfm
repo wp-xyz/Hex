@@ -1,4 +1,4 @@
-inherited NumViewerFrame: TNumViewerFrame
+inherited DataViewerFrame: TDataViewerFrame
   inherited lblHeader: TLabel
     Caption = ' Numeric Viewer'
   end

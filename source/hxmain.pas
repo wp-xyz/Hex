@@ -742,9 +742,9 @@ var
 begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) then
-    F.ShowNumViewer := AEnable
+    F.ShowDataViewer := AEnable
   else
-    HexParams.NumViewerVisible := AEnable;
+    HexParams.DataViewerVisible := AEnable;
 end;
 
 procedure TMainForm.ShowStatusbar(AEnable: boolean);

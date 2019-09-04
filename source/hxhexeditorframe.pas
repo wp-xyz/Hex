@@ -9,7 +9,7 @@ uses
   Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
   MPHexEditor, OMultiPanel,
   hxGlobal,
-  hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
+  hxBasicViewerFrame, hxDataViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
 
@@ -25,7 +25,7 @@ type
     StatusBar: TStatusBar;
   private
     FHexEditor: TMPHexEditor;
-    FNumViewer: TNumViewerFrame;
+    FDataViewer: TDataViewerFrame;
     FRecordViewer: TRecordViewerFrame;
     FObjectViewer: TObjectViewerFrame;
     FStatusbarItems: TStatusbarItems;
@@ -37,10 +37,10 @@ type
     function GetOffsetDisplayBase(AOffsetFormat: String): TOffsetDisplayBase;
     function GetOffsetDisplayHexPrefix(AOffsetFormat: String): String;
 
-    function GetShowNumViewer: Boolean;
-    procedure SetShowNumViewer(AValue: Boolean);
-    function GetNumViewerPosition: TViewerPosition;
-    procedure SetNumViewerPosition(AValue: TViewerPosition);
+    function GetShowDataViewer: Boolean;
+    procedure SetShowDataViewer(AValue: Boolean);
+    function GetDataViewerPosition: TViewerPosition;
+    procedure SetDataViewerPosition(AValue: TViewerPosition);
 
     function GetShowObjectViewer: Boolean;
     procedure SetShowObjectViewer(AValue: Boolean);
@@ -56,7 +56,7 @@ type
 
   protected
     procedure CreateHexEditor;
-    procedure CreateNumViewer;
+    procedure CreateDataViewer;
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
@@ -88,14 +88,14 @@ type
       read GetFileName;
     property HexEditor: TMPHexEditor
       read FHexEditor;
-    property NumViewerPosition: TViewerPosition
-      read GetNumViewerPosition write SetNumViewerPosition;
+    property DataViewerPosition: TViewerPosition
+      read GetDataViewerPosition write SetDataViewerPosition;
     property ObjectViewerPosition: TViewerPosition
       read GetObjectViewerPosition write SetObjectViewerPosition;
     property RecordViewerPosition: TViewerPosition
       read GetRecordViewerPosition write SetRecordViewerPosition;
-    property ShowNumViewer: Boolean
-      read GetShowNumViewer write SetShowNumViewer;
+    property ShowDataViewer: Boolean
+      read GetShowDataViewer write SetShowDataViewer;
     property ShowObjectViewer: Boolean
       read GetShowObjectViewer write SetShowObjectViewer;
     property ShowRecordViewer: Boolean
@@ -166,12 +166,12 @@ begin
   //AParams.RightPanelWidth := round(MainPanel.PanelCollection[0].Position * MainPanel.Width);
   //AParams.BottomPanelHeight := round(CenterPanel.PanelCollection[0].Position * CenterPanel.Height);
 
-  if Assigned(FNumViewer) then
+  if Assigned(FDataViewer) then
   begin
-    AParams.NumViewerVisible := GetShowNumViewer;
-    AParams.NumViewerPosition := GetNumViewerPosition;
-    for i:=0 to High(AParams.NumViewerColWidths) do
-      AParams.NumViewerColWidths[i] := FNumViewer.ColWidths[i];
+    AParams.DataViewerVisible := GetShowDataViewer;
+    AParams.DataViewerPosition := GetDataViewerPosition;
+    for i:=0 to High(AParams.DataViewerColWidths) do
+      AParams.DataViewerColWidths[i] := FDataViewer.ColWidths[i];
   end;
 
   if Assigned(FObjectViewer) then
@@ -239,12 +239,12 @@ begin
   end;
   }
 
-  ShowNumViewer := AParams.NumViewerVisible;         // this creates the NumViewer
-  if Assigned(FNumViewer) then
+  ShowDataViewer := AParams.DataViewerVisible;         // this creates the NumViewer
+  if Assigned(FDataViewer) then
   begin
-    SetNumViewerPosition(AParams.NumViewerPosition);
-    for i := 0 to High(AParams.NumViewerColWidths) do
-      FNumViewer.ColWidths[i] := AParams.NumViewerColWidths[i];
+    SetDataViewerPosition(AParams.DataViewerPosition);
+    for i := 0 to High(AParams.DataViewerColWidths) do
+      FDataViewer.ColWidths[i] := AParams.DataViewerColWidths[i];
   end;
 
   ShowObjectViewer := AParams.ObjectViewerVisible;   // this creates the ObjectViewer
@@ -297,21 +297,21 @@ begin
 //  CommonData.BookmarkImages.GetFullBitmap(FHexEditor.BookmarkBitmap);
 end;
 
-procedure THexEditorFrame.CreateNumViewer;
+procedure THexEditorFrame.CreateDataViewer;
 var
   panel: TOMultiPanel;
 begin
-  FNumViewer.Free;
-  FNumViewer := TNumViewerFrame.Create(self);
-  FNumViewer.Name := '';
-  panel := GetViewerPanel(HexParams.NumViewerPosition);
+  FDataViewer.Free;
+  FDataViewer := TDataViewerFrame.Create(self);
+  FDataViewer.Name := '';
+  panel := GetViewerPanel(HexParams.DataViewerPosition);
   with (panel.Parent as TOMultiPanel) do begin
     FindPanel(panel).Visible := true;
     ResizeControls;
   end;
-  FNumViewer.Parent := panel;
+  FDataViewer.Parent := panel;
   with panel.PanelCollection.Add do
-    Control := FNumViewer;
+    Control := FDataViewer;
   UpdateViewerPanelVisible(panel);
 end;
 
@@ -377,9 +377,9 @@ begin
   end;
 end;
 
-function THexEditorFrame.GetNumViewerPosition: TViewerPosition;
+function THexEditorFrame.GetDataViewerPosition: TViewerPosition;
 begin
-  Result := GetViewerPosition(FNumViewer);
+  Result := GetViewerPosition(FDataViewer);
 end;
 
 function THexEditorFrame.GetObjectViewerPosition: TViewerPosition;
@@ -396,9 +396,9 @@ begin
   Result := Copy(AOffsetFormat, p1+1, p2-p1-1);
 end;
 
-function THexEditorFrame.GetShowNumViewer: Boolean;
+function THexEditorFrame.GetShowDataViewer: Boolean;
 begin
-  Result := (FNumViewer <> nil) and FNumViewer.Visible;
+  Result := (FDataViewer <> nil) and FDataViewer.Visible;
 end;
 
 function THexEditorFrame.GetShowObjectViewer: Boolean;
@@ -441,8 +441,8 @@ end;
 procedure THexEditorFrame.HexEditorChanged(Sender: TObject);
 begin
   UpdateStatusBar;
-  if Assigned(FNumViewer) then
-    FNumViewer.UpdateData(FHexEditor);
+  if Assigned(FDataViewer) then
+    FDataViewer.UpdateData(FHexEditor);
   if Assigned(FObjectViewer) then
     FObjectViewer.UpdateData(FHexEditor);
   if Assigned(FRecordViewer) then
@@ -550,9 +550,9 @@ begin
   end;
 end;
 
-procedure THexEditorFrame.SetNumViewerPosition(AValue: TViewerPosition);
+procedure THexEditorFrame.SetDataViewerPosition(AValue: TViewerPosition);
 begin
-  SetViewerPosition(FNumViewer, AValue);
+  SetViewerPosition(FDataViewer, AValue);
 end;
 
 procedure THexEditorFrame.SetObjectViewerPosition(AValue: TViewerPosition);
@@ -580,27 +580,27 @@ begin
   SetViewerPosition(FRecordViewer, AValue);
 end;
 
-procedure THexEditorFrame.SetShowNumViewer(AValue: Boolean);
+procedure THexEditorFrame.SetShowDataViewer(AValue: Boolean);
 var
   panel: TOMultiPanel;
 begin
   if AValue then
   begin
     // Show number viewer
-    if Assigned(FNumViewer) then
+    if Assigned(FDataViewer) then
       exit;
-    CreateNumViewer;
-    FNumViewer.UpdateData(HexEditor);
-    HexParams.NumViewerVisible := true;
+    CreateDataViewer;
+    FDataViewer.UpdateData(HexEditor);
+    HexParams.DataViewerVisible := true;
   end else
   begin
     // Hide number viewer
-    if not Assigned(FNumViewer) then
+    if not Assigned(FDataViewer) then
       exit;
-    panel := FNumViewer.Parent as TOMultiPanel;
-    FreeAndNil(FNumViewer);
+    panel := FDataViewer.Parent as TOMultiPanel;
+    FreeAndNil(FDataViewer);
     UpdateViewerPanelVisible(panel);
-    HexParams.NumViewerVisible := false;
+    HexParams.DataViewerVisible := false;
   end;
 end;
 

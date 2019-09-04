@@ -152,30 +152,26 @@ begin
     BottomPanelHeight := AIniFile.ReadInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
 *)
 
-    NumViewerVisible := AIniFile.ReadBool('Params', 'NumViewer.Visible', NumViewerVisible);
-    s := AIniFile.ReadString('Params', 'NumViewer.Position', '');
+    DataViewerVisible := AIniFile.ReadBool('Params', 'DataViewer.Visible', DataViewerVisible);
+    s := AIniFile.ReadString('Params', 'DataViewer.Position', '');
     if s <> '' then
-      NumViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
-    //NumViewerHeight := AIniFile.ReadInteger('Params', 'NumViewer.Height', NumViewerHeight);
-    //NumViewerWidth := AIniFile.ReadInteger('Params', 'NumViewer.Width', NumViewerWidth);
-
-    s := UpperCase(AIniFile.ReadString('Params', 'NumViewer.DataTypes', ''));
+      DataViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
+    s := UpperCase(AIniFile.ReadString('Params', 'DataViewer.DataTypes', ''));
     if s <> '' then
     begin
       s := ';' + s + ';';
-      NumViewerDataTypes := [];
+      DataViewerDataTypes := [];
       for dt := dtFirstNumericDataType to dtLastNumericDataType do
         if pos(';' + UpperCase(DataTypeNames[dt]) + ';', s) <> 0 then
-          Include(NumViewerDataTypes, dt);
+          Include(DataViewerDataTypes, dt);
     end;
-
-    s := AIniFile.ReadString('Params', 'NumViewer.ColWidths', '');
+    s := AIniFile.ReadString('Params', 'DataViewer.ColWidths', '');
     if s <> '' then
     begin
       sa := s.Split(',');
       for i:=0 to High(sa) do
-        if i <= High(NumViewerColWidths) then
-          TryStrToInt(sa[i], NumViewerColWidths[i]);
+        if i <= High(DataViewerColWidths) then
+          TryStrToInt(sa[i], DataViewerColWidths[i]);
     end;
 
     ObjectViewerVisible := AIniFile.ReadBool('Params', 'ObjectViewer.Visible', ObjectViewerVisible);
@@ -283,25 +279,19 @@ begin
     AIniFile.WriteInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
 *)
 
-    AIniFile.WriteBool('Params', 'NumViewer.Visible',
-      NumViewerVisible);
-    AIniFile.WriteString('Params', 'NumViewer.Position',
-      GetEnumName(TypeInfo(TViewerPosition), integer(NumViewerPosition)));
-    {
-    if NumViewerPosition in [vpLeft, vpRight] then
-      AIniFile.WriteInteger('Params', 'NumViewer.Width', NumViewerWidth);
-    if NumViewerPosition in [vpBottom] then
-      AIniFile.WriteInteger('Params', 'NumViewer.Height', NumViewerHeight);
-      }
+    AIniFile.WriteBool('Params', 'DataViewer.Visible',
+      DataViewerVisible);
+    AIniFile.WriteString('Params', 'DataViewer.Position',
+      GetEnumName(TypeInfo(TViewerPosition), integer(DataViewerPosition)));
     s := '';
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
-      if dt in NumViewerDataTypes then s := s + DataTypeNames[dt] + ';';
+      if dt in DataViewerDataTypes then s := s + DataTypeNames[dt] + ';';
     if s <> '' then Delete(s, Length(s), 1);
-    AIniFile.WriteString('Params', 'NumViewer.DataTypes', s);
-    s := IntToStr(HexParams.NumViewerColWidths[0]);
-    for i := 1 to High(TNumViewerColWidths) do
-      s := s + ',' + IntToStr(HexParams.NumViewerColWidths[i]);
-    AIniFile.WriteString('Params', 'NumViewer.ColWidths', s);
+    AIniFile.WriteString('Params', 'DataViewer.DataTypes', s);
+    s := IntToStr(HexParams.DataViewerColWidths[0]);
+    for i := 1 to High(TDataViewerColWidths) do
+      s := s + ',' + IntToStr(HexParams.DataViewerColWidths[i]);
+    AIniFile.WriteString('Params', 'DataViewer.ColWidths', s);
 
     AIniFile.WriteBool('Params', 'ObjectViewer.Visible',
       ObjectViewerVisible);

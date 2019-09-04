@@ -41,25 +41,25 @@ type
     cmbObjectViewerPosition: TComboBox;
     cmbRulerNumberBase: TComboBox;
     cbRulerVisible: TCheckBox;
-    cbNumViewerVisible: TCheckBox;
-    cmbNumViewerPosition: TComboBox;
-    cbNumViewerByte: TCheckBox;
-    cbNumViewerWord: TCheckBox;
-    cbNumViewerCurrency: TCheckBox;
-    cbNumViewerReal48: TCheckBox;
-    cbNumViewerShortInt: TCheckBox;
-    cbNumViewerSmallInt: TCheckBox;
-    cbNumViewerLongWord: TCheckBox;
-    cbNumViewerLongInt: TCheckBox;
-    cbNumViewerInt64: TCheckBox;
-    cbNumViewerSingle: TCheckBox;
-    cbNumViewerDouble: TCheckBox;
-    cbNumViewerExtended: TCheckBox;
+    cbDataViewerVisible: TCheckBox;
+    cmbDataViewerPosition: TComboBox;
+    cbDataViewerByte: TCheckBox;
+    cbDataViewerWord: TCheckBox;
+    cbDataViewerCurrency: TCheckBox;
+    cbDataViewerReal48: TCheckBox;
+    cbDataViewerShortInt: TCheckBox;
+    cbDataViewerSmallInt: TCheckBox;
+    cbDataViewerLongWord: TCheckBox;
+    cbDataViewerLongInt: TCheckBox;
+    cbDataViewerInt64: TCheckBox;
+    cbDataViewerSingle: TCheckBox;
+    cbDataViewerDouble: TCheckBox;
+    cbDataViewerExtended: TCheckBox;
     clbBackground: TColorButton;
     cmbRecordViewerPosition: TComboBox;
-    gbNumViewer: TGroupBox;
+    gbDataViewer: TGroupBox;
     gbRecordViewer: TGroupBox;
-    gbNumViewerDataTypes: TGroupBox;
+    gbDataViewerDataTypes: TGroupBox;
     gbObjectViewer: TGroupBox;
     lblCurrentOffsetColor: TLabel;
     lblChangedColor: TLabel;
@@ -84,7 +84,7 @@ type
     pgEditor: TTabSheet;
     rgByteOrder: TRadioGroup;
     procedure btnRestoreDefaultsClick(Sender: TObject);
-    procedure cbNumViewerVisibleChange(Sender: TObject);
+    procedure cbDataViewerVisibleChange(Sender: TObject);
     procedure cbObjectViewerVisibleChange(Sender: TObject);
     procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbViewOnlyChange(Sender: TObject);
@@ -121,13 +121,13 @@ begin
   PageControl.ActivePageIndex := idx;
 end;
 
-procedure TSettingsForm.cbNumViewerVisibleChange(Sender: TObject);
+procedure TSettingsForm.cbDataViewerVisibleChange(Sender: TObject);
 var
   dt: TDataType;
 begin
-  cmbNumViewerPosition.Enabled := cbNumViewerVisible.Checked;
+  cmbDataViewerPosition.Enabled := cbDataViewerVisible.Checked;
   for dt := dtFirstNumericDataType to dtLastNumericDataType do
-    FDataTypeCheckboxes[dt].Enabled := cbNumViewerVisible.Checked;
+    FDataTypeCheckboxes[dt].Enabled := cbDataViewerVisible.Checked;
 end;
 
 procedure TSettingsForm.cbObjectViewerVisibleChange(Sender: TObject);
@@ -154,18 +154,18 @@ begin
     GetBitmap(IMG_INDEX_CANCEL, ButtonPanel.CancelButton.Glyph);  // Cancel icon
   end;
 
-  FDataTypeCheckboxes[dtByte] := cbNumViewerByte;
-  FDataTypeCheckboxes[dtShortInt] := cbNumViewerShortInt;
-  FDataTypeCheckboxes[dtWord] := cbNumViewerWord;
-  FDataTypeCheckboxes[dtSmallInt] := cbNumViewerSmallInt;
-  FDataTypeCheckboxes[dtLongWord] := cbNumViewerLongWord;
-  FDataTypeCheckboxes[dtLongInt] := cbNumViewerLongInt;
-  FDataTypeCheckboxes[dtInt64] := cbNumViewerInt64;
-  FDataTypeCheckboxes[dtCurrency] := cbNumViewerCurrency;
-  FDataTypeCheckboxes[dtSingle] := cbNumViewerSingle;
-  FDataTypeCheckboxes[dtDouble] := cbNumViewerDouble;
-  FDataTypeCheckboxes[dtExtended] := cbNumViewerExtended;
-  FDataTypeCheckboxes[dtReal48] := cbNumViewerReal48;
+  FDataTypeCheckboxes[dtByte] := cbDataViewerByte;
+  FDataTypeCheckboxes[dtShortInt] := cbDataViewerShortInt;
+  FDataTypeCheckboxes[dtWord] := cbDataViewerWord;
+  FDataTypeCheckboxes[dtSmallInt] := cbDataViewerSmallInt;
+  FDataTypeCheckboxes[dtLongWord] := cbDataViewerLongWord;
+  FDataTypeCheckboxes[dtLongInt] := cbDataViewerLongInt;
+  FDataTypeCheckboxes[dtInt64] := cbDataViewerInt64;
+  FDataTypeCheckboxes[dtCurrency] := cbDataViewerCurrency;
+  FDataTypeCheckboxes[dtSingle] := cbDataViewerSingle;
+  FDataTypeCheckboxes[dtDouble] := cbDataViewerDouble;
+  FDataTypeCheckboxes[dtExtended] := cbDataViewerExtended;
+  FDataTypeCheckboxes[dtReal48] := cbDataViewerReal48;
 
   rgByteOrder.Controls[1].BorderSpacing.Bottom := 6;
 end;
@@ -227,12 +227,12 @@ begin
     }
 
     { NumViewer }
-    NumViewerVisible := cbNumViewerVisible.Checked;
-    NumViewerPosition := TViewerPosition(cmbNumViewerPosition.ItemIndex);
-    NumViewerDataTypes := [];
+    DataViewerVisible := cbDataViewerVisible.Checked;
+    DataViewerPosition := TViewerPosition(cmbDataViewerPosition.ItemIndex);
+    DataViewerDataTypes := [];
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
-      if FDataTypeCheckBoxes[dt].Checked then Include(NumViewerDataTypes, dt);
-    cbNumViewerVisibleChange(nil);
+      if FDataTypeCheckBoxes[dt].Checked then Include(DataViewerDataTypes, dt);
+    cbDataViewerVisibleChange(nil);
 
     { ObjectViewer }
     ObjectViewerVisible := cbObjectViewerVisible.Checked;
@@ -244,7 +244,7 @@ begin
     RecordViewerPosition := TViewerPosition(cmbRecordViewerPosition.ItemIndex);
     cbRecordViewerVisibleChange(nil);
 
-    {ViewerVisible[vtStdViewer] := cbNumViewerVisible.Checked;
+    {ViewerVisible[vtStdViewer] := cbDataViewerVisible.Checked;
     ViewerVisible[vtRecordViewer] := CbRecordViewerVisible.Checked;
     for i:=1 to 4 do begin
       if FStdViewerPosRadioButtons[i].Checked
@@ -398,10 +398,10 @@ var
 begin
   with AParams do
   begin
-    cbNumViewerVisible.Checked := NumViewerVisible;
-    cmbNumViewerPosition.ItemIndex := ord(NumViewerPosition);
+    cbDataViewerVisible.Checked := DataViewerVisible;
+    cmbDataViewerPosition.ItemIndex := ord(DataViewerPosition);
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
-      FDataTypeCheckboxes[dt].Checked := dt in NumViewerDataTypes;
+      FDataTypeCheckboxes[dt].Checked := dt in DataViewerDataTypes;
 
     cbObjectViewerVisible.Checked := ObjectViewerVisible;
     cmbObjectViewerPosition.ItemIndex := ord(ObjectViewerPosition);
