@@ -136,9 +136,9 @@ type
     StatusbarPosDisplay : TOffsetDisplayBase;
     StatusbarSelDisplay : TOffsetDisplayBase;
 
-    LeftPanelWidth: Integer;
-    RightPanelWidth: Integer;
-    BottomPanelHeight: Integer;
+    //LeftPanelWidth: Integer;
+    //RightPanelWidth: Integer;
+    //BottomPanelHeight: Integer;
 
     NumViewerVisible: Boolean;
     NumViewerPosition: TViewerPosition;
@@ -189,9 +189,9 @@ var
     StatusbarPosDisplay: odbDec;
     StatusbarSelDisplay: odbDec;
 
-    LeftPanelWidth: 250;
-    RightPanelWidth: 250;
-    BottomPanelHeight: 250;
+    //LeftPanelWidth: 250;
+    //RightPanelWidth: 250;
+    //BottomPanelHeight: 250;
 
     NumViewerVisible: true;
     NumViewerPosition: vpRight;

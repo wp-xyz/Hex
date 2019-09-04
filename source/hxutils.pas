@@ -145,9 +145,11 @@ begin
     CharFieldForegroundColor := TColor(AIniFile.ReadInteger('Params',
       'CharFieldForegroundColor', Integer(CharFieldForegroundColor)));
 
+(*
     LeftPanelWidth := AIniFile.ReadInteger('Params', 'LeftPanelWidth', LeftPanelWidth);
     RightPanelWidth := AIniFile.ReadInteger('Params', 'RightPanelWidth', RightPanelWidth);
     BottomPanelHeight := AIniFile.ReadInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
+*)
 
     NumViewerVisible := AIniFile.ReadBool('Params', 'NumViewer.Visible', NumViewerVisible);
     s := AIniFile.ReadString('Params', 'NumViewer.Position', '');
@@ -272,9 +274,11 @@ begin
     AIniFile.WriteInteger('Params', 'CharFieldForegroundColor',
       Integer(CharFieldForegroundColor));
 
+  (*
     AIniFile.WriteInteger('Params', 'LeftPanelWidth', LeftPaneLWidth);
     AIniFile.WriteInteger('Params', 'RightPanelWidth', RightPanelWidth);
     AIniFile.WriteInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
+*)
 
     AIniFile.WriteBool('Params', 'NumViewer.Visible',
       NumViewerVisible);

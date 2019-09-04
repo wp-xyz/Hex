@@ -67,8 +67,11 @@ type
     procedure UpdateStatusBarPanelWidths;
     procedure UpdateViewerPanelVisible(APanel: TOMultiPanel);
 
+    procedure LoadFromIni;
+    procedure SaveToIni;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     procedure ActiveParams(var AParams: THexParams);
     procedure ApplyParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
@@ -107,7 +110,7 @@ implementation
 {$R *.lfm}
 
 uses
-  StrUtils,
+  StrUtils, IniFiles,
   hxStrings, hxUtils, hxHexEditor;
 
 constructor THexEditorFrame.Create(AOwner: TComponent);
@@ -115,6 +118,11 @@ begin
   inherited;
 end;
 
+destructor THexEditorFrame.Destroy;
+begin
+  SaveToIni;
+  inherited;
+end;
 procedure THexEditorFrame.ActiveParams(var AParams: THexParams);
 var
   i: Integer;
@@ -153,9 +161,9 @@ begin
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
 
-  AParams.LeftPanelWidth := LeftPanel.Width;
-  AParams.RightPanelWidth := RightPanel.Width;
-  AParams.BottomPanelHeight := BottomPanel.Height;
+  //AParams.LeftPanelWidth := round(MainPanel.PanelCollection[0].Position * MainPanel.Width);
+  //AParams.RightPanelWidth := round(MainPanel.PanelCollection[0].Position * MainPanel.Width);
+  //AParams.BottomPanelHeight := round(CenterPanel.PanelCollection[0].Position * CenterPanel.Height);
 
   if Assigned(FNumViewer) then
   begin
@@ -220,9 +228,14 @@ begin
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
 
-  LeftPanel.Width := AParams.LeftPanelWidth;
-  RightPanel.Width := AParams.RightPanelWidth;
-  BottomPanel.Height := AParams.BottomPanelHeight;
+  {
+  if FSizeValid then
+  begin
+    MainPanel.PanelCollection[0].Position := AParams.LeftPanelWidth / MainPanel.Width;
+    MainPanel.PanelCollection[1].Position := AParams.RightPanelWidth / MainPanel.Width;
+    CenterPanel.PanelCollection[0].Position := AParams.BottomPanelHeight / CenterPanel.Height;
+  end;
+  }
 
   ShowNumViewer := AParams.NumViewerVisible;         // this creates the NumViewer
   if Assigned(FNumViewer) then
@@ -245,6 +258,8 @@ begin
     for i := 0 to High(AParams.RecordViewerColWidths) do
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];
   end;
+
+  LoadFromIni;
 
   UpdateStatusbarPanelWidths;
   UpdateViewerPanelVisible(LeftPanel);
@@ -466,6 +481,22 @@ begin
 
   if ok then
     HexEditor.Seek(APosition, soFromBeginning);
+end;
+
+procedure THexEditorFrame.LoadFromIni;
+var
+  ini: TCustomIniFile;
+begin
+  ini := CreateIniFile;
+  try
+    MainPanel.LoadPositionsFromIniFile(ini, 'MainPanel', 'Positions');
+    LeftPanel.LoadPositionsFromIniFile(ini, 'LeftPanel', 'Positions');
+    CenterPanel.LoadPositionsFromIniFile(ini, 'CenterPanel', 'Positions');
+    RightPanel.LoadPositionsFromIniFile(ini, 'RightPanel', 'Positions');
+    BottomPanel.LoadPositionsFromIniFile(ini, 'BottomPanel', 'Positions');
+  finally
+    ini.Free;
+  end;
 end;
 
 procedure THexEditorFrame.OpenFile(const AFileName: string; WriteProtected: boolean);
@@ -803,6 +834,21 @@ begin
   parentPanel.ResizeControls;
 end;
 
+procedure THexEditorFrame.SaveToIni;
+var
+  ini: TCustomIniFile;
+begin
+  ini := CreateIniFile;
+  try
+    MainPanel.SavePositionsToIniFile(ini, 'MainPanel', 'Positions');
+    LeftPanel.SavePositionsToIniFile(ini, 'LeftPanel', 'Positions');
+    CenterPanel.SavePositionsToIniFile(ini, 'CenterPanel', 'Positions');
+    RightPanel.SavePositionsToIniFile(ini, 'RightPanel', 'Positions');
+    BottomPanel.SavePositionsToIniFile(ini, 'BottomPanel', 'Positions');
+  finally
+    ini.Free;
+  end;
+end;
 
 end.
 

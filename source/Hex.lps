@@ -20,8 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxMain"/>
-        <TopLine Value="186"/>
-        <CursorPos X="75" Y="202"/>
+        <TopLine Value="708"/>
+        <CursorPos X="3" Y="714"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -33,8 +33,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxHexEditorFrame"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
+        <TopLine Value="151"/>
+        <CursorPos X="5" Y="169"/>
         <UsageCount Value="200"/>
+        <Bookmarks Count="1">
+          <Item0 Y="341" ID="1"/>
+        </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -42,9 +48,9 @@
         <Filename Value="hxglobal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxGlobal"/>
-        <EditorIndex Value="20"/>
-        <TopLine Value="58"/>
-        <CursorPos X="44" Y="74"/>
+        <EditorIndex Value="16"/>
+        <TopLine Value="169"/>
+        <CursorPos X="7" Y="194"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
@@ -59,7 +65,7 @@
         <Filename Value="hxstrings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxStrings"/>
-        <EditorIndex Value="31"/>
+        <EditorIndex Value="23"/>
         <CursorPos X="23" Y="21"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -69,8 +75,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxUtils"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="166"/>
-        <CursorPos X="32" Y="179"/>
+        <CursorPos X="11" Y="18"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -97,7 +102,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="hxDataModule"/>
-        <EditorIndex Value="30"/>
+        <EditorIndex Value="22"/>
         <CursorPos X="58" Y="17"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -111,7 +116,7 @@
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxBasicViewerFrame"/>
         <EditorIndex Value="9"/>
-        <CursorPos X="49" Y="8"/>
+        <CursorPos X="78" Y="12"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -134,7 +139,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxSettingsDlg"/>
-        <EditorIndex Value="29"/>
+        <EditorIndex Value="21"/>
         <TopLine Value="147"/>
         <CursorPos Y="153"/>
         <UsageCount Value="201"/>
@@ -151,7 +156,7 @@
         <EditorIndex Value="2"/>
         <TopLine Value="65"/>
         <CursorPos X="49" Y="54"/>
-        <UsageCount Value="172"/>
+        <UsageCount Value="173"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit12>
@@ -162,13 +167,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxRecordViewerFrame"/>
-        <EditorIndex Value="21"/>
+        <EditorIndex Value="17"/>
         <TopLine Value="385"/>
         <CursorPos X="26" Y="396"/>
-        <UsageCount Value="158"/>
-        <Bookmarks Count="1">
-          <Item0 X="24" Y="568" ID="1"/>
-        </Bookmarks>
+        <UsageCount Value="159"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit13>
@@ -179,10 +181,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxRecordEditorForm"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="219"/>
         <CursorPos X="3" Y="178"/>
-        <UsageCount Value="136"/>
+        <UsageCount Value="137"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit14>
@@ -190,20 +192,20 @@
         <Filename Value="hxvieweritems.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerItems"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="13"/>
         <CursorPos X="3" Y="12"/>
-        <UsageCount Value="128"/>
+        <UsageCount Value="129"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="hxviewergrids.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerGrids"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="12"/>
         <TopLine Value="240"/>
         <CursorPos Y="307"/>
-        <UsageCount Value="128"/>
+        <UsageCount Value="129"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -213,9 +215,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <UnitName Value="hxObjectViewerFrame"/>
-        <EditorIndex Value="26"/>
+        <EditorIndex Value="19"/>
         <CursorPos X="51" Y="7"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit17>
@@ -229,7 +231,7 @@
         <EditorIndex Value="8"/>
         <TopLine Value="51"/>
         <CursorPos X="3" Y="55"/>
-        <UsageCount Value="35"/>
+        <UsageCount Value="36"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit18>
@@ -243,490 +245,482 @@
         <EditorIndex Value="1"/>
         <TopLine Value="46"/>
         <CursorPos X="55" Y="61"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="27"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit19>
       <Unit20>
+        <Filename Value="hxpascalrecordform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="PascalRecordForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="hxPascalRecordForm"/>
+        <EditorIndex Value="18"/>
+        <TopLine Value="47"/>
+        <CursorPos Y="77"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit20>
+      <Unit21>
         <Filename Value="hxviewerpanel.pas"/>
         <UnitName Value="hxViewerPanel"/>
         <EditorIndex Value="6"/>
         <TopLine Value="67"/>
         <CursorPos X="7" Y="79"/>
-        <UsageCount Value="47"/>
-        <Loaded Value="True"/>
-      </Unit20>
-      <Unit21>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <EditorIndex Value="11"/>
-        <TopLine Value="3551"/>
-        <CursorPos Y="3567"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="48"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3551"/>
+        <CursorPos Y="3567"/>
+        <UsageCount Value="24"/>
+      </Unit22>
+      <Unit23>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\comctrls.pp"/>
         <UnitName Value="ComCtrls"/>
-        <EditorIndex Value="27"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="2295"/>
         <CursorPos X="33" Y="2133"/>
         <UsageCount Value="22"/>
-        <Loaded Value="True"/>
-      </Unit22>
-      <Unit23>
+      </Unit23>
+      <Unit24>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4173"/>
         <CursorPos X="3" Y="4175"/>
         <UsageCount Value="9"/>
-      </Unit23>
-      <Unit24>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\forms.pp"/>
-        <UnitName Value="Forms"/>
-        <EditorIndex Value="16"/>
-        <TopLine Value="307"/>
-        <CursorPos X="17" Y="324"/>
-        <UsageCount Value="24"/>
-        <Loaded Value="True"/>
       </Unit24>
       <Unit25>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\controls.pp"/>
-        <UnitName Value="Controls"/>
-        <EditorIndex Value="19"/>
-        <TopLine Value="1298"/>
-        <CursorPos X="15" Y="1313"/>
-        <UsageCount Value="29"/>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="307"/>
+        <CursorPos X="17" Y="324"/>
+        <UsageCount Value="25"/>
         <Loaded Value="True"/>
       </Unit25>
       <Unit26>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1298"/>
+        <CursorPos X="15" Y="1313"/>
+        <UsageCount Value="29"/>
+      </Unit26>
+      <Unit27>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\objpas\sysutils\osutil.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="196"/>
         <CursorPos X="32" Y="208"/>
         <UsageCount Value="10"/>
-      </Unit26>
-      <Unit27>
+      </Unit27>
+      <Unit28>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2162"/>
         <CursorPos Y="2181"/>
         <UsageCount Value="10"/>
-      </Unit27>
-      <Unit28>
+      </Unit28>
+      <Unit29>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\packages\fcl-base\src\inifiles.pp"/>
         <UnitName Value="IniFiles"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="155"/>
         <CursorPos X="3" Y="150"/>
         <UsageCount Value="10"/>
-      </Unit28>
-      <Unit29>
+      </Unit29>
+      <Unit30>
         <Filename Value="..\..\..\git\mphexeditor\src\mphexeditor.pas"/>
         <UnitName Value="MPHexEditor"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="8949"/>
         <CursorPos Y="8980"/>
         <UsageCount Value="10"/>
-      </Unit29>
-      <Unit30>
+      </Unit30>
+      <Unit31>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\lresources.pp"/>
         <UnitName Value="LResources"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5342"/>
         <CursorPos Y="5359"/>
         <UsageCount Value="10"/>
-      </Unit30>
-      <Unit31>
+      </Unit31>
+      <Unit32>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\objpas\sysutils\osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="10" Y="35"/>
         <UsageCount Value="10"/>
-      </Unit31>
-      <Unit32>
+      </Unit32>
+      <Unit33>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="117"/>
         <CursorPos X="5" Y="134"/>
         <UsageCount Value="10"/>
-      </Unit32>
-      <Unit33>
+      </Unit33>
+      <Unit34>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\objpas\math.pp"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="9"/>
-      </Unit33>
-      <Unit34>
+      </Unit34>
+      <Unit35>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\inc\generic.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2070"/>
         <CursorPos X="5" Y="2085"/>
         <UsageCount Value="19"/>
-      </Unit34>
-      <Unit35>
+      </Unit35>
+      <Unit36>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\inc\mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="91"/>
         <CursorPos X="71" Y="97"/>
         <UsageCount Value="3"/>
-      </Unit35>
-      <Unit36>
+      </Unit36>
+      <Unit37>
         <Filename Value="hxhexeditorframe.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="34"/>
         <UsageCount Value="4"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit36>
-      <Unit37>
+      </Unit37>
+      <Unit38>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\tabsheet.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="33"/>
         <CursorPos X="3" Y="62"/>
         <UsageCount Value="10"/>
-      </Unit37>
-      <Unit38>
+      </Unit38>
+      <Unit39>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\grids.pas"/>
         <UnitName Value="Grids"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="1364"/>
         <CursorPos X="47" Y="1379"/>
         <UsageCount Value="66"/>
-        <Loaded Value="True"/>
-      </Unit38>
-      <Unit39>
+      </Unit39>
+      <Unit40>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\statuspanels.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="28"/>
         <UsageCount Value="6"/>
-      </Unit39>
-      <Unit40>
+      </Unit40>
+      <Unit41>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\imglist.pp"/>
         <UnitName Value="ImgList"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="336"/>
         <CursorPos X="3" Y="267"/>
         <UsageCount Value="2"/>
-      </Unit40>
-      <Unit41>
+      </Unit41>
+      <Unit42>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\imglist.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1765"/>
         <CursorPos Y="1783"/>
         <UsageCount Value="10"/>
-      </Unit41>
-      <Unit42>
+      </Unit42>
+      <Unit43>
         <Filename Value="hxviewer.pas"/>
         <UnitName Value="hxViewer"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <CursorPos X="23" Y="52"/>
         <UsageCount Value="7"/>
-      </Unit42>
-      <Unit43>
+      </Unit43>
+      <Unit44>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\radiogroup.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="367"/>
         <CursorPos Y="384"/>
         <UsageCount Value="8"/>
-      </Unit43>
-      <Unit44>
+      </Unit44>
+      <Unit45>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\objpas\typinfo.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="262"/>
         <CursorPos X="7" Y="279"/>
         <UsageCount Value="7"/>
-      </Unit44>
-      <Unit45>
+      </Unit45>
+      <Unit46>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\stdctrls.pp"/>
         <UnitName Value="StdCtrls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1272"/>
         <CursorPos X="3" Y="1289"/>
         <UsageCount Value="7"/>
-      </Unit45>
-      <Unit46>
+      </Unit46>
+      <Unit47>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\buttoncontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="33"/>
         <CursorPos Y="50"/>
         <UsageCount Value="5"/>
-      </Unit46>
-      <Unit47>
+      </Unit47>
+      <Unit48>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\canvas.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1783"/>
         <CursorPos Y="1799"/>
         <UsageCount Value="7"/>
-      </Unit47>
-      <Unit48>
+      </Unit48>
+      <Unit49>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\interfaces\win32\win32winapi.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2252"/>
         <CursorPos X="22" Y="2254"/>
         <UsageCount Value="3"/>
-      </Unit48>
-      <Unit49>
+      </Unit49>
+      <Unit50>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\customcheckbox.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="146"/>
         <CursorPos Y="174"/>
         <UsageCount Value="27"/>
-      </Unit49>
-      <Unit50>
+      </Unit50>
+      <Unit51>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\packages\fcl-base\src\contnrs.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="3" Y="31"/>
         <UsageCount Value="27"/>
-      </Unit50>
-      <Unit51>
+      </Unit51>
+      <Unit52>
         <Filename Value="hxrecordeditorform.lfm"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="18"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit51>
-      <Unit52>
+      </Unit52>
+      <Unit53>
         <Filename Value="hxrecordviewerframe.lfm"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="14"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit52>
-      <Unit53>
+      </Unit53>
+      <Unit54>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\containedaction.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="72"/>
         <CursorPos Y="100"/>
         <UsageCount Value="7"/>
-      </Unit53>
-      <Unit54>
+      </Unit54>
+      <Unit55>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\customaction.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="227"/>
         <CursorPos Y="247"/>
         <UsageCount Value="7"/>
-      </Unit54>
-      <Unit55>
+      </Unit55>
+      <Unit56>
         <Filename Value="C:\lazarus-trunk_fpc304\fpc\3.0.4\source\rtl\objpas\sysutils\syshelp.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1236"/>
         <CursorPos X="3" Y="1263"/>
         <UsageCount Value="7"/>
-      </Unit55>
-      <Unit56>
+      </Unit56>
+      <Unit57>
         <Filename Value="hxnumviewerframe.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="2"/>
         <UsageCount Value="14"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
-      </Unit56>
-      <Unit57>
+      </Unit57>
+      <Unit58>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\extctrls.pp"/>
         <UnitName Value="ExtCtrls"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="366"/>
         <CursorPos X="20" Y="322"/>
         <UsageCount Value="25"/>
-        <Loaded Value="True"/>
-      </Unit57>
-      <Unit58>
+      </Unit58>
+      <Unit59>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\customframe.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="166"/>
         <CursorPos X="3" Y="196"/>
         <UsageCount Value="9"/>
-      </Unit58>
-      <Unit59>
+      </Unit59>
+      <Unit60>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\toolbar.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="284"/>
         <CursorPos X="3" Y="286"/>
         <UsageCount Value="9"/>
-      </Unit59>
-      <Unit60>
-        <Filename Value="hxhexeditor.pas"/>
-        <UnitName Value="hxHexEditor"/>
-        <EditorIndex Value="28"/>
-        <TopLine Value="23"/>
-        <CursorPos X="50" Y="46"/>
-        <UsageCount Value="21"/>
-        <Loaded Value="True"/>
       </Unit60>
       <Unit61>
-        <Filename Value="thirdparty\OMultiPanel.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="585"/>
-        <CursorPos Y="602"/>
-        <UsageCount Value="14"/>
+        <Filename Value="hxhexeditor.pas"/>
+        <UnitName Value="hxHexEditor"/>
+        <EditorIndex Value="20"/>
+        <TopLine Value="23"/>
+        <CursorPos X="50" Y="46"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
       </Unit61>
       <Unit62>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\interfaces\win32\win32lclintf.inc"/>
-        <EditorIndex Value="12"/>
-        <TopLine Value="761"/>
-        <CursorPos X="30" Y="779"/>
+        <Filename Value="thirdparty\OMultiPanel.pas"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="1059"/>
+        <CursorPos X="3" Y="1063"/>
         <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit62>
       <Unit63>
+        <Filename Value="C:\lazarus-trunk_fpc304\lcl\interfaces\win32\win32lclintf.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="761"/>
+        <CursorPos X="30" Y="779"/>
+        <UsageCount Value="14"/>
+      </Unit63>
+      <Unit64>
         <Filename Value="C:\lazarus-trunk_fpc304\lcl\dialogs.pp"/>
         <UnitName Value="Dialogs"/>
-        <EditorIndex Value="25"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="749"/>
         <CursorPos Y="763"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
-      </Unit63>
-      <Unit64>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="PascalRecordForm"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="hxPascalRecordForm"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="22"/>
-        <TopLine Value="47"/>
-        <CursorPos Y="77"/>
-        <UsageCount Value="21"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit64>
       <Unit65>
         <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\synedit.pp"/>
         <UnitName Value="SynEdit"/>
-        <EditorIndex Value="23"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="4532"/>
         <CursorPos Y="4550"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit65>
       <Unit66>
         <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\syneditlines.pas"/>
         <UnitName Value="SynEditLines"/>
-        <EditorIndex Value="24"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="300"/>
         <CursorPos Y="318"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit66>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="83" Column="15" TopLine="70"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="191" TopLine="184"/>
       </Position1>
       <Position2>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="570" Column="24" TopLine="565"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="229" Column="87" TopLine="211"/>
       </Position2>
       <Position3>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="28" Column="52" TopLine="7"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="74" Column="15" TopLine="58"/>
       </Position3>
       <Position4>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="26" Column="38" TopLine="9"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="160" Column="91" TopLine="137"/>
       </Position4>
       <Position5>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="51" Column="24" TopLine="29"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="26" Column="15" TopLine="6"/>
       </Position5>
       <Position6>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="52" Column="48" TopLine="29"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="329" Column="89" TopLine="324"/>
       </Position6>
       <Position7>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="46" Column="64" TopLine="30"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="191" Column="34" TopLine="174"/>
       </Position7>
       <Position8>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="59" Column="31" TopLine="31"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="75" Column="15" TopLine="59"/>
       </Position8>
       <Position9>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="64" Column="14" TopLine="37"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="224" Column="14" TopLine="203"/>
       </Position9>
       <Position10>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="573" Column="39" TopLine="556"/>
+        <Filename Value="thirdparty\OMultiPanel.pas"/>
+        <Caret Line="260" Column="14" TopLine="243"/>
       </Position10>
       <Position11>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="396" Column="25" TopLine="385"/>
+        <Filename Value="thirdparty\OMultiPanel.pas"/>
+        <Caret Line="231" Column="27" TopLine="204"/>
       </Position11>
       <Position12>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="83" Column="26" TopLine="69"/>
+        <Filename Value="thirdparty\OMultiPanel.pas"/>
+        <Caret Line="720" Column="3" TopLine="717"/>
       </Position12>
       <Position13>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="52" TopLine="37"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="223" Column="43" TopLine="203"/>
       </Position13>
       <Position14>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="53" TopLine="37"/>
+        <Filename Value="hxmain.pas"/>
+        <Caret Line="184" Column="19" TopLine="176"/>
       </Position14>
       <Position15>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="54" TopLine="37"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="73" Column="34" TopLine="59"/>
       </Position15>
       <Position16>
-        <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\synedit.pp"/>
-        <Caret Line="4549" TopLine="4532"/>
+        <Filename Value="hxutils.pas"/>
+        <Caret Line="106" Column="35" TopLine="96"/>
       </Position16>
       <Position17>
-        <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\synedit.pp"/>
-        <Caret Line="4550" TopLine="4532"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="130" Column="7" TopLine="115"/>
       </Position17>
       <Position18>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <Caret Line="3546" TopLine="3529"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="121" Column="27" TopLine="104"/>
       </Position18>
       <Position19>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <Caret Line="3549" TopLine="3529"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="113" Column="22" TopLine="106"/>
       </Position19>
       <Position20>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <Caret Line="3550" TopLine="3529"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="127" Column="15" TopLine="110"/>
       </Position20>
       <Position21>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <Caret Line="3551" TopLine="3529"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="129" TopLine="110"/>
       </Position21>
       <Position22>
-        <Filename Value="C:\lazarus-trunk_fpc304\lcl\include\control.inc"/>
-        <Caret Line="3567" TopLine="3551"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="850" TopLine="818"/>
       </Position22>
       <Position23>
-        <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\synedit.pp"/>
-        <Caret Line="4549" TopLine="4532"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="75" Column="25" TopLine="52"/>
       </Position23>
       <Position24>
-        <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\synedit.pp"/>
-        <Caret Line="4550" TopLine="4532"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="127" TopLine="117"/>
       </Position24>
       <Position25>
-        <Filename Value="C:\lazarus-trunk_fpc304\components\synedit\syneditlines.pas"/>
-        <Caret Line="317" TopLine="300"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="81" Column="16" TopLine="60"/>
       </Position25>
       <Position26>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="574" Column="17" TopLine="565"/>
+        <Filename Value="hxutils.pas"/>
+        <Caret Line="19" Column="29"/>
       </Position26>
       <Position27>
-        <Filename Value="hxrecordviewerframe.pas"/>
-        <Caret Line="396" Column="26" TopLine="385"/>
+        <Filename Value="hxutils.pas"/>
+        <Caret Line="271" TopLine="253"/>
       </Position27>
       <Position28>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="72" TopLine="42"/>
+        <Filename Value="hxutils.pas"/>
+        <Caret Line="18" Column="11"/>
       </Position28>
       <Position29>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="48" Column="10" TopLine="31"/>
+        <Filename Value="hxutils.pas"/>
+        <Caret Line="146" TopLine="120"/>
       </Position29>
       <Position30>
-        <Filename Value="hxpascalrecordform.pas"/>
-        <Caret Line="72" Column="33" TopLine="43"/>
+        <Filename Value="hxglobal.pas"/>
+        <Caret Line="194" Column="7" TopLine="169"/>
       </Position30>
     </JumpHistory>
     <RunParams>

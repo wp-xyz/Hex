@@ -178,6 +178,7 @@
         <Filename Value="hxpascalrecordform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="PascalRecordForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxPascalRecordForm"/>
       </Unit20>
