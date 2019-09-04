@@ -1,0 +1,5 @@
+inherited ObjectViewerFrame: TObjectViewerFrame
+  inherited lblHeader: TLabel
+    Caption = ' Object viewer'
+  end
+end
