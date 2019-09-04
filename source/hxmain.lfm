@@ -489,6 +489,11 @@ object MainForm: TMainForm
       Caption = 'Go to backward'
       OnExecute = acGoToRepeatExecute
     end
+    object acAbout: TAction
+      Category = 'Help'
+      Caption = 'About...'
+      OnExecute = acAboutExecute
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images
@@ -702,7 +707,7 @@ object MainForm: TMainForm
     object mnuHelp: TMenuItem
       Caption = 'Help'
       object mnuHelpAbout: TMenuItem
-        Caption = 'About...'
+        Action = acAbout
       end
     end
   end

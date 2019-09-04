@@ -62,6 +62,7 @@ type
     acEditEditingAllowed: TAction;
     acGoToRepeat: TAction;
     acGotoBackward: TAction;
+    acAbout: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
@@ -140,6 +141,7 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
     procedure acBookmarkSet(Sender: TObject);
@@ -197,7 +199,7 @@ implementation
 uses
   IniFiles, Math,
   MPHexEditor,
-  hxStrings, hxUtils, {%H-}hxDataModule, hxSettingsDlg, hxGotoDlg;
+  hxStrings, hxUtils, {%H-}hxDataModule, hxSettingsDlg, hxGotoDlg, hxAbout;
 
 const
   PROG_NAME = 'Hex';
@@ -207,6 +209,18 @@ const
 
 
 { TMainForm }
+
+procedure TMainForm.acAboutExecute(Sender: TObject);
+var
+  F: TAboutForm;
+begin
+  F := TAboutForm.Create(nil);
+  try
+    F.ShowModal;
+  finally
+    F.Free;
+  end;
+end;
 
 procedure TMainForm.acBookmarkClear(Sender: TObject);
 var

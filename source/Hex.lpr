@@ -10,7 +10,7 @@ uses
   Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager,
   hxDataModule, hxViewerItems, hxViewerGrids,
   hxBasicViewerFrame, hxNumViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame,
-  hxSettingsDlg, hxGotoDlg, hxRecordEditorForm, hxGridViewerFrame;
+  hxSettingsDlg, hxGotoDlg, hxRecordEditorForm, hxGridViewerFrame, hxAbout;
 
 {$R *.res}
 
@@ -20,6 +20,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TCommonData, CommonData);
+  Application.CreateForm(TAboutForm, AboutForm);
   Application.Run;
 end.
 
