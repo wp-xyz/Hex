@@ -118,6 +118,7 @@ type
     RulerNumberBase: TOffsetDisplayBase;
     BytesPerRow: Integer;
     BytesPerColumn: Integer;
+    HexLowerCase: Boolean;
 
     BackgroundColor: TColor;
     ActiveFieldBackgroundColor: TColor;
@@ -171,6 +172,7 @@ var
     RulerNumberBase: odbHex;
     BytesPerRow: 16;
     BytesPerColumn: 1;
+    HexLowercase: false;
 
     BackgroundColor: clWindow;
     ActiveFieldBackgroundColor: clWindow;

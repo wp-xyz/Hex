@@ -121,6 +121,7 @@ begin
       RulerNumberBase := TOffsetDisplayBase(GetEnumValue(TypeInfo(TOffsetDisplayBase), s));
     BytesPerRow := AIniFile.ReadInteger('Params', 'BytesPerRow', BytesPerRow);
     BytesPerColumn := AIniFile.ReadInteger('Params', 'BytesPerColumn', BytesPerColumn);
+    HexLowercase := AIniFile.ReadBool('Params', 'HexLowercase', HexLowercase);
 
     BackgroundColor := TColor(AIniFile.ReadInteger('Params',
       'BackgroundColor', Integer(BackgroundColor)));
@@ -250,6 +251,8 @@ begin
       BytesPerRow);
     AIniFile.WriteInteger('Params', 'BytesPerColumn',
       BytesPerColumn);
+    AIniFile.WriteBool('Params', 'HexLowercase',
+      HexLowercase);
 
     AIniFile.WriteInteger('Params', 'BackgroundColor',
       Integer(BackgroundColor));

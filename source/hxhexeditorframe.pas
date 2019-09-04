@@ -142,6 +142,7 @@ begin
     AParams.OffsetDisplayHexPrefix := GetOffsetDisplayHexPrefix(HexEditor.OffsetFormat);
     AParams.BytesPerRow := HexEditor.BytesPerRow;
     AParams.BytesPerColumn := HexEditor.BytesPerColumn;
+    AParams.HexLowercase := HexEditor.HexLowercase;
 
     AParams.BackgroundColor := HexEditor.Colors.Background;
     AParams.ActiveFieldBackgroundColor := HexEditor.Colors.ActiveFieldBackground;
@@ -209,6 +210,7 @@ begin
     end;
     HexEditor.BytesPerRow := AParams.BytesPerRow;
     HexEditor.BytesPerColumn := AParams.BytesPerColumn;
+    HexEditor.HexLowercase := AParams.HexLowerCase;
 
     HexEditor.Colors.Background := AParams.BackgroundColor;
     HexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;

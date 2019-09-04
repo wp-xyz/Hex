@@ -27,6 +27,7 @@ type
     cbViewOnly: TCheckBox;
     cbWriteProtected: TCheckBox;
     cbAllowInsertMode: TCheckBox;
+    cbHexLowercase: TCheckBox;
     clbActiveFieldBackground: TColorButton;
     clbChangedBackground: TColorButton;
     clbChangedForeground: TColorButton;
@@ -200,6 +201,8 @@ begin
 
     RulerVisible := cbRulerVisible.Checked;
     RulerNumberBase := TOffsetDisplayBase(cmbRulerNumberBase.ItemIndex+1);
+
+    HexLowerCase := cbHexLowercase.Checked;
 
     { Colors }
     BackgroundColor := clbBackground.ButtonColor;
@@ -376,6 +379,8 @@ begin
 
     cbRulerVisible.Checked := RulerVisible;
     cmbRulerNumberBase.ItemIndex := ord(RulerNumberBase) - 1;
+
+    cbHexLowercase.Checked := HexLowerCase;
 
 
     (*

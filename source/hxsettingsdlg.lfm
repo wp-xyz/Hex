@@ -40,10 +40,10 @@ object SettingsForm: TSettingsForm
     Height = 386
     Top = 6
     Width = 522
-    ActivePage = pgViewer
+    ActivePage = pgFormat
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 1
     object pgEditor: TTabSheet
       Caption = 'Editor'
@@ -308,6 +308,19 @@ object SettingsForm: TSettingsForm
         BorderSpacing.Right = 16
         Caption = 'Ruler number base'
         ParentColor = False
+      end
+      object cbHexLowercase: TCheckBox
+        AnchorSideLeft.Control = cbBytesPerRow
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblBytesPerRow
+        AnchorSideTop.Side = asrCenter
+        Left = 304
+        Height = 19
+        Top = 26
+        Width = 154
+        BorderSpacing.Left = 60
+        Caption = 'Lowercase hex characters'
+        TabOrder = 6
       end
     end
     object pgColors: TTabSheet
