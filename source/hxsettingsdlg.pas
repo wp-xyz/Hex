@@ -93,12 +93,14 @@ type
     procedure FormCreate(Sender: TObject);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
-    procedure SetColorData(const AParams: THexParams);
     procedure SetEditorData(const AParams: THexParams);
     procedure SetFormatData(const AParams: THexParams);
     procedure SetViewerData(const AParams: THexParams);
 
   public
+    procedure ColorsFromControls(var AParams: TColorParams);
+    procedure ColorsToControls(const AParams: TColorParams);
+
     procedure ParamsFromControls(var AParams: THexParams);
     procedure ParamsToControls(const AParams: THexParams);
 
@@ -119,7 +121,10 @@ var
   idx: Integer;
 begin
   idx := PageControl.ActivePageIndex;
-  ParamsToControls(DefaultHexParams);
+  if PageControl.ActivePage = pgColors then
+    ColorsToControls(DefaultColorParams)
+  else
+    ParamsToControls(DefaultHexParams);
   PageControl.ActivePageIndex := idx;
 end;
 
@@ -146,6 +151,47 @@ procedure TSettingsForm.cbViewOnlyChange(Sender: TObject);
 begin
   cbWriteProtected.Enabled := not cbViewOnly.Checked;
   cbAllowInsertMode.Enabled := not cbViewOnly.Checked;
+end;
+
+procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
+var
+  dt: TDataType;
+  i: integer;
+  dir: string;
+  cmd: string;
+begin
+  AParams := ColorParams;
+  with AParams do
+  begin
+    BackgroundColor := clbBackground.ButtonColor;
+    ActiveFieldBackgroundColor := clbActiveFieldBackground.ButtonColor;
+    OffsetBackgroundColor := clbOffsetBackground.ButtonColor;
+    OffsetForegroundColor := clbOffsetForeground.ButtonColor;
+    CurrentOffsetBackgroundColor := clbCurrentOffsetBackground.ButtonColor;
+    CurrentOffsetForegroundColor := clbCurrentOffsetForeground.ButtonColor;
+    EvenColumnForegroundColor := clbEvenColumnForeground.ButtonColor;
+    OddColumnForegroundColor := clbOddColumnForeground.ButtonColor;
+    ChangedBackgroundColor := clbChangedBackground.ButtonColor;
+    ChangedForegroundColor := clbchangedForeground.ButtonColor;
+    CharFieldForegroundColor := clbCharFieldForeground.ButtonColor;
+  end;
+end;
+
+procedure TSettingsForm.ColorsToControls(const AParams: TColorParams);
+begin
+  with AParams do begin
+    clbBackground.ButtonColor := BackgroundColor;
+    clbActiveFieldBackground.ButtonColor := ActiveFieldBackgroundColor;
+    clbOffsetBackground.ButtonColor := OffsetBackgroundColor;
+    clbOffsetForeground.ButtonColor := OffsetForegroundColor;
+    clbCurrentOffsetBackground.ButtonColor := CurrentOffsetBackgroundColor;
+    clbCurrentOffsetForeground.ButtonColor := CurrentOffsetForegroundColor;
+    clbEvenColumnForeground.ButtonColor := EvenColumnForegroundColor;
+    clbOddColumnForeground.ButtonColor := OddColumnForegroundColor;
+    clbChangedBackground.ButtonColor := ChangedBackgroundColor;
+    clbChangedForeground.ButtonColor := ChangedForegroundColor;
+    clbCharFieldForeground.ButtonColor := CharfieldForegroundColor;
+  end;
 end;
 
 procedure TSettingsForm.FormCreate(Sender: TObject);
@@ -210,23 +256,7 @@ begin
 
     HexLowerCase := cbHexLowercase.Checked;
 
-    { Colors }
-    BackgroundColor := clbBackground.ButtonColor;
-    ActiveFieldBackgroundColor := clbActiveFieldBackground.ButtonColor;
-    OffsetBackgroundColor := clbOffsetBackground.ButtonColor;
-    OffsetForegroundColor := clbOffsetForeground.ButtonColor;
-    CurrentOffsetBackgroundColor := clbCurrentOffsetBackground.ButtonColor;
-    CurrentOffsetForegroundColor := clbCurrentOffsetForeground.ButtonColor;
-    EvenColumnForegroundColor := clbEvenColumnForeground.ButtonColor;
-    OddColumnForegroundColor := clbOddColumnForeground.ButtonColor;
-    ChangedBackgroundColor := clbChangedBackground.ButtonColor;
-    ChangedForegroundColor := clbchangedForeground.ButtonColor;
-    CharFieldForegroundColor := clbCharFieldForeground.ButtonColor;
     {
-    PositionTextColor := BtnPositionTextColor.SelectionColor;
-    PositionbackgroundColor := BtnPositionBackgroundColor.SelectionColor;
-    CursorFrameColor := BtnCursorFrameColor.SelectionColor;
-
     EditorFontName := FontInfo.Font.Name;
     EditorFontSize := FontInfo.Font.Size;
     EditorFontStyle := FontInfo.Font.Style;
@@ -315,26 +345,8 @@ begin
 
   SetEditorData(AParams);
   SetFormatData(AParams);
-  SetColorData(AParams);
   SetViewerData(AParams);
 //  SetWinData(WinParams);
-end;
-
-procedure TSettingsForm.SetColorData(const AParams: THexParams);
-begin
-  with AParams do begin
-    clbBackground.ButtonColor := BackgroundColor;
-    clbActiveFieldBackground.ButtonColor := ActiveFieldBackgroundColor;
-    clbOffsetBackground.ButtonColor := OffsetBackgroundColor;
-    clbOffsetForeground.ButtonColor := OffsetForegroundColor;
-    clbCurrentOffsetBackground.ButtonColor := CurrentOffsetBackgroundColor;
-    clbCurrentOffsetForeground.ButtonColor := CurrentOffsetForegroundColor;
-    clbEvenColumnForeground.ButtonColor := EvenColumnForegroundColor;
-    clbOddColumnForeground.ButtonColor := OddColumnForegroundColor;
-    clbChangedBackground.ButtonColor := ChangedBackgroundColor;
-    clbChangedForeground.ButtonColor := ChangedForegroundColor;
-    clbCharFieldForeground.ButtonColor := CharfieldForegroundColor;
-  end;
 end;
 
 procedure TSettingsForm.SetEditorData(const AParams: THexParams);

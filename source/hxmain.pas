@@ -289,22 +289,33 @@ var
   D: TSettingsForm;
   F: THexEditorFrame;
   params: THexParams;
+  colors: TColorParams;
 begin
   F := GetActiveHexEditorFrame;
   D := TSettingsForm.Create(nil);
   try
     params := HexParams;
-    if Assigned(F) then
-      F.ActiveParams(params{%H-});
+    colors := ColorParams;
+    if Assigned(F) then begin
+      F.ActiveHexParams(params{%H-});
+      F.ActiveColors(colors{%H-});
+    end;
+
     D.ParamsToControls(params);
+    D.ColorsToControls(colors);
+
     if D.ShowModal = mrOK then
     begin
       D.ParamsFromControls(params);
+      D.ColorsFromControls(colors);
       HexParams.SettingsPageIndex := params.SettingsPageIndex;
-      if Assigned(F) then
-        F.ApplyParams(params)
-      else
+      if Assigned(F) then begin
+        F.ApplyHexParams(params);
+        F.ApplyColors(colors);
+      end else begin
         HexParams := params;
+        ColorParams := colors;
+      end;
     end;
   finally
     D.Free;
@@ -573,7 +584,7 @@ begin
   for i := 0 to PageControl.PageCount-1 do
   begin
     F := GetHexEditorFrame(i);
-    F.ApplyParams(AParams);
+    F.ApplyHexParams(AParams);
   end;
 end;
 
@@ -614,7 +625,8 @@ begin
       FRecentFilesManager.AddToRecent(AFileName);
     end else
       F.Caption := Format(SNoName, [CountEmpty]);
-    F.ApplyParams(HexParams);
+    F.ApplyHexParams(HexParams);
+    F.ApplyColors(ColorParams);
     page.Caption := F.Caption;
     PageControl.ActivePage := page;
     PageControl.Show;
@@ -713,10 +725,11 @@ var
 begin
   ini := CreateIniFile;
   try
-    ReadFormFromIni(ini, self, 'MainForm');
-    ShowToolbar(ini.ReadBool('MainForm', 'ShowToolbar', acShowToolbar.Checked));
-    ShowStatusbar(ini.ReadBool('MainForm', 'ShowStatusbar', AcShowStatusbar.Checked));
-    ReadParamsFromIni(ini, 'Params');
+    ReadFormFromIni(ini, self, INI_MAINFORM);
+    ShowToolbar(ini.ReadBool(INI_MAINFORM, 'ShowToolbar', acShowToolbar.Checked));
+    ShowStatusbar(ini.ReadBool(INI_MAINFORM, 'ShowStatusbar', AcShowStatusbar.Checked));
+
+    ReadParamsFromIni(ini, INI_PARAMS);
     if HexParams.ViewOnly then
       AcEditEditingForbidden.Checked := true
     else
@@ -725,6 +738,8 @@ begin
       AcEditInsertMode.Checked := true
     else
       AcEditOverwriteMode.Checked := true;
+
+    ReadColorsFromIni(ini, INI_COLORS);
   finally
     ini.Free;
   end;
@@ -823,15 +838,18 @@ var
   F: THexEditorFrame;
 begin
   F := GetActiveHexEditorFrame;
-  if F <> nil then
-    F.ActiveParams(HexParams);
+  if F <> nil then begin
+    F.ActiveHexParams(HexParams);
+    F.ActiveColors(ColorParams);
+  end;
 
   ini := CreateIniFile;
   try
-    WriteFormToIni(ini, self, 'MainForm');
-    ini.WriteBool('MainForm', 'ShowToolbar', acShowToolbar.Checked);
-    ini.WriteBool('MainForm', 'ShowStatusbar', acShowStatusbar.Checked);
-    WriteParamsToIni(ini, 'Params');
+    WriteFormToIni(ini, self, INI_MAINFORM);
+    ini.WriteBool(INI_MAINFORM, 'ShowToolbar', acShowToolbar.Checked);
+    ini.WriteBool(INI_MAINFORM, 'ShowStatusbar', acShowStatusbar.Checked);
+    WriteParamsToIni(ini, INI_PARAMS);
+    WriteColorsToIni(ini, INI_COLORS);
     ini.UpdateFile;
   finally
     ini.Free;

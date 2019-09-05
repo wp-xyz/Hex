@@ -101,6 +101,11 @@ const
   IMG_INDEX_OK = 5;
   IMG_INDEX_CANCEL = 6;
 
+  // Ini file sections
+  INI_MAINFORM = 'MainForm';
+  INI_COLORS = 'Colors';
+  INI_PARAMS = 'Params';
+
 type
   TStatusbarItem = (sbPos, sbSel, sbSize);
   TStatusbarItems = set of TStatusbarItem;
@@ -120,18 +125,6 @@ type
     BytesPerColumn: Integer;
     HexLowerCase: Boolean;
     MaskChar: Char;
-
-    BackgroundColor: TColor;
-    ActiveFieldBackgroundColor: TColor;
-    OffsetBackgroundColor: TColor;
-    OffsetForegroundColor: TColor;
-    CurrentOffsetBackgroundColor: TColor;
-    CurrentOffsetForegroundColor: TColor;
-    EvenColumnForegroundColor: TColor;
-    OddColumnForegroundColor: TColor;
-    ChangedBackgroundColor: TColor;
-    ChangedForegroundColor: TColor;
-    CharFieldForegroundColor: TColor;
 
     ShowStatusBar: Boolean;
     StatusbarItems : TStatusbarItems;
@@ -159,6 +152,20 @@ type
     function GetOffsetFormat: String;
   end;
 
+  TColorParams = record
+    BackgroundColor: TColor;
+    ActiveFieldBackgroundColor: TColor;
+    OffsetBackgroundColor: TColor;
+    OffsetForegroundColor: TColor;
+    CurrentOffsetBackgroundColor: TColor;
+    CurrentOffsetForegroundColor: TColor;
+    EvenColumnForegroundColor: TColor;
+    OddColumnForegroundColor: TColor;
+    ChangedBackgroundColor: TColor;
+    ChangedForegroundColor: TColor;
+    CharFieldForegroundColor: TColor;
+  end;
+
 var
   HexParams: THexParams = (
     ViewOnly: true;
@@ -176,26 +183,10 @@ var
     HexLowercase: false;
     MaskChar: '.';
 
-    BackgroundColor: clWindow;
-    ActiveFieldBackgroundColor: clWindow;
-    OffsetBackgroundColor: clBtnFace;
-    OffsetForegroundColor: clWindowText;
-    CurrentOffsetBackgroundColor: clBtnShadow;
-    CurrentOffsetForegroundColor: clBtnHighlight;
-    EvenColumnForegroundColor: clNavy;
-    OddColumnForegroundColor: clBlue;
-    ChangedBackgroundColor: $00A8FFFF;
-    ChangedForegroundColor: clMaroon;
-    CharFieldForegroundColor: clWindowText;
-
     ShowStatusBar: true;
     StatusbarItems: [sbPos, sbSel, sbSize];
     StatusbarPosDisplay: odbDec;
     StatusbarSelDisplay: odbDec;
-
-    //LeftPanelWidth: 250;
-    //RightPanelWidth: 250;
-    //BottomPanelHeight: 250;
 
     DataViewerVisible: true;
     DataViewerPosition: vpRight;
@@ -211,8 +202,22 @@ var
 
     SettingsPageIndex: 0
   );
-
   DefaultHexParams: THexParams;
+
+  ColorParams: TColorParams = (
+    BackgroundColor: clWindow;
+    ActiveFieldBackgroundColor: clWindow;
+    OffsetBackgroundColor: clBtnFace;
+    OffsetForegroundColor: clWindowText;
+    CurrentOffsetBackgroundColor: clBtnShadow;
+    CurrentOffsetForegroundColor: clBtnHighlight;
+    EvenColumnForegroundColor: clNavy;
+    OddColumnForegroundColor: clBlue;
+    ChangedBackgroundColor: $00A8FFFF;
+    ChangedForegroundColor: clMaroon;
+    CharFieldForegroundColor: clWindowText
+  );
+  DefaultColorParams: TColorParams;
 
 type
   TGotoParams = record
@@ -241,6 +246,7 @@ end;
 
 initialization
   DefaultHexParams := HexParams;
+  DefaultColorParams := ColorParams;
 
 end.
 

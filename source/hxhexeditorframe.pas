@@ -72,8 +72,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure ActiveParams(var AParams: THexParams);
-    procedure ApplyParams(const AParams: THexParams);
+    procedure ActiveColors(var AParams: TColorParams);
+    procedure ActiveHexParams(var AParams: THexParams);
+    procedure ApplyColors(const AParams: TColorParams);
+    procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
     procedure InsertMode(const AEnable: Boolean);
     procedure JumpToPosition(APosition: Integer);
@@ -123,7 +125,29 @@ begin
   SaveToIni;
   inherited;
 end;
-procedure THexEditorFrame.ActiveParams(var AParams: THexParams);
+
+procedure THexEditorFrame.ActiveColors(var AParams: TColorParams);
+var
+  i: Integer;
+begin
+  AParams := ColorParams;
+  if Assigned(HexEditor) then
+  begin
+    AParams.BackgroundColor := HexEditor.Colors.Background;
+    AParams.ActiveFieldBackgroundColor := HexEditor.Colors.ActiveFieldBackground;
+    AParams.OffsetBackgroundColor := HexEditor.Colors.OffsetBackground;
+    AParams.OffsetForegroundColor := HexEditor.Colors.Offset;
+    AParams.CurrentOffsetBackgroundColor := HexEditor.Colors.CurrentOffsetBackground;
+    AParams.CurrentOffsetForegroundColor := HexEditor.Colors.CurrentOffset;
+    AParams.EvenColumnForegroundColor := HexEditor.Colors.EvenColumn;
+    AParams.OddColumnForegroundColor := HexEditor.Colors.OddColumn;
+    AParams.ChangedBackgroundColor := HexEditor.Colors.ChangedBackground;
+    AParams.ChangedForegroundColor := HexEditor.Colors.ChangedText;
+    AParams.CharFieldForegroundColor := HexEditor.Font.Color;
+  end;
+end;
+
+procedure THexEditorFrame.ActiveHexParams(var AParams: THexParams);
 var
   i: Integer;
 begin
@@ -144,28 +168,12 @@ begin
     AParams.BytesPerColumn := HexEditor.BytesPerColumn;
     AParams.HexLowercase := HexEditor.HexLowercase;
     AParams.MaskChar := HexEditor.MaskChar;
-
-    AParams.BackgroundColor := HexEditor.Colors.Background;
-    AParams.ActiveFieldBackgroundColor := HexEditor.Colors.ActiveFieldBackground;
-    AParams.OffsetBackgroundColor := HexEditor.Colors.OffsetBackground;
-    AParams.OffsetForegroundColor := HexEditor.Colors.Offset;
-    AParams.CurrentOffsetBackgroundColor := HexEditor.Colors.CurrentOffsetBackground;
-    AParams.CurrentOffsetForegroundColor := HexEditor.Colors.CurrentOffset;
-    AParams.EvenColumnForegroundColor := HexEditor.Colors.EvenColumn;
-    AParams.OddColumnForegroundColor := HexEditor.Colors.OddColumn;
-    AParams.ChangedBackgroundColor := HexEditor.Colors.ChangedBackground;
-    AParams.ChangedForegroundColor := HexEditor.Colors.ChangedText;
-    AParams.CharFieldForegroundColor := HexEditor.Font.Color;
   end;
 
   AParams.ShowStatusBar := StatusBar.Visible;
   AParams.StatusbarItems := FStatusbarItems;
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
-
-  //AParams.LeftPanelWidth := round(MainPanel.PanelCollection[0].Position * MainPanel.Width);
-  //AParams.RightPanelWidth := round(MainPanel.PanelCollection[0].Position * MainPanel.Width);
-  //AParams.BottomPanelHeight := round(CenterPanel.PanelCollection[0].Position * CenterPanel.Height);
 
   if Assigned(FDataViewer) then
   begin
@@ -190,7 +198,27 @@ begin
   end;
 end;
 
-procedure THexEditorFrame.ApplyParams(const AParams: THexParams);
+procedure THexEditorFrame.ApplyColors(const AParams: TColorParams);
+var
+  i: Integer;
+begin
+  if Assigned(HexEditor) then
+  begin
+    HexEditor.Colors.Background := AParams.BackgroundColor;
+    HexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;
+    HexEditor.Colors.OffsetBackground := AParams.OffsetBackgroundColor;
+    HexEditor.Colors.Offset := AParams.OffsetForegroundColor;
+    HexEditor.Colors.CurrentOffsetBackground := AParams.CurrentOffsetBackgroundColor;
+    HexEditor.Colors.CurrentOffset := AParams.CurrentOffsetForegroundColor;
+    HexEditor.Colors.EvenColumn := AParams.EvenColumnForegroundColor;
+    HexEditor.Colors.OddColumn := AParams.OddColumnForegroundColor;
+    HexEditor.Colors.ChangedBackground := AParams.ChangedBackgroundColor;
+    HexEditor.Colors.ChangedText := AParams.ChangedForegroundColor;
+    HexEditor.Font.Color := AParams.CharFieldForegroundColor;
+  end;
+end;
+
+procedure THexEditorFrame.ApplyHexParams(const AParams: THexParams);
 var
   i: Integer;
 begin
@@ -213,33 +241,12 @@ begin
     HexEditor.BytesPerColumn := AParams.BytesPerColumn;
     HexEditor.HexLowercase := AParams.HexLowerCase;
     HexEditor.MaskChar := AParams.MaskChar;
-
-    HexEditor.Colors.Background := AParams.BackgroundColor;
-    HexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;
-    HexEditor.Colors.OffsetBackground := AParams.OffsetBackgroundColor;
-    HexEditor.Colors.Offset := AParams.OffsetForegroundColor;
-    HexEditor.Colors.CurrentOffsetBackground := AParams.CurrentOffsetBackgroundColor;
-    HexEditor.Colors.CurrentOffset := AParams.CurrentOffsetForegroundColor;
-    HexEditor.Colors.EvenColumn := AParams.EvenColumnForegroundColor;
-    HexEditor.Colors.OddColumn := AParams.OddColumnForegroundColor;
-    HexEditor.Colors.ChangedBackground := AParams.ChangedBackgroundColor;
-    HexEditor.Colors.ChangedText := AParams.ChangedForegroundColor;
-    HexEditor.Font.Color := AParams.CharFieldForegroundColor;
   end;
 
   StatusBar.Visible := AParams.ShowStatusBar;
   FStatusbarItems := AParams.StatusbarItems;
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
-
-  {
-  if FSizeValid then
-  begin
-    MainPanel.PanelCollection[0].Position := AParams.LeftPanelWidth / MainPanel.Width;
-    MainPanel.PanelCollection[1].Position := AParams.RightPanelWidth / MainPanel.Width;
-    CenterPanel.PanelCollection[0].Position := AParams.BottomPanelHeight / CenterPanel.Height;
-  end;
-  }
 
   ShowDataViewer := AParams.DataViewerVisible;         // this creates the NumViewer
   if Assigned(FDataViewer) then
@@ -263,7 +270,7 @@ begin
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];
   end;
 
-  LoadFromIni;
+//  LoadFromIni;                 // why this?
 
   UpdateStatusbarPanelWidths;
   UpdateViewerPanelVisible(LeftPanel);
@@ -575,7 +582,8 @@ begin
   inherited;
   if (AParent <> nil) and (FHexEditor = nil) then
     CreateHexEditor;
-  ApplyParams(HexParams);
+  ApplyHexParams(HexParams);
+  ApplyColors(ColorParams);
   if HexEditor.CanFocus then HexEditor.SetFocus;
 end;
 

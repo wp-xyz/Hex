@@ -15,6 +15,8 @@ procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: Stri
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
 
 // Configuration parameters
+procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
+procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 
@@ -69,6 +71,35 @@ begin
     ChangeFileExt(ExtractFileName(Application.ExeName), '.cfg');
 end;
 
+procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
+begin
+  with ColorParams do
+  begin
+    BackgroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'BackgroundColor', Integer(BackgroundColor)));
+    ActiveFieldBackgroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'ActiveFieldBackgroundColor', Integer(ActiveFieldBackgroundColor)));
+    OffsetBackgroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'OffsetBackgroundColor', Integer(OffsetBackgroundColor)));
+    OffsetForegroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'OffsetForegroundColor', Integer(OffsetForegroundColor)));
+    CurrentOffsetBackgroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'CurrentOffsetBackgroundColor', Integer(CurrentOffsetBackgroundColor)));
+    CurrentOffsetForegroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'CurrentOffsetForegroundColor', Integer(CurrentOffsetForegroundColor)));
+    ChangedBackgroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'ChangedBackgroundColor', Integer(ChangedBackgroundColor)));
+    ChangedForegroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'ChangedForegroundColor', Integer(ChangedForegroundColor)));
+    EvenColumnForeGroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'EvenColumnForegroundColor', Integer(EvenColumnForegroundColor)));
+    OddColumnForegroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'OddColumnForegroundColor', Integer(OddColumnForegroundColor)));
+    CharFieldForegroundColor := TColor(AIniFile.ReadInteger(ASection,
+      'CharFieldForegroundColor', Integer(CharFieldForegroundColor)));
+  end;
+end;
+
 procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm;
   ASection: String);
 var
@@ -105,59 +136,32 @@ var
 begin
   with HexParams do
   begin
-    ViewOnly := AIniFile.ReadBool('Params', 'ViewOnly', ViewOnly);
-    WriteProtected := AIniFile.ReadBool('Params', 'WriteProtected', WriteProtected);
-    AllowInsertMode := AIniFile.ReadBool('Params', 'AllowInsertMode', AllowInsertMode);
-    InsertMode := AIniFile.ReadBool('Params', 'InsertMode', InsertMode);
-    BigEndian := AIniFile.ReadBool('Params', 'BigEndian', BigEndian);
+    ViewOnly := AIniFile.ReadBool(ASection, 'ViewOnly', ViewOnly);
+    WriteProtected := AIniFile.ReadBool(ASection, 'WriteProtected', WriteProtected);
+    AllowInsertMode := AIniFile.ReadBool(ASection, 'AllowInsertMode', AllowInsertMode);
+    InsertMode := AIniFile.ReadBool(ASection, 'InsertMode', InsertMode);
+    BigEndian := AIniFile.ReadBool(ASection, 'BigEndian', BigEndian);
 
-    s := AIniFile.ReadString('Params', 'OffsetDisplay.Base', '');
+    s := AIniFile.ReadString(ASection, 'OffsetDisplay.Base', '');
     if s <> '' then
       OffsetDisplayBase := TOffsetDisplayBase(GetEnumValue(TypeInfo(TOffsetDisplayBase), s));
-    OffsetDisplayHexPrefix := AIniFile.ReadString('Params', 'OffsetDisplay.HexPrefix', OffsetDisplayHexPrefix);
-    RulerVisible := AIniFile.ReadBool('Params', 'Ruler.Visible', RulerVisible);
+    OffsetDisplayHexPrefix := AIniFile.ReadString(ASection, 'OffsetDisplay.HexPrefix', OffsetDisplayHexPrefix);
+    RulerVisible := AIniFile.ReadBool(ASection, 'Ruler.Visible', RulerVisible);
     s := AIniFile.ReadString('Params', 'Ruler.NumberBase', '');
     if s <> '' then
       RulerNumberBase := TOffsetDisplayBase(GetEnumValue(TypeInfo(TOffsetDisplayBase), s));
-    BytesPerRow := AIniFile.ReadInteger('Params', 'BytesPerRow', BytesPerRow);
-    BytesPerColumn := AIniFile.ReadInteger('Params', 'BytesPerColumn', BytesPerColumn);
-    HexLowercase := AIniFile.ReadBool('Params', 'HexLowercase', HexLowercase);
-    MaskChar := char(AIniFile.ReadInteger('Params', 'MaskChar', ord(MaskChar)));
+    BytesPerRow := AIniFile.ReadInteger(ASection, 'BytesPerRow', BytesPerRow);
+    BytesPerColumn := AIniFile.ReadInteger(ASection, 'BytesPerColumn', BytesPerColumn);
+    HexLowercase := AIniFile.ReadBool(ASection, 'HexLowercase', HexLowercase);
+    MaskChar := char(AIniFile.ReadInteger(ASection, 'MaskChar', ord(MaskChar)));
 
-    BackgroundColor := TColor(AIniFile.ReadInteger('Params',
-      'BackgroundColor', Integer(BackgroundColor)));
-    ActiveFieldBackgroundColor := TColor(AIniFile.ReadInteger('Params',
-      'ActiveFieldBackgroundColor', Integer(ActiveFieldBackgroundColor)));
-    OffsetBackgroundColor := TColor(AIniFile.ReadInteger('Params',
-      'OffsetBackgroundColor', Integer(OffsetBackgroundColor)));
-    OffsetForegroundColor := TColor(AIniFile.ReadInteger('Params',
-      'OffsetForegroundColor', Integer(OffsetForegroundColor)));
-    CurrentOffsetBackgroundColor := TColor(AIniFile.ReadInteger('Params',
-      'CurrentOffsetBackgroundColor', Integer(CurrentOffsetBackgroundColor)));
-    CurrentOffsetForegroundColor := TColor(AIniFile.ReadInteger('Params',
-      'CurrentOffsetForegroundColor', Integer(CurrentOffsetForegroundColor)));
-    ChangedBackgroundColor := TColor(AIniFile.ReadInteger('Params',
-      'ChangedBackgroundColor', Integer(ChangedBackgroundColor)));
-    ChangedForegroundColor := TColor(AIniFile.ReadInteger('Params',
-      'ChangedForegroundColor', Integer(ChangedForegroundColor)));
-    EvenColumnForeGroundColor := TColor(AIniFile.ReadInteger('Params',
-      'EvenColumnForegroundColor', Integer(EvenColumnForegroundColor)));
-    OddColumnForegroundColor := TColor(AIniFile.ReadInteger('Params',
-      'OddColumnForegroundColor', Integer(OddColumnForegroundColor)));
-    CharFieldForegroundColor := TColor(AIniFile.ReadInteger('Params',
-      'CharFieldForegroundColor', Integer(CharFieldForegroundColor)));
+    { Data Viewer }
 
-(*
-    LeftPanelWidth := AIniFile.ReadInteger('Params', 'LeftPanelWidth', LeftPanelWidth);
-    RightPanelWidth := AIniFile.ReadInteger('Params', 'RightPanelWidth', RightPanelWidth);
-    BottomPanelHeight := AIniFile.ReadInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
-*)
-
-    DataViewerVisible := AIniFile.ReadBool('Params', 'DataViewer.Visible', DataViewerVisible);
-    s := AIniFile.ReadString('Params', 'DataViewer.Position', '');
+    DataViewerVisible := AIniFile.ReadBool(ASection, 'DataViewer.Visible', DataViewerVisible);
+    s := AIniFile.ReadString(ASection, 'DataViewer.Position', '');
     if s <> '' then
       DataViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
-    s := UpperCase(AIniFile.ReadString('Params', 'DataViewer.DataTypes', ''));
+    s := UpperCase(AIniFile.ReadString(ASection, 'DataViewer.DataTypes', ''));
     if s <> '' then
     begin
       s := ';' + s + ';';
@@ -166,7 +170,7 @@ begin
         if pos(';' + UpperCase(DataTypeNames[dt]) + ';', s) <> 0 then
           Include(DataViewerDataTypes, dt);
     end;
-    s := AIniFile.ReadString('Params', 'DataViewer.ColWidths', '');
+    s := AIniFile.ReadString(ASection, 'DataViewer.ColWidths', '');
     if s <> '' then
     begin
       sa := s.Split(',');
@@ -175,17 +179,21 @@ begin
           TryStrToInt(sa[i], DataViewerColWidths[i]);
     end;
 
-    ObjectViewerVisible := AIniFile.ReadBool('Params', 'ObjectViewer.Visible', ObjectViewerVisible);
-    s := AIniFile.ReadString('Params', 'ObjectViewer.Position', '');
+    { Object viewer }
+
+    ObjectViewerVisible := AIniFile.ReadBool(ASection, 'ObjectViewer.Visible', ObjectViewerVisible);
+    s := AIniFile.ReadString(ASection, 'ObjectViewer.Position', '');
     if s <> '' then
       ObjectViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
 
-    RecordViewerVisible := AIniFile.ReadBool('Params', 'RecordViewer.Visible', RecordViewerVisible);
-    s := AIniFile.ReadString('Params', 'RecordViewer.Position', '');
+    { RecordViewer }
+
+    RecordViewerVisible := AIniFile.ReadBool(ASection, 'RecordViewer.Visible', RecordViewerVisible);
+    s := AIniFile.ReadString(ASection, 'RecordViewer.Position', '');
     if s <> '' then
       RecordViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
 
-    s := AIniFile.ReadString('Params', 'RecordViewer.ColWidths', '');
+    s := AIniFile.ReadString(ASection, 'RecordViewer.ColWidths', '');
     if s <> '' then
     begin
       sa := s.Split(',');
@@ -194,7 +202,42 @@ begin
           TryStrToInt(sa[i], RecordViewerColWidths[i]);
     end;
 
-    SettingsPageIndex := AIniFile.ReadInteger('Params', 'SettingsPageIndex', SettingsPageIndex);
+    SettingsPageIndex := AIniFile.ReadInteger(ASection, 'SettingsPageIndex', SettingsPageIndex);
+  end;
+end;
+
+procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
+var
+  s: String;
+  dt: TDataType;
+  i: Integer;
+begin
+  with ColorParams do
+  begin
+    AIniFile.EraseSection(ASection);
+
+    AIniFile.WriteInteger(ASection, 'BackgroundColor',
+      Integer(BackgroundColor));
+    AIniFile.WriteInteger(ASection, 'ActiveFieldBackgroundColor',
+      Integer(ActiveFieldBackgroundColor));
+    AIniFile.WriteInteger(ASection, 'OffsetBackgroundColor',
+      Integer(OffsetBackgroundColor));
+    AIniFile.WriteInteger(ASection, 'OffsetForegroundColor',
+      Integer(OffsetForegroundColor));
+    AIniFile.WriteInteger(ASection, 'CurrentOffsetBackgroundColor',
+      Integer(CurrentOffsetBackgroundColor));
+    AIniFile.WriteInteger(ASection, 'CurrentOffsetForegroundColor',
+      Integer(CurrentOffsetForegroundColor));
+    AIniFile.WriteInteger(ASection, 'ChangedBackgroundColor',
+      Integer(ChangedBackgroundColor));
+    AIniFile.WriteInteger(ASection, 'ChangedForegroundColor',
+      Integer(ChangedForegroundColor));
+    AIniFile.WriteInteger(ASection, 'EvenColumnForegroundColor',
+      Integer(EvenColumnForegroundColor));
+    AIniFile.WriteInteger(ASection, 'OddColumnForegroundColor',
+      Integer(OddColumnForegroundColor));
+    AIniFile.WriteInteger(ASection, 'CharFieldForegroundColor',
+      Integer(CharFieldForegroundColor));
   end;
 end;
 
@@ -223,101 +266,70 @@ var
 begin
   with HexParams do
   begin
-    AIniFile.EraseSection('Params');
+    AIniFile.EraseSection(ASection);
 
-    AIniFile.WriteBool('Params', 'ViewOnly',
+    AIniFile.WriteInteger(ASection, 'SettingsPageIndex',
+      SettingsPageIndex);
+
+    AIniFile.WriteBool(ASection, 'ViewOnly',
       ViewOnly);
-    AIniFile.WriteBool('Params', 'WriteProtected',
+    AIniFile.WriteBool(ASection, 'WriteProtected',
       WriteProtected);
-    AIniFile.WriteBool('Params', 'AllowInsertMode',
+    AIniFile.WriteBool(ASection, 'AllowInsertMode',
       AllowInsertMode);
-    AIniFile.WriteBool('Params', 'InsertMode',
+    AIniFile.WriteBool(ASection, 'InsertMode',
       InsertMode);
-    AIniFile.WriteBool('Params', 'BigEndian',
+    AIniFile.WriteBool(ASection, 'BigEndian',
       BigEndian);
-
-    AIniFile.WriteString('Params', 'OffsetDisplay.Base',
+    AIniFile.WriteString(ASection, 'OffsetDisplay.Base',
       GetEnumName(TypeInfo(TOffsetDisplayBase), integer(OffsetDisplayBase)));
-    AIniFile.WriteString('Params', 'OffsetDisplay.HexPrefix',
+    AIniFile.WriteString(ASection, 'OffsetDisplay.HexPrefix',
       OffsetDisplayHexPrefix);
-    AIniFile.WriteBool('Params', 'Ruler.Visible',
+    AIniFile.WriteBool(ASection, 'Ruler.Visible',
       RulerVisible);
-    AIniFile.WriteString('Params', 'Ruler.NumberBase',
+    AIniFile.WriteString(ASection, 'Ruler.NumberBase',
       GetEnumName(TypeInfo(TOffsetDisplayBase), integer(RulerNumberBase)));
-    AIniFile.WriteInteger('Params', 'BytesPerRow',
+    AIniFile.WriteInteger(ASection, 'BytesPerRow',
       BytesPerRow);
-    AIniFile.WriteInteger('Params', 'BytesPerColumn',
+    AIniFile.WriteInteger(ASection, 'BytesPerColumn',
       BytesPerColumn);
-    AIniFile.WriteBool('Params', 'HexLowercase',
+    AIniFile.WriteBool(ASection, 'HexLowercase',
       HexLowercase);
-    AIniFile.WriteInteger('Params', 'MaskChar', ord(MaskChar));
+    AIniFile.WriteInteger(ASection, 'MaskChar', ord(MaskChar));
 
-    AIniFile.WriteInteger('Params', 'BackgroundColor',
-      Integer(BackgroundColor));
-    AIniFile.WriteInteger('Params', 'ActiveFieldBackgroundColor',
-      Integer(ActiveFieldBackgroundColor));
-    AIniFile.WriteInteger('Params', 'OffsetBackgroundColor',
-      Integer(OffsetBackgroundColor));
-    AIniFile.WriteInteger('Params', 'OffsetForegroundColor',
-      Integer(OffsetForegroundColor));
-    AIniFile.WriteInteger('Params', 'CurrentOffsetBackgroundColor',
-      Integer(CurrentOffsetBackgroundColor));
-    AIniFile.WriteInteger('Params', 'CurrentOffsetForegroundColor',
-      Integer(CurrentOffsetForegroundColor));
-    AIniFile.WriteInteger('Params', 'ChangedBackgroundColor',
-      Integer(ChangedBackgroundColor));
-    AIniFile.WriteInteger('Params', 'ChangedForegroundColor',
-      Integer(ChangedForegroundColor));
-    AIniFile.WriteInteger('Params', 'EvenColumnForegroundColor',
-      Integer(EvenColumnForegroundColor));
-    AIniFile.WriteInteger('Params', 'OddColumnForegroundColor',
-      Integer(OddColumnForegroundColor));
-    AIniFile.WriteInteger('Params', 'CharFieldForegroundColor',
-      Integer(CharFieldForegroundColor));
+    { Data viewer }
 
-  (*
-    AIniFile.WriteInteger('Params', 'LeftPanelWidth', LeftPaneLWidth);
-    AIniFile.WriteInteger('Params', 'RightPanelWidth', RightPanelWidth);
-    AIniFile.WriteInteger('Params', 'BottomPanelHeight', BottomPanelHeight);
-*)
-
-    AIniFile.WriteBool('Params', 'DataViewer.Visible',
+    AIniFile.WriteBool(ASection, 'DataViewer.Visible',
       DataViewerVisible);
-    AIniFile.WriteString('Params', 'DataViewer.Position',
+    AIniFile.WriteString(ASection, 'DataViewer.Position',
       GetEnumName(TypeInfo(TViewerPosition), integer(DataViewerPosition)));
     s := '';
     for dt := dtFirstNumericDataType to dtLastNumericDataType do
       if dt in DataViewerDataTypes then s := s + DataTypeNames[dt] + ';';
     if s <> '' then Delete(s, Length(s), 1);
-    AIniFile.WriteString('Params', 'DataViewer.DataTypes', s);
+    AIniFile.WriteString(ASection, 'DataViewer.DataTypes', s);
     s := IntToStr(HexParams.DataViewerColWidths[0]);
     for i := 1 to High(TDataViewerColWidths) do
       s := s + ',' + IntToStr(HexParams.DataViewerColWidths[i]);
-    AIniFile.WriteString('Params', 'DataViewer.ColWidths', s);
+    AIniFile.WriteString(ASection, 'DataViewer.ColWidths', s);
 
-    AIniFile.WriteBool('Params', 'ObjectViewer.Visible',
+    { Object viewer }
+
+    AIniFile.WriteBool(ASection, 'ObjectViewer.Visible',
       ObjectViewerVisible);
-    AIniFile.WriteString('Params', 'ObjectViewer.Position',
+    AIniFile.WriteString(ASection, 'ObjectViewer.Position',
       GetEnumName(TypeInfo(TViewerPosition), integer(ObjectViewerPosition)));
 
-    AIniFile.WriteBool('Params', 'RecordViewer.Visible',
-      RecordViewerVisible);
-    AIniFile.WriteString('Params', 'RecordViewer.Position',
-      GetEnumName(TypeInfo(TViewerPosition), integer(RecordViewerPosition)));
-    {
-    if RecordViewerPosition in [vpLeft, vpRight] then
-      AIniFile.WriteInteger('Params', 'RecordViewer.Width', RecordViewerWidth);
-    if RecordViewerPosition in [vpBottom] then
-      AIniFile.WriteInteger('Params', 'RecordViewer.Height', RecordViewerHeight);
-    }
+    { Record viewer }
 
+    AIniFile.WriteBool(ASection, 'RecordViewer.Visible',
+      RecordViewerVisible);
+    AIniFile.WriteString(ASection, 'RecordViewer.Position',
+      GetEnumName(TypeInfo(TViewerPosition), integer(RecordViewerPosition)));
     s := IntToStr(HexParams.RecordViewerColWidths[0]);
     for i := 1 to High(TRecordViewerColWidths) do
       s := s + ',' + IntToStr(HexParams.RecordViewerColWidths[i]);
-    AIniFile.WriteString('Params', 'RecordViewer.ColWidths', s);
-
-    AIniFile.WriteInteger('Params', 'SettingsPageIndex',
-      SettingsPageIndex);
+    AIniFile.WriteString(ASection, 'RecordViewer.ColWidths', s);
   end;
 end;
 

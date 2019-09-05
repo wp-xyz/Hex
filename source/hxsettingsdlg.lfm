@@ -40,10 +40,10 @@ object SettingsForm: TSettingsForm
     Height = 386
     Top = 6
     Width = 522
-    ActivePage = pgFormat
+    ActivePage = pgColors
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 1
     object pgEditor: TTabSheet
       Caption = 'Editor'
