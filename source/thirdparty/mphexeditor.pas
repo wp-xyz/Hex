@@ -1667,6 +1667,8 @@ type
     // @exclude(inherited)
     property BiDiMode;
     // @exclude(inherited)
+    property BorderSpacing;
+    // @exclude(inherited)
     property BorderStyle;
     // @exclude(inherited)
     property Constraints;
