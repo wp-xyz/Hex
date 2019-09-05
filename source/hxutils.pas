@@ -156,8 +156,11 @@ begin
       RulerNumberBase := TOffsetDisplayBase(GetEnumValue(TypeInfo(TOffsetDisplayBase), s));
     BytesPerRow := AIniFile.ReadInteger(ASection, 'BytesPerRow', BytesPerRow);
     BytesPerColumn := AIniFile.ReadInteger(ASection, 'BytesPerColumn', BytesPerColumn);
-    HexLowercase := AIniFile.ReadBool(ASection, 'HexLowercase', HexLowercase);
     MaskChar := char(AIniFile.ReadInteger(ASection, 'MaskChar', ord(MaskChar)));
+    FontName := AIniFile.ReadString(ASection, 'FontName', FontName);
+    FontSize := AIniFile.ReadInteger(ASection, 'FontSize', FontSize);
+    HexLowercase := AIniFile.ReadBool(ASection, 'HexLowercase', HexLowercase);
+    DrawGutter3D := AIniFile.ReadBool(ASection, 'DrawGutter3D', DrawGutter3D);
 
     { Data Viewer }
 
@@ -297,9 +300,17 @@ begin
       BytesPerRow);
     AIniFile.WriteInteger(ASection, 'BytesPerColumn',
       BytesPerColumn);
+    AIniFile.WriteInteger(ASection, 'MaskChar', ord(MaskChar));
+
+    AIniFile.WriteString(ASection, 'FontName',
+      FontName);
+    AIniFile.WriteInteger(ASection, 'FontSize',
+      FontSize);
     AIniFile.WriteBool(ASection, 'HexLowercase',
       HexLowercase);
-    AIniFile.WriteInteger(ASection, 'MaskChar', ord(MaskChar));
+    AIniFile.WriteBool(ASection, 'DrawGutter3D',
+      DrawGutter3D);
+
 
     { Data viewer }
 
@@ -378,8 +389,12 @@ begin
     end;
     AHexEditor.BytesPerRow := AParams.BytesPerRow;
     AHexEditor.BytesPerColumn := AParams.BytesPerColumn;
-    AHexEditor.HexLowercase := AParams.HexLowerCase;
     AHexEditor.MaskChar := AParams.MaskChar;
+
+    AHexEditor.Font.Name := AParams.FontName;
+    AHexEditor.Font.Size := AParams.FontSize;
+    AHexEditor.HexLowercase := AParams.HexLowerCase;
+    AHexEditor.DrawGutter3D := AParams.DrawGutter3D;
   end;
 end;
 

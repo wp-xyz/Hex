@@ -123,17 +123,17 @@ type
     RulerNumberBase: TOffsetDisplayBase;
     BytesPerRow: Integer;
     BytesPerColumn: Integer;
-    HexLowerCase: Boolean;
     MaskChar: Char;
+
+    FontName: String;
+    FontSize: Integer;
+    HexLowerCase: Boolean;
+    DrawGutter3D: Boolean;
 
     ShowStatusBar: Boolean;
     StatusbarItems : TStatusbarItems;
     StatusbarPosDisplay : TOffsetDisplayBase;
     StatusbarSelDisplay : TOffsetDisplayBase;
-
-    //LeftPanelWidth: Integer;
-    //RightPanelWidth: Integer;
-    //BottomPanelHeight: Integer;
 
     DataViewerVisible: Boolean;
     DataViewerPosition: TViewerPosition;
@@ -180,8 +180,12 @@ var
     RulerNumberBase: odbHex;
     BytesPerRow: 16;
     BytesPerColumn: 1;
-    HexLowercase: false;
     MaskChar: '.';
+
+    FontName: 'Courier New';
+    FontSize: 9;
+    HexLowercase: false;
+    DrawGutter3D: false;
 
     ShowStatusBar: true;
     StatusbarItems: [sbPos, sbSel, sbSize];

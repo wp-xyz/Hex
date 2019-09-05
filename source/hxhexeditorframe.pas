@@ -165,8 +165,12 @@ begin
     AParams.OffsetDisplayHexPrefix := GetOffsetDisplayHexPrefix(HexEditor.OffsetFormat);
     AParams.BytesPerRow := HexEditor.BytesPerRow;
     AParams.BytesPerColumn := HexEditor.BytesPerColumn;
-    AParams.HexLowercase := HexEditor.HexLowercase;
     AParams.MaskChar := HexEditor.MaskChar;
+
+    AParams.FontName := HexEditor.Font.Name;
+    AParams.FontSize := HexEditor.Font.Size;
+    AParams.HexLowercase := HexEditor.HexLowercase;
+    AParams.DrawGutter3D := HexEditor.DrawGutter3D;
   end;
 
   AParams.ShowStatusBar := StatusBar.Visible;
@@ -249,21 +253,16 @@ begin
   FHexEditor := THxHexEditor.Create(self);
   FHexEditor.Parent := HexPanel;
   FHexEditor.Align := alClient;
-  FHexEditor.BytesPerColumn := HexParams.BytesPerColumn;
-  FHexEditor.BytesPerRow := HexParams.BytesPerRow;
   FHexEditor.DrawGutter3D := false;
-  FHexEditor.Font.Size := 9;
 //  FHexEditor.GraySelectionIfNotFocused := true;
-  FHexEditor.HexLowercase := HexParams.HexLowercase;
-  FHexEditor.MaskChar := HexParams.MaskChar;
-  FHexEditor.OffsetFormat := HexParams.GetOffsetFormat;
-  FHexEditor.ReadOnlyView := true;
-  FHexEditor.ReadOnlyFile := true;
-  FHexEditor.RulerNumberBase := 10;
-  FHexEditor.ShowRuler := HexParams.RulerVisible;
   FHexEditor.WantTabs := false;
   FHexEditor.OnChange := @HexEditorChanged;
   FHexEditor.OnSelectionChanged := @HexEditorChanged;
+
+  ApplyParamsToHexEditor(HexParams, FHexEditor);
+
+  FHexEditor.ReadOnlyView := true;
+  FHexEditor.ReadOnlyFile := true;
 
 //  CommonData.BookmarkImages.GetFullBitmap(FHexEditor.BookmarkBitmap);
 end;

@@ -29,6 +29,7 @@ type
     cbWriteProtected: TCheckBox;
     cbAllowInsertMode: TCheckBox;
     cbHexLowercase: TCheckBox;
+    cbDrawGutter3D: TCheckBox;
     clbActiveFieldBackground: TColorButton;
     clbChangedBackground: TColorButton;
     clbChangedForeground: TColorButton;
@@ -58,12 +59,15 @@ type
     cbDataViewerExtended: TCheckBox;
     clbBackground: TColorButton;
     cmbRecordViewerPosition: TComboBox;
+    cmbFontSize: TComboBox;
+    cmbFontName: TComboBox;
     edMaskChar: TEdit;
     gbDataViewer: TGroupBox;
     gbRecordViewer: TGroupBox;
     gbDataViewerDataTypes: TGroupBox;
     gbObjectViewer: TGroupBox;
     gbSampleHexEditor: TGroupBox;
+    lblFont: TLabel;
     lblMaskChar: TLabel;
     lblCurrentOffsetColor: TLabel;
     lblChangedColor: TLabel;
@@ -95,6 +99,7 @@ type
     procedure cbViewOnlyChange(Sender: TObject);
     procedure ColorChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure OKButtonClick(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
@@ -103,6 +108,7 @@ type
     procedure SetEditorData(const AParams: THexParams);
     procedure SetFormatData(const AParams: THexParams);
     procedure SetViewerData(const AParams: THexParams);
+    function ValidData(out AControl: TWinControl; out AMsg: String): boolean;
 
   public
     procedure ColorsFromControls(var AParams: TColorParams);
@@ -219,6 +225,10 @@ begin
 end;
 
 procedure TSettingsForm.FormCreate(Sender: TObject);
+const
+  FONT_SIZES: array[0..14] of PtrInt = (6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24);
+var
+  i: Integer;
 begin
   with CommonData.Images do
   begin
@@ -241,7 +251,24 @@ begin
 
   rgByteOrder.Controls[1].BorderSpacing.Bottom := 6;
 
+  cmbFontName.Items.Assign(Screen.Fonts);
+  cmbFontSize.Items.Clear;
+  for i in FONT_SIZES do
+    cmbFontSize.Items.AddObject(IntToStr(i) + ' pt', TObject(i));
+
   PrepareSampleHexEditor;
+end;
+
+procedure TSettingsForm.OKButtonClick(Sender: TObject);
+var
+  C: TWinControl;
+  msg: String;
+begin
+  if not ValidData(C, msg) then begin
+    C.SetFocus;
+    MessageDlg(msg, mtError, [mbOK], 0);
+    ModalResult := mrNone;
+  end;
 end;
 
 procedure TSettingsForm.PageControlChange(Sender: TObject);
@@ -254,6 +281,7 @@ procedure TSettingsForm.ParamsFromControls(var AParams: THexParams);
 var
   dt: TDataType;
   i: integer;
+  s: String;
   dir: string;
   cmd: string;
 begin
@@ -286,13 +314,10 @@ begin
     else
       MaskChar := edMaskChar.Text[1];
 
+    FontName := cmbFontName.Text;
+    FontSize := PtrInt(cmbFontSize.Items.Objects[cmbFontSize.ItemIndex]);
     HexLowerCase := cbHexLowercase.Checked;
-
-    {
-    EditorFontName := FontInfo.Font.Name;
-    EditorFontSize := FontInfo.Font.Size;
-    EditorFontStyle := FontInfo.Font.Style;
-    }
+    DrawGutter3D := cbDrawGutter3D.Checked;
 
     { NumViewer }
     DataViewerVisible := cbDataViewerVisible.Checked;
@@ -426,7 +451,6 @@ begin
       if StrToInt(cbBytesPerRow.Items[i]) = BytesPerRow then
       begin
         cbBytesPerRow.ItemIndex := i;
-        FSampleHexEditor.BytesPerRow := i;
         break;
       end;
     end;
@@ -435,8 +459,6 @@ begin
       if StrToInt(cbbytesPerColumn.Items[i]) = BytesPerColumn then
       begin
         cbBytesPerColumn.ItemIndex := i;
-        if i > 0 then
-          FSampleHexEditor.BytesPerColumn := i;
         break;
       end;
     end;
@@ -454,22 +476,13 @@ begin
         end;
 
     cbRulerVisible.Checked := RulerVisible;
-    FSampleHexEditor.ShowRuler := RulerVisible;
-
     cmbRulerNumberBase.ItemIndex := ord(RulerNumberBase) - 1;
-
     edMaskChar.Text := String(MaskChar);
-    FSampleHexEditor.MaskChar := MaskChar;
 
+    cmbFontName.Text := FontName;
+    cmbFontSize.ItemIndex := cmbFontSize.Items.IndexOfObject(TObject(PtrInt(FontSize)));
     cbHexLowercase.Checked := HexLowerCase;
-    FSampleHexEditor.HexLowerCase := HexLowerCase;
-
-
-    (*
-    FontInfo.Font.Name := EditorFontName;
-    FontInfo.Font.Size := EditorFontSize;
-    FontInfo.Font.Style := EditorFontStyle;
-    *)
+    cbDrawGutter3D.Checked := DrawGutter3D;
   end;
 end;
 
@@ -491,6 +504,25 @@ begin
     cbRecordViewerVisible.Checked := RecordViewerVisible;
     cmbRecordViewerPosition.ItemIndex := ord(RecordViewerPosition);
   end;
+end;
+
+function TSettingsForm.ValidData(out AControl: TWinControl;
+  out AMsg: String): Boolean;
+begin
+  Result := false;
+  if cmbFontName.Text = '' then
+  begin
+    AControl := cmbFontName;
+    AMsg := 'No font selected.';
+    exit;
+  end;
+  if cmbFontSize.ItemIndex = -1 then
+  begin
+    AControl := cmbFontSize;
+    AMsg := 'No font size selected.';
+    exit;
+  end;
+  Result := true;
 end;
 
 end.
