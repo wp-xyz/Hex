@@ -6524,11 +6524,11 @@ var
           ReadBuffer(LWChrOutput, LIntDataPos, Min(2, LIntDataSize - LIntDataPos));
           if FUnicodeBigEndian then
             SwapWideChar(LWChrOutput);
-          if (LWChrOutput < #256) and (Char(LWChrOutput) in FMaskedChars) then
-            LWChrOutput := FReplaceUnprintableCharsBy;
         end
         else
           LWChrOutput := char(Data[LIntDataPos]);
+        if (LWChrOutput < #256) and (Char(LWChrOutput) in FMaskedChars) then
+          LWChrOutput := FReplaceUnprintableCharsBy;
       end;
 
       // Test whether byte has changed
