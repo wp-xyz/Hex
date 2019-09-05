@@ -760,6 +760,7 @@ type
     FSepCharBlocks: boolean;
     FOnGetOffsetText: TMPHGetOffsetTextEvent;
     FFixedFileSize: boolean;
+    FCreateHandleDone: Boolean;
     FCharWidth,
       FCharHeight: integer;
     FBookmarkImageList: TImageList;
@@ -3172,7 +3173,10 @@ end;
 procedure TCustomMPHexEditor.CreateHandle;
 begin
   inherited;
-  CreateEmptyFile(UNNAMED_FILE);
+  if not FCreateHandleDone then begin
+    CreateEmptyFile(UNNAMED_FILE);
+    FCreateHandleDone := true;
+  end;
 end;
 
 procedure TCustomMPHexEditor.SaveToStream(Strm: TStream);

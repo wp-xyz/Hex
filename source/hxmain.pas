@@ -311,7 +311,7 @@ begin
       HexParams.SettingsPageIndex := params.SettingsPageIndex;
       if Assigned(F) then begin
         F.ApplyHexParams(params);
-        F.ApplyColors(colors);
+        ApplyColorsToHexEditor(colors, F.HexEditor);
       end else begin
         HexParams := params;
         ColorParams := colors;
@@ -626,7 +626,7 @@ begin
     end else
       F.Caption := Format(SNoName, [CountEmpty]);
     F.ApplyHexParams(HexParams);
-    F.ApplyColors(ColorParams);
+    ApplyColorsToHexEditor(ColorParams, F.HexEditor);
     page.Caption := F.Caption;
     PageControl.ActivePage := page;
     PageControl.Show;

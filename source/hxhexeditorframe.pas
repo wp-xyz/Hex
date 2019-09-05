@@ -74,7 +74,6 @@ type
     destructor Destroy; override;
     procedure ActiveColors(var AParams: TColorParams);
     procedure ActiveHexParams(var AParams: THexParams);
-    procedure ApplyColors(const AParams: TColorParams);
     procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
     procedure InsertMode(const AEnable: Boolean);
@@ -198,50 +197,11 @@ begin
   end;
 end;
 
-procedure THexEditorFrame.ApplyColors(const AParams: TColorParams);
-var
-  i: Integer;
-begin
-  if Assigned(HexEditor) then
-  begin
-    HexEditor.Colors.Background := AParams.BackgroundColor;
-    HexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;
-    HexEditor.Colors.OffsetBackground := AParams.OffsetBackgroundColor;
-    HexEditor.Colors.Offset := AParams.OffsetForegroundColor;
-    HexEditor.Colors.CurrentOffsetBackground := AParams.CurrentOffsetBackgroundColor;
-    HexEditor.Colors.CurrentOffset := AParams.CurrentOffsetForegroundColor;
-    HexEditor.Colors.EvenColumn := AParams.EvenColumnForegroundColor;
-    HexEditor.Colors.OddColumn := AParams.OddColumnForegroundColor;
-    HexEditor.Colors.ChangedBackground := AParams.ChangedBackgroundColor;
-    HexEditor.Colors.ChangedText := AParams.ChangedForegroundColor;
-    HexEditor.Font.Color := AParams.CharFieldForegroundColor;
-  end;
-end;
-
 procedure THexEditorFrame.ApplyHexParams(const AParams: THexParams);
 var
   i: Integer;
 begin
-  if Assigned(HexEditor) then
-  begin
-    HexEditor.ReadOnlyView := AParams.ViewOnly;
-    HexEditor.ReadOnlyFile := AParams.WriteProtected;
-    HexEditor.AllowInsertMode := AParams.AllowInsertMode;
-    HexEditor.InsertMode := AParams.InsertMode;
-    // To do: Big endian
-
-    HexEditor.OffsetFormat := AParams.GetOffsetFormat;
-    HexEditor.ShowRuler := AParams.RulerVisible;
-    case AParams.RulerNumberBase of
-      odbDec: HexEditor.RulerNumberBase := 10;
-      odbHex: HexEditor.RulerNumberBase := 16;
-      odbOct: HexEditor.RulerNumberBase := 8;
-    end;
-    HexEditor.BytesPerRow := AParams.BytesPerRow;
-    HexEditor.BytesPerColumn := AParams.BytesPerColumn;
-    HexEditor.HexLowercase := AParams.HexLowerCase;
-    HexEditor.MaskChar := AParams.MaskChar;
-  end;
+  ApplyParamsToHexEditor(AParams, HexEditor);
 
   StatusBar.Visible := AParams.ShowStatusBar;
   FStatusbarItems := AParams.StatusbarItems;
@@ -583,7 +543,7 @@ begin
   if (AParent <> nil) and (FHexEditor = nil) then
     CreateHexEditor;
   ApplyHexParams(HexParams);
-  ApplyColors(ColorParams);
+  ApplyColorsToHexEditor(ColorParams, FHexEditor);
   if HexEditor.CanFocus then HexEditor.SetFocus;
 end;
 

@@ -5,8 +5,9 @@ unit hxSettingsDlg;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ComCtrls,
-  StdCtrls, ExtCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel,
+  ComCtrls, StdCtrls, ExtCtrls,
+  MPHexEditor,
   hxGlobal;
 
 type
@@ -62,6 +63,7 @@ type
     gbRecordViewer: TGroupBox;
     gbDataViewerDataTypes: TGroupBox;
     gbObjectViewer: TGroupBox;
+    gbSampleHexEditor: TGroupBox;
     lblMaskChar: TLabel;
     lblCurrentOffsetColor: TLabel;
     lblChangedColor: TLabel;
@@ -86,13 +88,18 @@ type
     pgEditor: TTabSheet;
     rgByteOrder: TRadioGroup;
     procedure btnRestoreDefaultsClick(Sender: TObject);
+    procedure FormatChanged(Sender: TObject);
     procedure cbDataViewerVisibleChange(Sender: TObject);
     procedure cbObjectViewerVisibleChange(Sender: TObject);
     procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbViewOnlyChange(Sender: TObject);
+    procedure ColorChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure PageControlChange(Sender: TObject);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
+    FSampleHexEditor: TMPHexEditor;
+    procedure PrepareSampleHexEditor;
     procedure SetEditorData(const AParams: THexParams);
     procedure SetFormatData(const AParams: THexParams);
     procedure SetViewerData(const AParams: THexParams);
@@ -114,7 +121,7 @@ implementation
 {$R *.lfm}
 
 uses
-  hxDataModule;
+  hxDataModule, hxUtils;
 
 procedure TSettingsForm.btnRestoreDefaultsClick(Sender: TObject);
 var
@@ -126,6 +133,14 @@ begin
   else
     ParamsToControls(DefaultHexParams);
   PageControl.ActivePageIndex := idx;
+end;
+
+procedure TSettingsForm.FormatChanged(Sender: TObject);
+var
+  params: THexParams;
+begin
+  ParamsFromControls(params);
+  ApplyParamsToHexEditor(params, FSampleHexEditor);
 end;
 
 procedure TSettingsForm.cbDataViewerVisibleChange(Sender: TObject);
@@ -151,6 +166,14 @@ procedure TSettingsForm.cbViewOnlyChange(Sender: TObject);
 begin
   cbWriteProtected.Enabled := not cbViewOnly.Checked;
   cbAllowInsertMode.Enabled := not cbViewOnly.Checked;
+end;
+
+procedure TSettingsForm.ColorChanged(Sender: TObject);
+var
+  colors: TColorParams;
+begin
+  ColorsFromControls(colors);
+  ApplyColorsToHexEditor(colors, FSampleHexEditor);
 end;
 
 procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
@@ -192,6 +215,7 @@ begin
     clbChangedForeground.ButtonColor := ChangedForegroundColor;
     clbCharFieldForeground.ButtonColor := CharfieldForegroundColor;
   end;
+  ApplyColorsToHexEditor(AParams, FSampleHexEditor);
 end;
 
 procedure TSettingsForm.FormCreate(Sender: TObject);
@@ -216,6 +240,14 @@ begin
   FDataTypeCheckboxes[dtReal48] := cbDataViewerReal48;
 
   rgByteOrder.Controls[1].BorderSpacing.Bottom := 6;
+
+  PrepareSampleHexEditor;
+end;
+
+procedure TSettingsForm.PageControlChange(Sender: TObject);
+begin
+  if (PageControl.ActivePage = pgColors) or (PageControl.ActivePage = pgFormat) then
+    gbSampleHexEditor.Parent := PageControl.ActivePage;
 end;
 
 procedure TSettingsForm.ParamsFromControls(var AParams: THexParams);
@@ -325,6 +357,7 @@ end;
 procedure TSettingsForm.ParamsToControls(const AParams: THexParams);
 var
   i : integer;
+  stream: TStream;
 begin
   with AParams do
   begin
@@ -332,6 +365,7 @@ begin
       if PageControl.Pages[i].PageIndex = SettingsPageIndex then
       begin
         PageControl.ActivePage := PageControl.Pages[i];
+        PageControlChange(nil);
         break;
       end;
 
@@ -346,7 +380,28 @@ begin
   SetEditorData(AParams);
   SetFormatData(AParams);
   SetViewerData(AParams);
-//  SetWinData(WinParams);
+  //  SetWinData(WinParams);
+
+  ApplyParamsToHexEditor(AParams, FSampleHexEditor);
+end;
+
+procedure TSettingsForm.PrepareSampleHexEditor;
+var
+  stream: TStream;
+begin
+  FSampleHexEditor.Free;
+  FSampleHexEditor := TMPHexEditor.Create(self);
+  FSampleHexEditor.ParentFont := false;
+  FSampleHexEditor.Parent := gbSampleHexEditor;
+  FSampleHexEditor.Align := alClient;
+
+  // Load some dummy data into the sample hex editor.
+  stream := TStringStream.Create(#$1B#$FF#$08#$00'Here is some sample text loaded into our demo HexEditor.'#$0D#$0A#09#$AE);
+  try
+    FSampleHexEditor.LoadFromStream(stream);
+  finally
+    stream.Free;
+  end;
 end;
 
 procedure TSettingsForm.SetEditorData(const AParams: THexParams);
@@ -371,6 +426,7 @@ begin
       if StrToInt(cbBytesPerRow.Items[i]) = BytesPerRow then
       begin
         cbBytesPerRow.ItemIndex := i;
+        FSampleHexEditor.BytesPerRow := i;
         break;
       end;
     end;
@@ -379,6 +435,8 @@ begin
       if StrToInt(cbbytesPerColumn.Items[i]) = BytesPerColumn then
       begin
         cbBytesPerColumn.ItemIndex := i;
+        if i > 0 then
+          FSampleHexEditor.BytesPerColumn := i;
         break;
       end;
     end;
@@ -396,10 +454,15 @@ begin
         end;
 
     cbRulerVisible.Checked := RulerVisible;
+    FSampleHexEditor.ShowRuler := RulerVisible;
+
     cmbRulerNumberBase.ItemIndex := ord(RulerNumberBase) - 1;
+
     edMaskChar.Text := String(MaskChar);
+    FSampleHexEditor.MaskChar := MaskChar;
 
     cbHexLowercase.Checked := HexLowerCase;
+    FSampleHexEditor.HexLowerCase := HexLowerCase;
 
 
     (*

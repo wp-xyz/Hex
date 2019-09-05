@@ -6,6 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, IniFiles, Forms,
+  MPHexEditor,
   hxGlobal;
 
 // Ini file
@@ -19,6 +20,9 @@ procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
+
+procedure ApplyColorsToHexEditor(const AParams: TColorParams; AHexEditor: TMPHexEditor);
+procedure ApplyParamsToHexEditor(const AParams: THexParams; AHexEditor: TMPHexEditor);
 
 // Simple dialogs
 function Confirm(const AMsg: string): boolean;
@@ -333,6 +337,51 @@ begin
   end;
 end;
 
+procedure ApplyColorsToHexEditor(const AParams: TColorParams;
+  AHexEditor: TMPHexEditor);
+var
+  i: Integer;
+begin
+  if Assigned(AHexEditor) then
+  begin
+    AHexEditor.Colors.Background := AParams.BackgroundColor;
+    AHexEditor.Colors.ActiveFieldBackground := AParams.ActiveFieldBackgroundColor;
+    AHexEditor.Colors.OffsetBackground := AParams.OffsetBackgroundColor;
+    AHexEditor.Colors.Offset := AParams.OffsetForegroundColor;
+    AHexEditor.Colors.CurrentOffsetBackground := AParams.CurrentOffsetBackgroundColor;
+    AHexEditor.Colors.CurrentOffset := AParams.CurrentOffsetForegroundColor;
+    AHexEditor.Colors.EvenColumn := AParams.EvenColumnForegroundColor;
+    AHexEditor.Colors.OddColumn := AParams.OddColumnForegroundColor;
+    AHexEditor.Colors.ChangedBackground := AParams.ChangedBackgroundColor;
+    AHexEditor.Colors.ChangedText := AParams.ChangedForegroundColor;
+    AHexEditor.Font.Color := AParams.CharFieldForegroundColor;
+  end;
+end;
+
+procedure ApplyParamsToHexEditor(const AParams: THexParams;
+  AHexEditor: TMPHexEditor);
+begin
+  if Assigned(AHexEditor) then
+  begin
+    AHexEditor.ReadOnlyView := AParams.ViewOnly;
+    AHexEditor.ReadOnlyFile := AParams.WriteProtected;
+    AHexEditor.AllowInsertMode := AParams.AllowInsertMode;
+    AHexEditor.InsertMode := AParams.InsertMode;
+    // To do: Big endian
+
+    AHexEditor.OffsetFormat := AParams.GetOffsetFormat;
+    AHexEditor.ShowRuler := AParams.RulerVisible;
+    case AParams.RulerNumberBase of
+      odbDec: AHexEditor.RulerNumberBase := 10;
+      odbHex: AHexEditor.RulerNumberBase := 16;
+      odbOct: AHexEditor.RulerNumberBase := 8;
+    end;
+    AHexEditor.BytesPerRow := AParams.BytesPerRow;
+    AHexEditor.BytesPerColumn := AParams.BytesPerColumn;
+    AHexEditor.HexLowercase := AParams.HexLowerCase;
+    AHexEditor.MaskChar := AParams.MaskChar;
+  end;
+end;
 
 {==============================================================================}
 {  Dialogs                                                                     }

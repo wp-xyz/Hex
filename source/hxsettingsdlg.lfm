@@ -1,18 +1,18 @@
 object SettingsForm: TSettingsForm
   Left = 718
-  Height = 438
+  Height = 633
   Top = 271
-  Width = 534
+  Width = 806
   Caption = 'Parameter configuration'
-  ClientHeight = 438
-  ClientWidth = 534
+  ClientHeight = 633
+  ClientWidth = 806
   OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object ButtonPanel: TButtonPanel
     Left = 6
     Height = 34
-    Top = 398
-    Width = 522
+    Top = 593
+    Width = 794
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     HelpButton.Name = 'HelpButton'
@@ -37,14 +37,15 @@ object SettingsForm: TSettingsForm
   end
   object PageControl: TPageControl
     Left = 6
-    Height = 386
+    Height = 581
     Top = 6
-    Width = 522
-    ActivePage = pgColors
+    Width = 794
+    ActivePage = pgFormat
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 1
+    OnChange = PageControlChange
     object pgEditor: TTabSheet
       Caption = 'Editor'
       ClientHeight = 358
@@ -111,8 +112,8 @@ object SettingsForm: TSettingsForm
     end
     object pgFormat: TTabSheet
       Caption = 'Format'
-      ClientHeight = 358
-      ClientWidth = 514
+      ClientHeight = 553
+      ClientWidth = 786
       object lblBytesPerRow: TLabel
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = cbBytesPerRow
@@ -183,6 +184,7 @@ object SettingsForm: TSettingsForm
           '32'
           '64'
         )
+        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 0
         Text = '16'
@@ -204,6 +206,7 @@ object SettingsForm: TSettingsForm
           '2'
           '4'
         )
+        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 1
         Text = '1'
@@ -225,6 +228,7 @@ object SettingsForm: TSettingsForm
           'hexadecimal'
           'octal'
         )
+        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 2
         Text = 'hexadecimal'
@@ -245,6 +249,7 @@ object SettingsForm: TSettingsForm
           '$ (Pascal)'
           '0x (C)'
         )
+        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 3
         Text = '$ (Pascal)'
@@ -260,6 +265,7 @@ object SettingsForm: TSettingsForm
         BorderSpacing.Top = 32
         Caption = 'Visible'
         Checked = True
+        OnChange = FormatChanged
         State = cbChecked
         TabOrder = 4
       end
@@ -292,6 +298,7 @@ object SettingsForm: TSettingsForm
           'hexadecimal'
           'octal'
         )
+        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 5
         Text = 'hexadecimal'
@@ -320,6 +327,7 @@ object SettingsForm: TSettingsForm
         Width = 154
         BorderSpacing.Left = 60
         Caption = 'Lowercase hex characters'
+        OnChange = FormatChanged
         TabOrder = 6
       end
       object edMaskChar: TEdit
@@ -335,6 +343,7 @@ object SettingsForm: TSettingsForm
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         MaxLength = 1
+        OnChange = FormatChanged
         TabOrder = 7
       end
       object lblMaskChar: TLabel
@@ -350,32 +359,49 @@ object SettingsForm: TSettingsForm
         Caption = 'Mask character'
         ParentColor = False
       end
+      object gbSampleHexEditor: TGroupBox
+        AnchorSideLeft.Control = pgFormat
+        AnchorSideRight.Control = pgFormat
+        AnchorSideRight.Side = asrBottom
+        Left = 16
+        Height = 272
+        Top = 272
+        Width = 754
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 16
+        BorderSpacing.Right = 16
+        Caption = 'Sample'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 8
+      end
     end
     object pgColors: TTabSheet
       Caption = 'Colors'
-      ClientHeight = 358
-      ClientWidth = 514
+      ClientHeight = 553
+      ClientWidth = 786
       object clbBackground: TColorButton
         AnchorSideLeft.Control = lblBackground
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = lblBackground
         AnchorSideTop.Side = asrBottom
-        Left = 269
+        Left = 405
         Height = 25
-        Top = 43
+        Top = 27
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblWindowColor: TLabel
         AnchorSideTop.Control = clbBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = clbOffsetForeground
-        Left = 103
+        Left = 239
         Height = 15
-        Top = 48
+        Top = 32
         Width = 44
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 24
@@ -387,9 +413,9 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 115
+        Left = 251
         Height = 15
-        Top = 106
+        Top = 90
         Width = 32
         Anchors = [akTop, akRight]
         Caption = 'Offset'
@@ -399,22 +425,23 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbActiveFieldBackground
         AnchorSideTop.Side = asrBottom
-        Left = 269
+        Left = 405
         Height = 25
-        Top = 101
+        Top = 85
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblForeground: TLabel
         AnchorSideTop.Control = Bevel1
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = Bevel1
-        Left = 176
+        Left = 312
         Height = 15
-        Top = 24
+        Top = 8
         Width = 65
         Anchors = [akTop, akRight]
         Caption = 'Foreground'
@@ -426,9 +453,9 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = Bevel1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = lblForeground
-        Left = 273
+        Left = 409
         Height = 15
-        Top = 24
+        Top = 8
         Width = 67
         Caption = 'Background'
         Font.Style = [fsBold]
@@ -439,23 +466,24 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = lblForeground
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOffsetBackground
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 105
+        Top = 89
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblCurrentOffsetColor: TLabel
         AnchorSideTop.Control = clbCurrentOffsetBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 74
+        Left = 210
         Height = 15
-        Top = 135
+        Top = 119
         Width = 73
         Anchors = [akTop, akRight]
         Caption = 'Current offset'
@@ -466,36 +494,38 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOffsetForeground
         AnchorSideTop.Side = asrBottom
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 134
+        Top = 118
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object clbCurrentOffsetBackground: TColorButton
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbOffsetBackground
         AnchorSideTop.Side = asrBottom
-        Left = 269
+        Left = 405
         Height = 25
-        Top = 130
+        Top = 114
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblEvenColumnForegroundColor: TLabel
         AnchorSideTop.Control = clbEvenColumnForeground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 73
+        Left = 209
         Height = 15
-        Top = 213
+        Top = 193
         Width = 74
         Anchors = [akTop, akRight]
         Caption = 'Even columns'
@@ -504,26 +534,26 @@ object SettingsForm: TSettingsForm
       object clbEvenColumnForeground: TColorButton
         AnchorSideLeft.Control = lblForeground
         AnchorSideLeft.Side = asrCenter
-        AnchorSideTop.Control = clbCurrentOffsetForeground
+        AnchorSideTop.Control = clbChangedForeground
         AnchorSideTop.Side = asrBottom
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 208
+        Top = 188
         Width = 75
-        Anchors = [akLeft]
-        BorderSpacing.Top = 4
+        BorderSpacing.Top = 16
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblOddColumnForegroundColor: TLabel
         AnchorSideTop.Control = clbOddColumnForeground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 75
+        Left = 211
         Height = 15
-        Top = 242
+        Top = 222
         Width = 72
         Anchors = [akTop, akRight]
         Caption = 'Odd columns'
@@ -534,23 +564,24 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbEvenColumnForeground
         AnchorSideTop.Side = asrBottom
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 237
+        Top = 217
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblChangedColor: TLabel
         AnchorSideTop.Control = clbChangedBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 99
+        Left = 235
         Height = 15
-        Top = 164
+        Top = 148
         Width = 48
         Anchors = [akTop, akRight]
         Caption = 'Changed'
@@ -561,33 +592,35 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbCurrentOffsetForeground
         AnchorSideTop.Side = asrBottom
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 163
+        Top = 147
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object clbChangedBackground: TColorButton
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbCurrentOffsetBackground
         AnchorSideTop.Side = asrBottom
-        Left = 269
+        Left = 405
         Height = 25
-        Top = 159
+        Top = 143
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object Bevel1: TBevel
         AnchorSideLeft.Control = pgColors
         AnchorSideLeft.Side = asrCenter
-        Left = 241
-        Height = 24
+        Left = 377
+        Height = 8
         Top = 0
         Width = 32
         Shape = bsSpacer
@@ -596,9 +629,9 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Control = clbActiveFieldBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = clbOffsetForeground
-        Left = 88
+        Left = 224
         Height = 15
-        Top = 77
+        Top = 61
         Width = 59
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 24
@@ -610,23 +643,24 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbBackground
         AnchorSideTop.Side = asrBottom
-        Left = 269
+        Left = 405
         Height = 25
-        Top = 72
+        Top = 56
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
       object lblCharFieldForegroundColor: TLabel
         AnchorSideTop.Control = clbCharFieldForeground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 70
+        Left = 206
         Height = 15
-        Top = 271
+        Top = 251
         Width = 77
         Anchors = [akTop, akRight]
         Caption = 'Character field'
@@ -637,14 +671,15 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOddColumnForeground
         AnchorSideTop.Side = asrBottom
-        Left = 171
+        Left = 307
         Height = 25
-        Top = 266
+        Top = 246
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
+        OnColorChanged = ColorChanged
       end
     end
     object pgViewer: TTabSheet
