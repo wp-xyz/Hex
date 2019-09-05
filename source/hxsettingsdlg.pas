@@ -92,6 +92,7 @@ type
     pgEditor: TTabSheet;
     rgByteOrder: TRadioGroup;
     procedure btnRestoreDefaultsClick(Sender: TObject);
+    procedure cbOffsetDisplayBaseChange(Sender: TObject);
     procedure FormatChanged(Sender: TObject);
     procedure cbDataViewerVisibleChange(Sender: TObject);
     procedure cbObjectViewerVisibleChange(Sender: TObject);
@@ -101,6 +102,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure OKButtonClick(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
+    procedure PageControlChanging(Sender: TObject; var AllowChange: Boolean);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
     FSampleHexEditor: TMPHexEditor;
@@ -161,6 +163,13 @@ end;
 procedure TSettingsForm.cbObjectViewerVisibleChange(Sender: TObject);
 begin
   cmbObjectViewerPosition.Enabled := cbObjectViewerVisible.Checked;
+end;
+
+procedure TSettingsForm.cbOffsetDisplayBaseChange(Sender: TObject);
+begin
+  FormatChanged(Sender);
+  cbHexPrefix.Enabled := cbOffsetDisplayBase.ItemIndex = 2;
+  lblHexIndicator.Enabled := cbHexPrefix.Enabled;
 end;
 
 procedure TSettingsForm.cbRecordViewerVisibleChange(Sender: TObject);
@@ -274,7 +283,18 @@ end;
 procedure TSettingsForm.PageControlChange(Sender: TObject);
 begin
   if (PageControl.ActivePage = pgColors) or (PageControl.ActivePage = pgFormat) then
+  begin
     gbSampleHexEditor.Parent := PageControl.ActivePage;
+    gbSampleHexEditor.AnchorSideLeft.Control := PageControl.ActivePage;
+    gbSampleHexEditor.AnchorSideRight.Control := PageControl.ActivePage;
+  end;
+end;
+
+procedure TSettingsForm.PageControlChanging(Sender: TObject;
+  var AllowChange: Boolean);
+begin
+  gbSampleHexEditor.AnchorSideLeft.Control := nil;
+  gbSampleHexEditor.AnchorSideRight.Control := nil;
 end;
 
 procedure TSettingsForm.ParamsFromControls(var AParams: THexParams);
@@ -419,6 +439,7 @@ begin
   FSampleHexEditor.ParentFont := false;
   FSampleHexEditor.Parent := gbSampleHexEditor;
   FSampleHexEditor.Align := alClient;
+  FSampleHexEditor.BorderSpacing.Around := 8;
 
   // Load some dummy data into the sample hex editor.
   stream := TStringStream.Create(#$1B#$FF#$08#$00'Here is some sample text loaded into our demo HexEditor.'#$0D#$0A#09#$AE);

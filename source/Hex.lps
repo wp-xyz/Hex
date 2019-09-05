@@ -141,11 +141,11 @@
         <UnitName Value="hxSettingsDlg"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="21"/>
-        <TopLine Value="297"/>
-        <CursorPos X="60" Y="302"/>
+        <TopLine Value="146"/>
+        <CursorPos X="50" Y="172"/>
         <UsageCount Value="201"/>
         <Bookmarks Count="1">
-          <Item0 Y="225" ID="1"/>
+          <Item0 Y="234" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -637,123 +637,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="301" TopLine="286"/>
+        <Caret Line="311" TopLine="286"/>
       </Position1>
       <Position2>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="302" TopLine="286"/>
+        <Caret Line="314" TopLine="287"/>
       </Position2>
       <Position3>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="303" TopLine="286"/>
+        <Caret Line="316" TopLine="289"/>
       </Position3>
       <Position4>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="304" TopLine="286"/>
+        <Caret Line="317" TopLine="290"/>
       </Position4>
       <Position5>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="307" TopLine="286"/>
+        <Caret Line="319" Column="26" TopLine="291"/>
       </Position5>
       <Position6>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="309" TopLine="286"/>
+        <Caret Line="316" TopLine="292"/>
       </Position6>
       <Position7>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="310" TopLine="286"/>
+        <Caret Line="317" TopLine="292"/>
       </Position7>
       <Position8>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="311" TopLine="286"/>
+        <Caret Line="318" TopLine="292"/>
       </Position8>
       <Position9>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="314" TopLine="287"/>
+        <Caret Line="319" TopLine="292"/>
       </Position9>
       <Position10>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="316" TopLine="289"/>
+        <Filename Value="hxhexeditorframe.pas"/>
+        <Caret Line="58" Column="26" TopLine="51"/>
       </Position10>
       <Position11>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="317" TopLine="290"/>
+        <Caret Line="304" Column="56" TopLine="293"/>
       </Position11>
       <Position12>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="319" Column="26" TopLine="291"/>
+        <Caret Line="320" Column="44" TopLine="294"/>
       </Position12>
       <Position13>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="316" TopLine="292"/>
+        <Caret Line="109" Column="15" TopLine="101"/>
       </Position13>
       <Position14>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="317" TopLine="292"/>
+        <Caret Line="485" Column="39" TopLine="464"/>
       </Position14>
       <Position15>
         <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="318" TopLine="292"/>
+        <Caret Line="117" Column="15" TopLine="93"/>
       </Position15>
       <Position16>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="319" TopLine="292"/>
-      </Position16>
-      <Position17>
-        <Filename Value="hxhexeditorframe.pas"/>
-        <Caret Line="58" Column="26" TopLine="51"/>
-      </Position17>
-      <Position18>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="304" Column="56" TopLine="293"/>
-      </Position18>
-      <Position19>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="320" Column="44" TopLine="294"/>
-      </Position19>
-      <Position20>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="109" Column="15" TopLine="101"/>
-      </Position20>
-      <Position21>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="485" Column="39" TopLine="464"/>
-      </Position21>
-      <Position22>
-        <Filename Value="hxsettingsdlg.pas"/>
-        <Caret Line="117" Column="15" TopLine="93"/>
-      </Position22>
-      <Position23>
         <Filename Value="hxutils.pas"/>
         <Caret Line="311" Column="21" TopLine="285"/>
-      </Position23>
-      <Position24>
+      </Position16>
+      <Position17>
         <Filename Value="hxutils.pas"/>
         <Caret Line="21" Column="11" TopLine="5"/>
-      </Position24>
-      <Position25>
+      </Position17>
+      <Position18>
         <Filename Value="hxutils.pas"/>
         <Caret Line="163" Column="36" TopLine="152"/>
-      </Position25>
-      <Position26>
+      </Position18>
+      <Position19>
         <Filename Value="hxutils.pas"/>
         <Caret Line="24" Column="11" TopLine="4"/>
-      </Position26>
-      <Position27>
+      </Position19>
+      <Position20>
         <Filename Value="hxutils.pas"/>
         <Caret Line="356" Column="3" TopLine="351"/>
-      </Position27>
-      <Position28>
+      </Position20>
+      <Position21>
         <Filename Value="hxutils.pas"/>
         <Caret Line="25" Column="11" TopLine="7"/>
-      </Position28>
-      <Position29>
+      </Position21>
+      <Position22>
         <Filename Value="hxhexeditorframe.pas"/>
         <Caret Line="257" Column="23" TopLine="249"/>
-      </Position29>
-      <Position30>
+      </Position22>
+      <Position23>
         <Filename Value="hxhexeditorframe.pas"/>
         <Caret Line="76" Column="15" TopLine="58"/>
+      </Position23>
+      <Position24>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="309" Column="33" TopLine="297"/>
+      </Position24>
+      <Position25>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="107" Column="15" TopLine="85"/>
+      </Position25>
+      <Position26>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="420" Column="23" TopLine="412"/>
+      </Position26>
+      <Position27>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="103" Column="15" TopLine="75"/>
+      </Position27>
+      <Position28>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="282" Column="13" TopLine="274"/>
+      </Position28>
+      <Position29>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="288" Column="50" TopLine="274"/>
+      </Position29>
+      <Position30>
+        <Filename Value="hxsettingsdlg.pas"/>
+        <Caret Line="150" Column="3" TopLine="146"/>
       </Position30>
     </JumpHistory>
     <RunParams>

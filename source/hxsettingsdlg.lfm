@@ -7,6 +7,7 @@ object SettingsForm: TSettingsForm
   ClientHeight = 633
   ClientWidth = 806
   OnCreate = FormCreate
+  Position = poMainFormCenter
   LCLVersion = '2.1.0.0'
   object ButtonPanel: TButtonPanel
     Left = 6
@@ -47,6 +48,7 @@ object SettingsForm: TSettingsForm
     TabIndex = 1
     TabOrder = 1
     OnChange = PageControlChange
+    OnChanging = PageControlChanging
     object pgEditor: TTabSheet
       Caption = 'Editor'
       ClientHeight = 358
@@ -229,7 +231,7 @@ object SettingsForm: TSettingsForm
           'hexadecimal'
           'octal'
         )
-        OnChange = FormatChanged
+        OnChange = cbOffsetDisplayBaseChange
         Style = csDropDownList
         TabOrder = 2
         Text = 'hexadecimal'
