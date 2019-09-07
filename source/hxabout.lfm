@@ -1,59 +1,31 @@
 object AboutForm: TAboutForm
   Left = 340
-  Height = 276
+  Height = 299
   Top = 127
-  Width = 666
+  Width = 652
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About Hex'
-  ClientHeight = 276
-  ClientWidth = 666
+  ClientHeight = 299
+  ClientWidth = 652
   OnCreate = FormCreate
   Position = poMainFormCenter
   ShowHint = True
   LCLVersion = '2.1.0.0'
-  object ButtonPanel: TButtonPanel
-    AnchorSideLeft.Control = lblAcknowledgements
-    AnchorSideTop.Control = lblIcons8
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 288
-    Height = 26
-    Top = 241
-    Width = 372
-    Align = alNone
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 6
-    BorderSpacing.Right = 6
-    BorderSpacing.Bottom = 6
-    BorderSpacing.Around = 0
-    OKButton.Name = 'OKButton'
-    OKButton.DefaultCaption = True
-    HelpButton.Name = 'HelpButton'
-    HelpButton.DefaultCaption = True
-    CloseButton.Name = 'CloseButton'
-    CloseButton.DefaultCaption = True
-    CancelButton.Name = 'CancelButton'
-    CancelButton.DefaultCaption = True
-    TabOrder = 0
-    ShowButtons = [pbOK]
-    ShowBevel = False
-  end
   object Image1: TImage
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    Left = 8
+    Left = 12
     Height = 256
-    Top = 8
+    Top = 12
     Width = 256
-    BorderSpacing.Around = 8
+    BorderSpacing.Around = 12
   end
   object lblHex: TLabel
     AnchorSideLeft.Control = Image1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    Left = 288
+    Left = 292
     Height = 65
     Top = 0
     Width = 90
@@ -68,7 +40,7 @@ object AboutForm: TAboutForm
     AnchorSideLeft.Control = lblHex
     AnchorSideTop.Control = lblHex
     AnchorSideTop.Side = asrBottom
-    Left = 288
+    Left = 292
     Height = 15
     Top = 65
     Width = 55
@@ -79,7 +51,7 @@ object AboutForm: TAboutForm
     AnchorSideLeft.Control = lblHexEditor
     AnchorSideTop.Control = lblHexEditor
     AnchorSideTop.Side = asrBottom
-    Left = 288
+    Left = 292
     Height = 15
     Top = 104
     Width = 114
@@ -89,161 +61,205 @@ object AboutForm: TAboutForm
     ParentColor = False
     ParentFont = False
   end
-  object lblCompiler: TLabel
+  object Panel1: TPanel
     AnchorSideLeft.Control = lblAcknowledgements
     AnchorSideTop.Control = lblAcknowledgements
     AnchorSideTop.Side = asrBottom
-    Left = 288
-    Height = 15
-    Top = 127
-    Width = 52
-    BorderSpacing.Top = 8
-    Caption = 'Compiler:'
+    Left = 292
+    Height = 110
+    Top = 123
+    Width = 346
+    AutoSize = True
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 12
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    ClientHeight = 106
+    ClientWidth = 342
+    Color = clWindow
     ParentColor = False
+    TabOrder = 0
+    object lblCompiler: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel1
+      AnchorSideRight.Control = lblMPHexEditor
+      AnchorSideRight.Side = asrBottom
+      Left = 98
+      Height = 15
+      Top = 8
+      Width = 52
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      Caption = 'Compiler:'
+      ParentColor = False
+    end
+    object lblFPC: TLabel
+      AnchorSideLeft.Control = lblMarkus
+      AnchorSideTop.Control = lblCompiler
+      Left = 166
+      Height = 15
+      Hint = 'https://www.freepascal.org/'
+      Top = 8
+      Width = 110
+      Caption = 'Free Pascal Compiler'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblURLClick
+      OnMouseEnter = lblURLMouseEnter
+      OnMouseLeave = lblURLMouseLeave
+    end
+    object lblLazarus: TLabel
+      AnchorSideLeft.Control = lblMarkus
+      AnchorSideTop.Control = lblFPC
+      AnchorSideTop.Side = asrBottom
+      Left = 166
+      Height = 15
+      Hint = 'https://www.lazarus-ide.org/'
+      Top = 23
+      Width = 39
+      Caption = 'Lazarus'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblURLClick
+      OnMouseEnter = lblURLMouseEnter
+      OnMouseLeave = lblURLMouseLeave
+    end
+    object lblIDE: TLabel
+      AnchorSideTop.Control = lblCompiler
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblMPHexEditor
+      AnchorSideRight.Side = asrBottom
+      Left = 130
+      Height = 15
+      Top = 23
+      Width = 20
+      Anchors = [akTop, akRight]
+      Caption = 'IDE:'
+      ParentColor = False
+    end
+    object lblMPHexEditor: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = lblIDE
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 15
+      Top = 38
+      Width = 138
+      BorderSpacing.Left = 12
+      Caption = 'MPHexEditor component:'
+      ParentColor = False
+    end
+    object lblMarkus: TLabel
+      AnchorSideLeft.Control = lblMPHexEditor
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblLazarus
+      AnchorSideTop.Side = asrBottom
+      Left = 166
+      Height = 15
+      Top = 38
+      Width = 91
+      BorderSpacing.Left = 16
+      Caption = 'Markus Stephany'
+      ParentColor = False
+    end
+    object lblMichal: TLabel
+      AnchorSideLeft.Control = lblMarkus
+      AnchorSideTop.Control = lblMarkus
+      AnchorSideTop.Side = asrBottom
+      Left = 166
+      Height = 15
+      Hint = 'https://github.com/michalgw/mphexeditor'
+      Top = 53
+      Width = 164
+      BorderSpacing.Right = 12
+      Caption = 'Michal Glawitzky (Lazarus port)'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblURLClick
+      OnMouseEnter = lblURLMouseEnter
+      OnMouseLeave = lblURLMouseLeave
+    end
+    object lblOMultiPanelComponent: TLabel
+      AnchorSideTop.Control = lblMichal
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblMPHexEditor
+      AnchorSideRight.Side = asrBottom
+      Left = 16
+      Height = 15
+      Top = 68
+      Width = 134
+      Anchors = [akTop, akRight]
+      Caption = 'OMultiPanel component:'
+      ParentColor = False
+    end
+    object lblOndrej: TLabel
+      AnchorSideLeft.Control = lblMarkus
+      AnchorSideTop.Control = lblMichal
+      AnchorSideTop.Side = asrBottom
+      Cursor = crHandPoint
+      Left = 166
+      Height = 15
+      Hint = 'www.kluug.net'
+      Top = 68
+      Width = 80
+      Caption = 'www.kluug.net'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblURLClick
+      OnMouseEnter = lblURLMouseEnter
+      OnMouseLeave = lblURLMouseLeave
+    end
+    object lblIcons: TLabel
+      AnchorSideTop.Control = lblOMultiPanelComponent
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblMPHexEditor
+      AnchorSideRight.Side = asrBottom
+      Left = 119
+      Height = 15
+      Top = 83
+      Width = 31
+      Anchors = [akTop, akRight]
+      Caption = 'Icons:'
+      ParentColor = False
+    end
+    object lblIcons8: TLabel
+      AnchorSideLeft.Control = lblMarkus
+      AnchorSideTop.Control = lblOndrej
+      AnchorSideTop.Side = asrBottom
+      Cursor = crHandPoint
+      Left = 166
+      Height = 15
+      Hint = 'www.icons8.com'
+      Top = 83
+      Width = 91
+      BorderSpacing.Bottom = 8
+      Caption = 'www.icons8.com'
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblURLClick
+      OnMouseEnter = lblURLMouseEnter
+      OnMouseLeave = lblURLMouseLeave
+    end
   end
-  object lblFPC: TLabel
-    AnchorSideLeft.Control = lblMarkus
-    AnchorSideTop.Control = lblCompiler
-    Left = 450
-    Height = 15
-    Hint = 'https://www.freepascal.org/'
-    Top = 127
-    Width = 110
-    Caption = 'Free Pascal Compiler'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblURLClick
-    OnMouseEnter = lblURLMouseEnter
-    OnMouseLeave = lblURLMouseLeave
-  end
-  object lblLazarus: TLabel
-    AnchorSideLeft.Control = lblMarkus
-    AnchorSideTop.Control = lblFPC
-    AnchorSideTop.Side = asrBottom
-    Left = 450
-    Height = 15
-    Hint = 'https://www.lazarus-ide.org/'
-    Top = 142
-    Width = 39
-    Caption = 'Lazarus'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblURLClick
-    OnMouseEnter = lblURLMouseEnter
-    OnMouseLeave = lblURLMouseLeave
-  end
-  object lblIDE: TLabel
-    AnchorSideLeft.Control = lblAcknowledgements
-    AnchorSideTop.Control = lblCompiler
-    AnchorSideTop.Side = asrBottom
-    Left = 288
-    Height = 15
-    Top = 142
-    Width = 20
-    Caption = 'IDE:'
-    ParentColor = False
-  end
-  object lblMPHexEditor: TLabel
-    AnchorSideLeft.Control = lblAcknowledgements
-    AnchorSideTop.Control = lblIDE
-    AnchorSideTop.Side = asrBottom
-    Left = 288
-    Height = 15
-    Top = 157
-    Width = 138
-    Caption = 'MPHexEditor component:'
-    ParentColor = False
-  end
-  object lblMarkus: TLabel
-    AnchorSideLeft.Control = lblMPHexEditor
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = lblLazarus
-    AnchorSideTop.Side = asrBottom
-    Left = 450
-    Height = 15
-    Top = 157
-    Width = 91
-    BorderSpacing.Left = 24
-    Caption = 'Markus Stephany'
-    ParentColor = False
-  end
-  object lblMichal: TLabel
-    AnchorSideLeft.Control = lblMarkus
-    AnchorSideTop.Control = lblMarkus
-    AnchorSideTop.Side = asrBottom
-    Left = 450
-    Height = 15
-    Hint = 'https://github.com/michalgw/mphexeditor'
-    Top = 172
-    Width = 164
-    BorderSpacing.Right = 16
-    Caption = 'Michal Glawitzky (Lazarus port)'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblURLClick
-    OnMouseEnter = lblURLMouseEnter
-    OnMouseLeave = lblURLMouseLeave
-  end
-  object lblOMultiPanelComponent: TLabel
-    AnchorSideLeft.Control = lblAcknowledgements
-    AnchorSideTop.Control = lblMichal
-    AnchorSideTop.Side = asrBottom
-    Left = 288
-    Height = 15
-    Top = 187
-    Width = 134
-    Caption = 'OMultiPanel component:'
-    ParentColor = False
-  end
-  object lblOndrej: TLabel
-    AnchorSideLeft.Control = lblMarkus
-    AnchorSideTop.Control = lblMichal
-    AnchorSideTop.Side = asrBottom
-    Cursor = crHandPoint
-    Left = 450
-    Height = 15
-    Hint = 'www.kluug.net'
-    Top = 187
-    Width = 80
-    Caption = 'www.kluug.net'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblURLClick
-    OnMouseEnter = lblURLMouseEnter
-    OnMouseLeave = lblURLMouseLeave
-  end
-  object lblIcons: TLabel
-    AnchorSideLeft.Control = lblAcknowledgements
-    AnchorSideTop.Control = lblOMultiPanelComponent
-    AnchorSideTop.Side = asrBottom
-    Left = 288
-    Height = 15
-    Top = 202
-    Width = 31
-    Caption = 'Icons:'
-    ParentColor = False
-  end
-  object lblIcons8: TLabel
-    AnchorSideLeft.Control = lblMarkus
-    AnchorSideTop.Control = lblOndrej
-    AnchorSideTop.Side = asrBottom
-    Cursor = crHandPoint
-    Left = 450
-    Height = 15
-    Hint = 'www.icons8.com'
-    Top = 202
-    Width = 91
-    BorderSpacing.Bottom = 24
-    Caption = 'www.icons8.com'
-    Font.Color = clBlue
-    ParentColor = False
-    ParentFont = False
-    OnClick = lblURLClick
-    OnMouseEnter = lblURLMouseEnter
-    OnMouseLeave = lblURLMouseLeave
+  object BitBtn1: TBitBtn
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    Left = 563
+    Height = 26
+    Top = 240
+    Width = 75
+    Anchors = [akTop, akRight]
+    AutoSize = True
+    BorderSpacing.Bottom = 12
+    Caption = 'Close'
+    ModalResult = 11
+    Images = CommonData.Images
+    ImageIndex = 5
+    TabOrder = 1
   end
 end

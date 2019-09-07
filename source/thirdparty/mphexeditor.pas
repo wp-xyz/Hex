@@ -5334,6 +5334,9 @@ var
   cLoop,
     cInc: Cardinal;
   LPTblFind: PMPHFindTable;
+
+  //wp
+  ch: Char;
 begin
   if Assigned(FOnFind) then
     FOnFind(self, aBuffer, aCount, aStart, aEnd, IgnoreCase, #0, Result)
@@ -5377,6 +5380,8 @@ begin
 
         if LIntCurPos > LIntEnd then
           Exit;
+
+        ch := char(Data[LIntCurPos]);  // wp
 
         LChrCurrent := LPTblFind^[char(Data[LIntCurPos])];
 

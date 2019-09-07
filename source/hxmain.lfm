@@ -41,7 +41,7 @@ object MainForm: TMainForm
       Left = 22
       Height = 22
       Top = 3
-      Width = 119
+      Width = 148
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
@@ -61,32 +61,44 @@ object MainForm: TMainForm
         Style = tbsDropDown
       end
       object tbFileQuit: TToolButton
-        Left = 95
+        Left = 124
         Top = 0
         Action = acFileQuit
       end
-      object ToolButton1: TToolButton
-        Left = 66
+      object tbSettings: TToolButton
+        Left = 95
         Top = 0
         Action = acCfgSettings
       end
-      object ToolButton2: TToolButton
+      object tbDivider1: TToolButton
         Left = 61
         Height = 22
         Top = 0
-        Caption = 'ToolButton2'
+        Caption = 'tbDivider1'
         Style = tbsDivider
       end
-      object ToolButton3: TToolButton
+      object tbSave: TToolButton
         Left = 37
         Top = 0
         Action = acFileSave
       end
-      object ToolButton4: TToolButton
+      object tbDivider2: TToolButton
         Left = 90
         Height = 22
         Top = 0
-        Caption = 'ToolButton4'
+        Caption = 'tbDivider2'
+        Style = tbsDivider
+      end
+      object tbFind: TToolButton
+        Left = 66
+        Top = 0
+        Action = acEditFind
+      end
+      object tbDivider3: TToolButton
+        Left = 119
+        Height = 22
+        Top = 0
+        Caption = 'tbDivider3'
         Style = tbsDivider
       end
     end
@@ -494,6 +506,14 @@ object MainForm: TMainForm
       Caption = 'About...'
       OnExecute = acAboutExecute
     end
+    object acEditFind: TAction
+      Category = 'Edit'
+      Caption = 'Find...'
+      Hint = 'Find|Find expression'
+      ImageIndex = 16
+      OnExecute = acEditFindExecute
+      ShortCut = 16454
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images
@@ -537,27 +557,33 @@ object MainForm: TMainForm
     end
     object mnuEdit: TMenuItem
       Caption = 'Edit'
-      object MenuItem6: TMenuItem
+      object mnuEditMode: TMenuItem
         Caption = 'Edit mode'
-        object MenuItem7: TMenuItem
+        object mnuEditingAllowed: TMenuItem
           Action = acEditEditingAllowed
           AutoCheck = True
         end
-        object MenuItem8: TMenuItem
+        object mnuEditingForbidden: TMenuItem
           Action = acEditEditingForbidden
           AutoCheck = True
         end
-        object MenuItem11: TMenuItem
+        object mnuEditModeSeparator: TMenuItem
           Caption = '-'
         end
-        object MenuItem10: TMenuItem
+        object mnuEditInsert: TMenuItem
           Action = acEditInsertMode
           AutoCheck = True
         end
-        object MenuItem12: TMenuItem
+        object mnuEditOverwrite: TMenuItem
           Action = acEditOverWriteMode
           AutoCheck = True
         end
+      end
+      object MenuItem15: TMenuItem
+        Caption = '-'
+      end
+      object mnuEditFind: TMenuItem
+        Action = acEditFind
       end
     end
     object mnuView: TMenuItem

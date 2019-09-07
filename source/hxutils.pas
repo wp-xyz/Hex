@@ -45,7 +45,22 @@ function LEToN(AValue: Extended): Extended; overload;
 function LEToN(AValue: Real48): Real48; overload;
 function LEToN(AValue: Currency): Currency; overload;
 function LEToN(AValue: WideString): WideString; overload;
+function NToBE(AValue: WideString): WideString; overload;
+function NToLE(AValue: WideString): WideString; overload;
 
+// Data types
+procedure CreateDataTypeList(AList: TStrings; const ADataTypes: Array of TDataType);
+function ByteToBytes(AValue: byte): TBytes;
+function WordToBytes(AValue: word; BigEndian: Boolean): TBytes;
+function DWordToBytes(AValue: DWord; BigEndian: Boolean): TBytes;
+function Int64ToBytes(AValue: DWord; BigEndian: Boolean): TBytes;
+function CurrToBytes(AValue: Currency; BigEndian: Boolean): TBytes;
+function SingleToBytes(AValue: single; BigEndian: Boolean): TBytes;
+function DoubleToBytes(AValue: double; BigEndian: Boolean): TBytes;
+function ExtendedToBytes(AValue: Extended; BigEndian: Boolean): TBytes;
+function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;
+
+function BytesToHex(AValue: TBytes): String;
 
 implementation
 
@@ -125,6 +140,7 @@ begin
       T := ReadInteger(ASection, 'Top',  AForm.Top);
       W := ReadInteger(ASection, 'Width',  AForm.Width);
       H := ReadInteger(ASection, 'Height', AForm.Height);
+      AForm.Position := poDesigned;
       AForm.BoundsRect := Rect(L, T, L + W, T + H);
       AForm.MakeFullyVisible;
     end;
@@ -529,10 +545,11 @@ var
   i: Integer;
   w: Word;
 begin
+  SetLength(Result, Length(AValue));
   for i := 1 to Length(AValue) do begin
     w := PWord(@AValue[i])^;
     Swap(w);
-    AValue[i] := WideChar(w);
+    Result[i] := WideChar(w);
   end;
 end;
 {$ENDIF}
@@ -620,13 +637,157 @@ var
   i: Integer;
   w: Word;
 begin
+  SetLength(Result, Length(AValue));
   for i := 1 to Length(AValue) do begin
     w := PWord(@AValue[i])^;
     Swap(w);
-    AValue[i] := WideChar(w);
+    Result[i] := WideChar(w);
   end;
 end;
 {$ENDIF}
+
+function NToBE(AValue: WideString): WideString;
+{$IFDEF ENDIAN_BIG}
+begin
+  Result := AValue;
+end;
+{$ELSE}
+var
+  i: Integer;
+  w: Word;
+begin
+  SetLength(Result, Length(AValue));
+  for i := 1 to Length(AValue) do
+  begin
+    w := PWord(@AValue[i])^;
+    Swap(w);
+    Result[i] := WideChar(w);
+  end;
+end;
+{$ENDIF}
+
+function NToLE(AValue: WideString): WideString;
+{$IFDEF ENDIAN_LITTLE}
+begin
+  Result := AValue;
+end;
+{$ELSE}
+var
+  i: Integer;
+  w: Word;
+begin
+  SetLength(Result, Length(AValue);
+  for i := 1 to Length(AValue) do
+  begin
+    w := PWord(@AValue[i])^;
+    Swap(w);
+    Result[i] := WideChar(w);
+  end;
+end;
+{$ENDIF}
+
+
+{==============================================================================}
+{    Data types                                                                }
+{==============================================================================}
+
+procedure CreateDataTypeList(AList: TStrings; const ADataTypes: array of TDataType);
+var
+  dt: TDataType;
+  s: String;
+begin
+  if AList = nil then
+    raise Exception.Create('[CreateDataTypeList] Parameter AList cannot be nil.');
+
+  for dt in ADataTypes do begin
+    if DataTypeDescriptions[dt] = '' then
+      s := DataTypeNames[dt]
+    else
+      s := Format('%s (%s)', [DataTypeNames[dt], DataTypeDescriptions[dt]]);
+    AList.AddObject(s, TObject(PtrInt(dt)))
+  end;
+end;
+
+function NumberToBytes(P: PByte; ANumBytes: Integer; BigEndian: Boolean): TBytes;
+var
+  i: Integer;
+begin
+  SetLength(Result, ANumBytes);
+  if BigEndian then
+    for i := 0 to ANumBytes - 1 do
+      Result[ANumBytes - 1 - i] := P^
+  else
+    Move(P^, Result[0], ANumBytes);
+end;
+
+function ByteToBytes(AValue: Byte): TBytes;
+begin
+  SetLength(Result, 1);
+  Result[0] := AValue;
+end;
+
+function WordToBytes(AValue: word; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 2, BigEndian);
+end;
+
+function DWordToBytes(AValue: DWord; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 4, BigEndian);
+end;
+
+function Int64ToBytes(AValue: DWord; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 8, BigEndian);
+end;
+
+function CurrToBytes(AValue: Currency; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 8, BigEndian);
+end;
+
+function SingleToBytes(AValue: single; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 4, BigEndian);
+end;
+
+function DoubleToBytes(AValue: double; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 8, BigEndian);
+end;
+
+function ExtendedToBytes(AValue: Extended; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, SizeOf(Extended), BigEndian);
+end;
+
+function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, 6, BigEndian);
+end;
+
+function BytesToHex(AValue: TBytes): string;
+const
+  HexChars = '0123456789ABCDEF';
+var
+  i, j: integer;
+  b: byte;
+begin
+  Result := '';
+  if AValue = nil then
+    exit;
+
+  j := 1;
+  SetLength(Result, Length(AValue) * 3);
+  for i := 0 to Length(AValue) do begin
+    b := AValue[i];
+    Result[j    ] := HexChars[(b shr 4) + 1];
+    Result[j + 1] := HexChars[(b and 15) + 1];
+    Result[j + 2] := ' ';
+    inc(j, 3);
+  end;
+  SetLength(Result, Length(Result) - 1);
+end;
 
 end.
 

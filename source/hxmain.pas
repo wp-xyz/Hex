@@ -63,19 +63,22 @@ type
     acGoToRepeat: TAction;
     acGotoBackward: TAction;
     acAbout: TAction;
+    acEditFind: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
     MenuItem1: TMenuItem;
-    MenuItem10: TMenuItem;
-    MenuItem11: TMenuItem;
-    MenuItem12: TMenuItem;
+    mnuEditInsert: TMenuItem;
+    mnuEditModeSeparator: TMenuItem;
+    mnuEditOverwrite: TMenuItem;
     MenuItem13: TMenuItem;
     MenuItem14: TMenuItem;
+    MenuItem15: TMenuItem;
+    mnuEditFind: TMenuItem;
     MenuItem4: TMenuItem;
-    MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
-    MenuItem8: TMenuItem;
+    mnuEditMode: TMenuItem;
+    mnuEditingAllowed: TMenuItem;
+    mnuEditingForbidden: TMenuItem;
     mnuEdit: TMenuItem;
     mnuGoto: TMenuItem;
     mnuClearBookmark5: TMenuItem;
@@ -137,15 +140,18 @@ type
     ToolBar: TToolBar;
     tbFileOpen: TToolButton;
     tbFileQuit: TToolButton;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
+    tbSettings: TToolButton;
+    tbDivider1: TToolButton;
+    tbSave: TToolButton;
+    tbDivider2: TToolButton;
+    tbFind: TToolButton;
+    tbDivider3: TToolButton;
     procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
     procedure acBookmarkSet(Sender: TObject);
     procedure acCfgSettingsExecute(Sender: TObject);
+    procedure acEditFindExecute(Sender: TObject);
     procedure acEditMode(Sender: TObject);
     procedure acEditInsertOverwriteModeExecute(Sender: TObject);
     procedure acEditEditingForbiddenExecute(Sender: TObject);
@@ -349,6 +355,15 @@ begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) and Assigned(F.HexEditor) then
     F.HexEditor.ReadOnlyView := acEditEditingForbidden.Checked;
+end;
+
+procedure TMainForm.acEditFindExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.FindDlg;
 end;
 
 procedure TMainForm.acFileCloseAllExecute(Sender: TObject);
@@ -799,6 +814,7 @@ begin
   acFileCloseAll.Enabled := Hex_ok;
   acFileSave.Enabled := Hex_ok;
   acFileSaveAs.Enabled := Hex_ok;
+  acEditFind.Enabled := Hex_ok;
 
   if (F = nil) then
   begin

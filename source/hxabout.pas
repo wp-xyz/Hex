@@ -6,14 +6,14 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ExtCtrls,
-  StdCtrls;
+  StdCtrls, Buttons;
 
 type
 
   { TAboutForm }
 
   TAboutForm = class(TForm)
-    ButtonPanel: TButtonPanel;
+    BitBtn1: TBitBtn;
     Image1: TImage;
     lblOMultiPanelComponent: TLabel;
     lblIcons: TLabel;
@@ -29,6 +29,7 @@ type
     lblMichal: TLabel;
     lblOndrej: TLabel;
     lblIcons8: TLabel;
+    Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure lblURLClick(Sender: TObject);
     procedure lblURLMouseEnter(Sender: TObject);
@@ -56,11 +57,6 @@ procedure TAboutForm.FormCreate(Sender: TObject);
 begin
   Image1.Picture.Assign(Application.Icon);
   Image1.Picture.Icon.Current := 0;
-
-  with CommonData.Images do
-  begin
-    GetBitmap(IMG_INDEX_OK, ButtonPanel.OKButton.Glyph);          // OK icon
-  end;
 end;
 
 procedure TAboutForm.lblURLClick(Sender: TObject);

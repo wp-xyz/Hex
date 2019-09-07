@@ -76,6 +76,7 @@ type
     procedure ActiveHexParams(var AParams: THexParams);
     procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
+    procedure FindDlg;
     procedure InsertMode(const AEnable: Boolean);
     procedure JumpToPosition(APosition: Integer);
     procedure OpenFile(const AFileName: string; WriteProtected: boolean);
@@ -112,7 +113,7 @@ implementation
 
 uses
   StrUtils, IniFiles,
-  hxStrings, hxUtils, hxHexEditor;
+  hxStrings, hxUtils, hxHexEditor, hxFindDlg;
 
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
@@ -319,6 +320,20 @@ begin
   with panel.PanelCollection.Add do
     Control := FObjectViewer;
   UpdateViewerPanelVisible(panel);
+end;
+
+procedure THexEditorFrame.FindDlg;
+begin
+  if (FHexEditor = nil) or (FHexEditor.DataSize < 1) then
+    Exit;
+
+  if FindForm = nil then begin
+    FindForm := TFindForm.Create(Application);
+    FindForm.FormStyle := fsStayOnTop;
+  end;
+  FindForm.HexEditor := FHexEditor;
+  FindForm.BigEndian := HexParams.BigEndian;
+  FindForm.Show;
 end;
 
 function THexEditorFrame.GetFileName: String;

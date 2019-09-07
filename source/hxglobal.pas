@@ -63,6 +63,8 @@ const
     dtInt64, dtCurrency, dtSingle, dtDouble, dtExtended, dtReal48
   ];
 
+  SearchableDataTypes = [dtCharArray, dtWideCharArray] + AllNumericDataTypes;
+
   dtFirstNumericDataType = dtByte;
   dtLastNumericDataType  = dtReal48;
   dtFirstStringDataType  = dtShortString;
@@ -74,6 +76,22 @@ const
     'Single', 'Double', 'Extended', 'Real48',
     'ShortString', 'AnsiString', 'PChar', 'Char array',
     'WideString', 'PWideChar', 'WideChar array'
+  );
+
+  DataTypeDescriptions: array[TDataType] of string = (
+    '8-bit unsigned Integer', '8-bit signed Integer',
+    '16-bit unsigned Integer', '16-bit signed Integer',
+    '32-bit unsigned Integer', '32-bit signed Integer',
+    '64-bit signed Integer',
+    '64-bit currency',
+    '4-byte Float', '8-byte Float', '10-byte Float', '6-byte Pascal Float',
+    'String of 1-byte characters, 1 length byte',
+    'String of 1-byte characters, 2 length bytes',
+    'Zero-terminated string of 1-byte characters',
+    'Array of 1-byte characters',
+    'String of 2-byte characters, 2 length bytes',
+    'Zero-terminated string of 2-byte characters',
+    'Array of 2-byte characters'
   );
 
   DataTypeSizes: array[TDataType] of Integer = (
@@ -98,13 +116,19 @@ const
   vcName = 4;
 
   // Index into image list for specific icons
+  IMG_INDEX_EXIT = 1;
   IMG_INDEX_OK = 5;
   IMG_INDEX_CANCEL = 6;
+  IMG_INDEX_FIND = 16;
 
   // Ini file sections
   INI_MAINFORM = 'MainForm';
   INI_COLORS = 'Colors';
   INI_PARAMS = 'Params';
+  INI_SEARCH = 'Search';
+
+  MAX_SEARCH_HISTORY = 10;
+  DROP_DOWN_COUNT = 32;
 
 type
   TStatusbarItem = (sbPos, sbSel, sbSize);
@@ -235,6 +259,32 @@ var
     PosAbs: 0;
     PosRel: 0;
     JumpAbs: true
+  );
+
+type
+  TSearchStart = (ssBOF, ssCursor);
+
+  TFindParams = record
+    FindExpression: string;
+    FindDataType: TDataType;
+    ReplaceExpression: string;
+    ReplaceDataType: TDataType;
+    SearchStart: TSearchStart;
+    IgnoreCase: Boolean;
+    TextIsHex: Boolean;
+    ConfirmReplace: boolean;
+  end;
+
+var
+  FindParams: TFindParams = (
+    FindExpression: '';
+    FindDataType: dtCharArray;
+    ReplaceExpression: '';
+    ReplaceDataType: dtCharArray;
+    SearchStart: ssBOF;
+    IgnoreCase: true;
+    TextIsHex: false;
+    ConfirmReplace: true;
   );
 
 implementation

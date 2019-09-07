@@ -25,6 +25,10 @@ resourcestring
   SGotoPastBOF = 'This jump will reach beyond the begin of file. Jump to begin of file?';
   SGotoPastEOF = 'This jump will reach beyond the end of file. Jump to end of file?';
 
+  // hxFindDlg
+  SNotFound = 'Byte sequence not found.';
+
+
 implementation
 
 end.

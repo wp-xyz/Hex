@@ -42,17 +42,17 @@ object SettingsForm: TSettingsForm
     Height = 581
     Top = 6
     Width = 794
-    ActivePage = pgFormat
+    ActivePage = pgEditor
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
     object pgEditor: TTabSheet
       Caption = 'Editor'
-      ClientHeight = 358
-      ClientWidth = 514
+      ClientHeight = 553
+      ClientWidth = 786
       object cbViewOnly: TCheckBox
         AnchorSideLeft.Control = pgEditor
         AnchorSideTop.Control = pgEditor
