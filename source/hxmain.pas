@@ -65,10 +65,15 @@ type
     acAbout: TAction;
     acEditFind: TAction;
     acEditReplace: TAction;
+    acEditUndo: TAction;
+    acEditRedo: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
     MenuItem1: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
     mnuEditRepalce: TMenuItem;
     mnuEditInsert: TMenuItem;
     mnuEditModeSeparator: TMenuItem;
@@ -149,6 +154,9 @@ type
     tbFind: TToolButton;
     tbDivider3: TToolButton;
     ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
     procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
@@ -158,7 +166,9 @@ type
     procedure acEditMode(Sender: TObject);
     procedure acEditInsertOverwriteModeExecute(Sender: TObject);
     procedure acEditEditingForbiddenExecute(Sender: TObject);
+    procedure acEditRedoExecute(Sender: TObject);
     procedure acEditReplaceExecute(Sender: TObject);
+    procedure acEditUndoExecute(Sender: TObject);
     procedure acFileCloseAllExecute(Sender: TObject);
     procedure acFileCloseExecute(Sender: TObject);
     procedure acFileNewExecute(Sender: TObject);
@@ -357,6 +367,15 @@ begin
     HexParams.ViewOnly := acEditEditingForbidden.Checked;
 end;
 
+procedure TMainForm.acEditRedoExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.Redo;
+end;
+
 procedure TMainForm.acEditReplaceExecute(Sender: TObject);
 var
   F: THexEditorFrame;
@@ -364,6 +383,15 @@ begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) and Assigned(F.HexEditor) then
     F.ReplaceDlg;
+end;
+
+procedure TMainForm.acEditUndoExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.Undo;
 end;
 
 procedure TMainForm.acEditEditingForbiddenExecute(Sender: TObject);
@@ -835,6 +863,8 @@ begin
   acFileCloseAll.Enabled := Hex_ok;
   acFileSave.Enabled := Hex_ok;
   acFileSaveAs.Enabled := Hex_ok;
+  acEditUndo.Enabled := Hex_ok and F.HexEditor.CanUndo;
+  acEditRedo.Enabled := Hex_ok and F.HexEditor.CanRedo;
   acEditFind.Enabled := Hex_ok;
   acEditReplace.Enabled := Hex_ok;
 

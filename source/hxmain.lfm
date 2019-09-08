@@ -42,7 +42,7 @@ object MainForm: TMainForm
       Left = 22
       Height = 22
       Top = 3
-      Width = 172
+      Width = 225
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
@@ -62,12 +62,12 @@ object MainForm: TMainForm
         Style = tbsDropDown
       end
       object tbFileQuit: TToolButton
-        Left = 148
+        Left = 201
         Top = 0
         Action = acFileQuit
       end
       object tbSettings: TToolButton
-        Left = 119
+        Left = 172
         Top = 0
         Action = acCfgSettings
       end
@@ -91,21 +91,38 @@ object MainForm: TMainForm
         Style = tbsDivider
       end
       object tbFind: TToolButton
-        Left = 66
+        Left = 119
         Top = 0
         Action = acEditFind
       end
       object tbDivider3: TToolButton
-        Left = 143
+        Left = 196
         Height = 22
         Top = 0
         Caption = 'tbDivider3'
         Style = tbsDivider
       end
       object ToolButton1: TToolButton
-        Left = 90
+        Left = 143
         Top = 0
         Action = acEditReplace
+      end
+      object ToolButton2: TToolButton
+        Left = 66
+        Top = 0
+        Action = acEditUndo
+      end
+      object ToolButton3: TToolButton
+        Left = 90
+        Top = 0
+        Action = acEditRedo
+      end
+      object ToolButton4: TToolButton
+        Left = 167
+        Height = 22
+        Top = 0
+        Caption = 'ToolButton4'
+        Style = tbsDivider
       end
     end
   end
@@ -528,6 +545,20 @@ object MainForm: TMainForm
       OnExecute = acEditReplaceExecute
       ShortCut = 16466
     end
+    object acEditUndo: TAction
+      Category = 'Edit'
+      Caption = 'Undo'
+      Hint = 'Undo|Undo last modification'
+      ImageIndex = 21
+      OnExecute = acEditUndoExecute
+    end
+    object acEditRedo: TAction
+      Category = 'Edit'
+      Caption = 'Redo'
+      Hint = 'Revoke last undo'
+      ImageIndex = 22
+      OnExecute = acEditRedoExecute
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -571,6 +602,24 @@ object MainForm: TMainForm
     end
     object mnuEdit: TMenuItem
       Caption = 'Edit'
+      object MenuItem7: TMenuItem
+        Action = acEditUndo
+      end
+      object MenuItem6: TMenuItem
+        Action = acEditRedo
+      end
+      object MenuItem8: TMenuItem
+        Caption = '-'
+      end
+      object mnuEditFind: TMenuItem
+        Action = acEditFind
+      end
+      object mnuEditRepalce: TMenuItem
+        Action = acEditReplace
+      end
+      object MenuItem15: TMenuItem
+        Caption = '-'
+      end
       object mnuEditMode: TMenuItem
         Caption = 'Edit mode'
         object mnuEditingAllowed: TMenuItem
@@ -592,15 +641,6 @@ object MainForm: TMainForm
           Action = acEditOverWriteMode
           AutoCheck = True
         end
-      end
-      object MenuItem15: TMenuItem
-        Caption = '-'
-      end
-      object mnuEditFind: TMenuItem
-        Action = acEditFind
-      end
-      object mnuEditRepalce: TMenuItem
-        Action = acEditReplace
       end
     end
     object mnuView: TMenuItem

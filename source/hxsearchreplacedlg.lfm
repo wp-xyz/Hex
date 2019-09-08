@@ -436,6 +436,7 @@ object SearchReplaceForm: TSearchReplaceForm
       Width = 75
       Anchors = [akTop, akRight]
       AutoSize = True
+      Cancel = True
       Caption = 'Close'
       ModalResult = 11
       Images = CommonData.Images_SimpleSmall
