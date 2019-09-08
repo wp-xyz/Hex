@@ -1,0 +1,465 @@
+object SearchReplaceForm: TSearchReplaceForm
+  Left = 340
+  Height = 378
+  Top = 127
+  Width = 656
+  AutoSize = True
+  BorderStyle = bsDialog
+  Caption = 'Search'
+  ClientHeight = 378
+  ClientWidth = 656
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object MainPanel: TPanel
+    Left = 0
+    Height = 335
+    Top = 0
+    Width = 656
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 335
+    ClientWidth = 656
+    TabOrder = 0
+    object gbSearch: TGroupBox
+      AnchorSideLeft.Control = MainPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 258
+      Top = 12
+      Width = 276
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 12
+      BorderSpacing.Right = 12
+      BorderSpacing.Bottom = 12
+      Caption = 'Search for'
+      ClientHeight = 238
+      ClientWidth = 272
+      TabOrder = 0
+      object cmbSearchFor: TComboBox
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideTop.Control = gbSearch
+        AnchorSideRight.Control = gbSearchOptions
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 4
+        Width = 239
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        OnChange = cmbSearchForChange
+        TabOrder = 0
+      end
+      object lblSearchDataTypes: TLabel
+        AnchorSideLeft.Control = cmbSearchDataTypes
+        AnchorSideTop.Control = cmbSearchFor
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 15
+        Top = 35
+        Width = 102
+        BorderSpacing.Top = 8
+        Caption = 'to be interpreted as'
+        ParentColor = False
+      end
+      object cmbSearchDataTypes: TComboBox
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideTop.Control = lblSearchDataTypes
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gbSearchOptions
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 54
+        Width = 239
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        OnChange = cmbSearchDataTypesChange
+        Style = csDropDownList
+        TabOrder = 1
+      end
+      object lblHexSearchSequence: TLabel
+        AnchorSideLeft.Control = txtSearchSequence
+        AnchorSideTop.Control = Bevel1
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 15
+        Top = 100
+        Width = 74
+        BorderSpacing.Top = 8
+        Caption = 'Hex sequence'
+        ParentColor = False
+      end
+      object txtSearchSequence: TEdit
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideTop.Control = lblHexSearchSequence
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gbSearchOptions
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 119
+        Width = 239
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        Enabled = False
+        OnChange = txtSearchSequenceChange
+        TabOrder = 2
+      end
+      object Bevel1: TBevel
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideTop.Control = cmbSearchDataTypes
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gbSearchOptions
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 3
+        Top = 89
+        Width = 239
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 12
+        Shape = bsTopLine
+      end
+      object Bevel2: TBevel
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideTop.Control = txtSearchSequence
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gbSearchOptions
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 3
+        Top = 154
+        Width = 239
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 12
+        Shape = bsTopLine
+      end
+      object rgSearchStart: TRadioGroup
+        AnchorSideLeft.Control = gbSearch
+        AnchorSideTop.Control = gbSearchOptions
+        AnchorSideBottom.Control = gbSearchOptions
+        AnchorSideBottom.Side = asrBottom
+        Left = 12
+        Height = 64
+        Top = 162
+        Width = 115
+        Anchors = [akTop, akLeft, akBottom]
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Left = 12
+        Caption = 'Searching starts at'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 44
+        ClientWidth = 111
+        ItemIndex = 0
+        Items.Strings = (
+          'begin of file'
+          'cursor position'
+        )
+        OnClick = rgSearchStartClick
+        TabOrder = 3
+      end
+      object gbSearchOptions: TGroupBox
+        AnchorSideLeft.Control = rgSearchStart
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Bevel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 143
+        Height = 64
+        Top = 162
+        Width = 108
+        AutoSize = True
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 8
+        BorderSpacing.Right = 12
+        BorderSpacing.Bottom = 12
+        Caption = 'Search options'
+        ClientHeight = 44
+        ClientWidth = 104
+        TabOrder = 4
+        object cbIgnoreCase: TCheckBox
+          AnchorSideLeft.Control = gbSearchOptions
+          AnchorSideTop.Control = gbSearchOptions
+          Left = 12
+          Height = 19
+          Top = 0
+          Width = 80
+          BorderSpacing.Left = 12
+          BorderSpacing.Right = 12
+          Caption = 'Ignore case'
+          Enabled = False
+          TabOrder = 0
+        end
+        object cbSearchTextIsHex: TCheckBox
+          AnchorSideLeft.Control = cbIgnoreCase
+          Left = 12
+          Height = 19
+          Top = 19
+          Width = 75
+          BorderSpacing.Bottom = 6
+          Caption = 'Text is hex'
+          Enabled = False
+          TabOrder = 1
+        end
+      end
+      object bvSearchCenter: TBevel
+        AnchorSideLeft.Control = gbSearch
+        AnchorSideLeft.Side = asrCenter
+        Left = 128
+        Height = 50
+        Top = 144
+        Width = 16
+      end
+    end
+    object gbReplace: TGroupBox
+      AnchorSideLeft.Control = gbSearch
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = gbSearch
+      AnchorSideRight.Control = MainPanel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = gbSearch
+      AnchorSideBottom.Side = asrBottom
+      Left = 300
+      Height = 258
+      Top = 12
+      Width = 288
+      Anchors = [akTop, akLeft, akBottom]
+      BorderSpacing.Left = 12
+      BorderSpacing.Right = 12
+      Caption = 'Replace by'
+      ClientHeight = 238
+      ClientWidth = 284
+      TabOrder = 1
+      Visible = False
+      object cmbReplaceBy: TComboBox
+        AnchorSideLeft.Control = gbReplace
+        AnchorSideTop.Control = gbReplace
+        AnchorSideRight.Control = gbReplace
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 4
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 12
+        BorderSpacing.Top = 4
+        BorderSpacing.Right = 12
+        ItemHeight = 15
+        OnChange = cmbSearchForChange
+        TabOrder = 0
+      end
+      object lblReplaceDataTypes: TLabel
+        AnchorSideLeft.Control = cmbReplaceBy
+        AnchorSideTop.Control = cmbReplaceBy
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 15
+        Top = 35
+        Width = 102
+        BorderSpacing.Top = 8
+        Caption = 'to be interpreted as'
+        ParentColor = False
+      end
+      object cmbReplaceDataTypes: TComboBox
+        AnchorSideLeft.Control = cmbReplaceBy
+        AnchorSideTop.Control = lblReplaceDataTypes
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = cmbReplaceBy
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 54
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        ItemHeight = 15
+        OnChange = cmbSearchDataTypesChange
+        Style = csDropDownList
+        TabOrder = 1
+      end
+      object lblHexRepalceSequence: TLabel
+        AnchorSideLeft.Control = txtReplaceSequence
+        AnchorSideTop.Control = Bevel5
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 15
+        Top = 100
+        Width = 74
+        BorderSpacing.Top = 8
+        Caption = 'Hex sequence'
+        ParentColor = False
+      end
+      object txtReplaceSequence: TEdit
+        AnchorSideLeft.Control = cmbReplaceBy
+        AnchorSideTop.Control = lblHexRepalceSequence
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = cmbReplaceBy
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 119
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 4
+        Enabled = False
+        OnChange = txtSearchSequenceChange
+        TabOrder = 2
+      end
+      object Bevel5: TBevel
+        AnchorSideLeft.Control = cmbReplaceBy
+        AnchorSideTop.Control = cmbReplaceDataTypes
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = cmbReplaceBy
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 3
+        Top = 89
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 12
+        Shape = bsTopLine
+      end
+      object Bevel6: TBevel
+        AnchorSideLeft.Control = cmbReplaceBy
+        AnchorSideTop.Control = txtReplaceSequence
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = cmbReplaceBy
+        AnchorSideRight.Side = asrBottom
+        Left = 12
+        Height = 3
+        Top = 154
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 12
+        Shape = bsTopLine
+      end
+      object gbReplaceOptions: TGroupBox
+        AnchorSideLeft.Control = cmbReplaceDataTypes
+        AnchorSideTop.Control = Bevel6
+        AnchorSideRight.Control = cmbReplaceBy
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 12
+        Height = 64
+        Top = 162
+        Width = 260
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
+        BorderSpacing.Top = 8
+        BorderSpacing.Bottom = 12
+        Caption = 'Replace options'
+        ClientHeight = 44
+        ClientWidth = 256
+        TabOrder = 3
+        object cbConfirmReplace: TCheckBox
+          AnchorSideLeft.Control = gbReplaceOptions
+          AnchorSideTop.Control = gbReplaceOptions
+          Left = 12
+          Height = 19
+          Top = 0
+          Width = 64
+          BorderSpacing.Left = 12
+          Caption = 'Confirm'
+          TabOrder = 0
+        end
+        object cbReplaceTextIsHex: TCheckBox
+          AnchorSideLeft.Control = cbConfirmReplace
+          Left = 12
+          Height = 19
+          Top = 19
+          Width = 75
+          BorderSpacing.Bottom = 6
+          Caption = 'Text is hex'
+          Enabled = False
+          TabOrder = 1
+        end
+      end
+    end
+  end
+  object ButtonPanel: TPanel
+    Left = 12
+    Height = 35
+    Top = 335
+    Width = 632
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Left = 12
+    BorderSpacing.Right = 12
+    BorderSpacing.Bottom = 8
+    BevelOuter = bvNone
+    ClientHeight = 35
+    ClientWidth = 632
+    TabOrder = 1
+    object bvSeparator: TBevel
+      Left = 0
+      Height = 3
+      Top = 0
+      Width = 632
+      Align = alTop
+      Shape = bsTopLine
+    end
+    object btnSearchReplace: TBitBtn
+      AnchorSideLeft.Control = ButtonPanel
+      AnchorSideTop.Control = bvSeparator
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 26
+      Top = 9
+      Width = 81
+      AutoSize = True
+      BorderSpacing.Top = 6
+      Caption = 'Search'
+      Default = True
+      Images = CommonData.Images
+      ImageIndex = 16
+      OnClick = Execute
+      TabOrder = 0
+    end
+    object btnClose: TBitBtn
+      AnchorSideTop.Control = btnSearchReplace
+      AnchorSideRight.Control = ButtonPanel
+      AnchorSideRight.Side = asrBottom
+      Left = 557
+      Height = 26
+      Top = 9
+      Width = 75
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      Caption = 'Close'
+      ModalResult = 11
+      Images = CommonData.Images
+      ImageIndex = 1
+      OnClick = btnCloseClick
+      TabOrder = 1
+    end
+    object btnRepeat: TBitBtn
+      AnchorSideLeft.Control = btnSearchReplace
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = btnSearchReplace
+      AnchorSideBottom.Control = btnSearchReplace
+      AnchorSideBottom.Side = asrBottom
+      Left = 89
+      Height = 26
+      Top = 9
+      Width = 62
+      Anchors = [akTop, akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Caption = 'Repeat'
+      Enabled = False
+      OnClick = Execute
+      TabOrder = 2
+    end
+  end
+end

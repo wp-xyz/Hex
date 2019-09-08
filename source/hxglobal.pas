@@ -125,7 +125,7 @@ const
   INI_MAINFORM = 'MainForm';
   INI_COLORS = 'Colors';
   INI_PARAMS = 'Params';
-  INI_SEARCH = 'Search';
+  INI_SEARCH_REPLACE = 'SearchReplace';
 
   MAX_SEARCH_HISTORY = 10;
   DROP_DOWN_COUNT = 32;
@@ -264,28 +264,32 @@ var
 type
   TSearchStart = (ssBOF, ssCursor);
 
-  TFindParams = record
-    FindExpression: string;
-    FindDataType: TDataType;
-    ReplaceExpression: string;
-    ReplaceDataType: TDataType;
+  TSearchReplaceParams = record
+    SearchExpression: string;
+    SearchDataType: TDataType;
     SearchStart: TSearchStart;
     IgnoreCase: Boolean;
-    TextIsHex: Boolean;
-    ConfirmReplace: boolean;
+    SearchTextIsHex: Boolean;
+    ReplaceExpression: String;
+    ReplaceDataType: TDataType;
+    ReplaceTextIsHex: Boolean;
+    ReplaceConfirmation: Boolean;
   end;
+  PSearchReplaceParams = ^TSearchReplaceParams;
 
 var
-  FindParams: TFindParams = (
-    FindExpression: '';
-    FindDataType: dtCharArray;
-    ReplaceExpression: '';
-    ReplaceDataType: dtCharArray;
+  SearchReplaceParams: TSearchReplaceParams = (
+    SearchExpression: '';
+    SearchDataType: dtCharArray;
     SearchStart: ssBOF;
     IgnoreCase: true;
-    TextIsHex: false;
-    ConfirmReplace: true;
+    SearchTextIsHex: false;
+    ReplaceExpression: '';
+    ReplaceDataType: dtCharArray;
+    ReplaceTextIsHex: false;
+    ReplaceConfirmation: true;
   );
+
 
 implementation
 

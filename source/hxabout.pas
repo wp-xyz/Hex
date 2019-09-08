@@ -49,7 +49,7 @@ implementation
 
 uses
   LCLIntf,
-  hxGlobal, hxDataModule;
+  hxGlobal;
 
 { TAboutForm }
 

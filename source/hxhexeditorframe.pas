@@ -80,6 +80,7 @@ type
     procedure InsertMode(const AEnable: Boolean);
     procedure JumpToPosition(APosition: Integer);
     procedure OpenFile(const AFileName: string; WriteProtected: boolean);
+    procedure ReplaceDlg;
     procedure SaveFile;
     procedure SaveFileAs(const AFileName: string);
     procedure UpdateCaption;
@@ -113,7 +114,7 @@ implementation
 
 uses
   StrUtils, IniFiles,
-  hxStrings, hxUtils, hxHexEditor, hxFindDlg;
+  hxStrings, hxUtils, hxHexEditor, hxSearchReplaceDlg;
 
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
@@ -327,13 +328,14 @@ begin
   if (FHexEditor = nil) or (FHexEditor.DataSize < 1) then
     Exit;
 
-  if FindForm = nil then begin
-    FindForm := TFindForm.Create(Application);
-    FindForm.FormStyle := fsStayOnTop;
+  if SearchReplaceForm = nil then begin
+    SearchReplaceForm := TSearchReplaceForm.Create(Application);
+    SearchReplaceForm.FormStyle := fsStayOnTop;
   end;
-  FindForm.HexEditor := FHexEditor;
-  FindForm.BigEndian := HexParams.BigEndian;
-  FindForm.Show;
+  SearchReplaceForm.HexEditor := FHexEditor;
+  SearchReplaceForm.BigEndian := HexParams.BigEndian;
+  SearchReplaceForm.Mode := srmSearch;
+  SearchReplaceForm.Show;
 end;
 
 function THexEditorFrame.GetFileName: String;
@@ -507,6 +509,21 @@ begin
     end;
     *)
   end;
+end;
+
+procedure THexEditorFrame.ReplaceDlg;
+begin
+  if (FHexEditor = nil) or (FHexEditor.DataSize < 1) then
+    Exit;
+
+  if SearchReplaceForm = nil then begin
+    SearchReplaceForm := TSearchReplaceForm.Create(Application);
+    SearchReplaceForm.FormStyle := fsStayOnTop;
+  end;
+  SearchReplaceForm.HexEditor := FHexEditor;
+  SearchReplaceForm.BigEndian := HexParams.BigEndian;
+  SearchReplaceForm.Mode := srmReplace;
+  SearchReplaceForm.Show;
 end;
 
 procedure THexEditorFrame.SaveFile;

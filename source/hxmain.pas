@@ -64,10 +64,12 @@ type
     acGotoBackward: TAction;
     acAbout: TAction;
     acEditFind: TAction;
+    acEditReplace: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
     MenuItem1: TMenuItem;
+    mnuEditRepalce: TMenuItem;
     mnuEditInsert: TMenuItem;
     mnuEditModeSeparator: TMenuItem;
     mnuEditOverwrite: TMenuItem;
@@ -146,6 +148,7 @@ type
     tbDivider2: TToolButton;
     tbFind: TToolButton;
     tbDivider3: TToolButton;
+    ToolButton1: TToolButton;
     procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
@@ -155,6 +158,7 @@ type
     procedure acEditMode(Sender: TObject);
     procedure acEditInsertOverwriteModeExecute(Sender: TObject);
     procedure acEditEditingForbiddenExecute(Sender: TObject);
+    procedure acEditReplaceExecute(Sender: TObject);
     procedure acFileCloseAllExecute(Sender: TObject);
     procedure acFileCloseExecute(Sender: TObject);
     procedure acFileNewExecute(Sender: TObject);
@@ -346,6 +350,15 @@ begin
     F.HexEditor.ReadOnlyView := acEditEditingForbidden.Checked
   else
     HexParams.ViewOnly := acEditEditingForbidden.Checked;
+end;
+
+procedure TMainForm.acEditReplaceExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.ReplaceDlg;
 end;
 
 procedure TMainForm.acEditEditingForbiddenExecute(Sender: TObject);

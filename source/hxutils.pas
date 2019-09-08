@@ -12,7 +12,8 @@ uses
 // Ini file
 function CreateIniFile : TCustomIniFile;
 function GetIniFileName: String;
-procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
+procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String;
+  APositionOnly: Boolean = false);
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
 
 // Configuration parameters
@@ -120,7 +121,7 @@ begin
 end;
 
 procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm;
-  ASection: String);
+  ASection: String; APositionOnly: Boolean = false);
 var
   s: String;
   ws: TWindowState;
@@ -138,8 +139,15 @@ begin
     begin
       L := ReadInteger(ASection, 'Left', AForm.Left);
       T := ReadInteger(ASection, 'Top',  AForm.Top);
-      W := ReadInteger(ASection, 'Width',  AForm.Width);
-      H := ReadInteger(ASection, 'Height', AForm.Height);
+      if APositionOnly then
+      begin
+        W := AForm.Width;
+        H := AForm.Height;
+      end else
+      begin
+        W := ReadInteger(ASection, 'Width',  AForm.Width);
+        H := ReadInteger(ASection, 'Height', AForm.Height);
+      end;
       AForm.Position := poDesigned;
       AForm.BoundsRect := Rect(L, T, L + W, T + H);
       AForm.MakeFullyVisible;
@@ -779,7 +787,7 @@ begin
 
   j := 1;
   SetLength(Result, Length(AValue) * 3);
-  for i := 0 to Length(AValue) do begin
+  for i := 0 to Length(AValue)-1 do begin
     b := AValue[i];
     Result[j    ] := HexChars[(b shr 4) + 1];
     Result[j + 1] := HexChars[(b and 15) + 1];

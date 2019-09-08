@@ -10,7 +10,8 @@ uses
   Forms, hxMain, hxHexEditorFrame, MPHexEditor, mrumanager, hxDataModule,
   hxViewerItems, hxViewerGrids, hxBasicViewerFrame, hxDataViewerFrame,
   hxRecordViewerFrame, hxObjectViewerFrame, hxSettingsDlg, hxGotoDlg,
-  hxRecordEditorForm, hxGridViewerFrame, hxAbout, hxPascalRecordForm, hxFindDlg;
+  hxRecordEditorForm, hxGridViewerFrame, hxAbout, hxPascalRecordForm, 
+  hxSearchReplaceDlg;
 
 {$R *.res}
 
