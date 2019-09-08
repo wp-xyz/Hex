@@ -98,6 +98,7 @@ type
     procedure SetParent(AValue: TWinControl); override;
   public
     constructor Create(AOwner: TComponent); override;
+    procedure UpdateIconSet;
   end;
 
 
@@ -107,7 +108,7 @@ implementation
 
 uses
   TypInfo, Math,
-  hxHexEditor, hxRecordEditorForm, hxPascalRecordForm;
+  hxDataModule, hxHexEditor, hxRecordEditorForm, hxPascalRecordForm;
 
 {------------------------------------------------------------------------------}
 {                           TRecordViewerGrid                                  }
@@ -676,6 +677,13 @@ begin
     RestoreToolButtons;
   end;
 end;
+
+procedure TRecordViewerFrame.UpdateIconSet;
+begin
+  ActionList.Images := CommonData.Images;
+  Toolbar.Images := CommonData.Images;
+end;
+
 
 end.
 

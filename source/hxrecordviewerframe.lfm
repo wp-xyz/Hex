@@ -11,7 +11,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
     Width = 320
     AutoSize = True
     Caption = 'ToolBar'
-    Images = CommonData.Images
+    Images = CommonData.Images_Office
     TabOrder = 0
     object ToolButton1: TToolButton
       Left = 1
@@ -105,7 +105,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
     end
   end
   object ActionList: TActionList[2]
-    Images = CommonData.Images
+    Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
     left = 114
     top = 70

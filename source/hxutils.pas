@@ -12,14 +12,16 @@ uses
 // Ini file
 function CreateIniFile : TCustomIniFile;
 function GetIniFileName: String;
+
 procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String;
   APositionOnly: Boolean = false);
-procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
-
-// Configuration parameters
 procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
-procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
+procedure ReadGuiParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
+
+procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
+procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
+procedure WriteGuiParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 
 procedure ApplyColorsToHexEditor(const AParams: TColorParams; AHexEditor: TMPHexEditor);
@@ -155,6 +157,18 @@ begin
   end;
 end;
 
+procedure ReadGUIParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
+var
+  s: String;
+begin
+  with AIniFile do
+  begin
+    s := ReadString(ASection, 'IconSet', '');
+    if s <> '' then
+      GuiParams.IconSet := TIconSet(GetEnumValue(TypeInfo(TIconSet), s));
+  end;
+end;
+
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 var
   i: Integer;
@@ -286,6 +300,18 @@ begin
       WriteInteger(ASection, 'Width',  AForm.Width);
       WriteInteger(ASection, 'Height', AForm.Height);
     end;
+  end;
+end;
+
+procedure WriteGuiParamsToIni(AIniFile: TCustomIniFile; ASection: String);
+var
+  s: String;
+begin
+  with GUIParams do
+  begin
+    AIniFile.EraseSection(ASection);
+    s := GetEnumName(TypeInfo(TIconSet), Integer(IconSet));
+    AIniFile.WriteString(ASection, 'IconSet', s);
   end;
 end;
 

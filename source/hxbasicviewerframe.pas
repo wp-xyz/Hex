@@ -16,6 +16,7 @@ type
     lblHeader: TLabel;
   public
     procedure UpdateData({%H-}AHexEditor: TMPHexEditor); virtual;
+    procedure UpdateIconSet; virtual;
   end;
 
 
@@ -28,6 +29,11 @@ implementation
 { TBasicViewerFrame }
 
 procedure TBasicViewerFrame.UpdateData(AHexEditor: TMPHexEditor);
+begin
+  // to be overridden...
+end;
+
+procedure TbasicViewerFrame.UpdateIconSet;
 begin
   // to be overridden...
 end;

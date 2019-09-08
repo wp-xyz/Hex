@@ -421,7 +421,7 @@ object SearchReplaceForm: TSearchReplaceForm
       BorderSpacing.Top = 6
       Caption = 'Search'
       Default = True
-      Images = CommonData.Images
+      Images = CommonData.Images_SimpleSmall
       ImageIndex = 16
       OnClick = Execute
       TabOrder = 0
@@ -438,7 +438,7 @@ object SearchReplaceForm: TSearchReplaceForm
       AutoSize = True
       Caption = 'Close'
       ModalResult = 11
-      Images = CommonData.Images
+      Images = CommonData.Images_SimpleSmall
       ImageIndex = 1
       OnClick = btnCloseClick
       TabOrder = 1

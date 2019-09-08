@@ -84,6 +84,7 @@ type
     procedure SaveFile;
     procedure SaveFileAs(const AFileName: string);
     procedure UpdateCaption;
+    procedure UpdateIconSet;
     procedure UpdateStatusBar;
 
     property Caption;
@@ -690,6 +691,16 @@ begin
       Caption := '* ' + Caption //Format(SWriteProtectedCaption, [Caption]);
   end else
     Caption := SEmptyCaption;
+end;
+
+procedure THexEditorFrame.UpdateIconSet;
+begin
+  if Assigned(FDataViewer) then
+    FDataViewer.UpdateIconSet;
+  if Assigned(FRecordViewer) then
+    FDataViewer.UpdateIconSet;
+  if Assigned(FObjectViewer) then
+    FObjectViewer.UpdateIconSet;
 end;
 
 procedure THexEditorFrame.UpdateStatusbar;

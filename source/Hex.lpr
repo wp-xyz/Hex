@@ -19,8 +19,8 @@ begin
   RequireDerivedFormResource := True;
   Application.Scaled := True;
   Application.Initialize;
-  Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TCommonData, CommonData);
+  Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.
 

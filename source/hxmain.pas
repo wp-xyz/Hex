@@ -190,6 +190,7 @@ type
     procedure ShowToolbar(AEnable: boolean);
     procedure UpdateCaption;
     procedure UpdateCmds;
+    procedure UpdateIconSet;
 
     procedure ReadIni;
     procedure WriteIni;
@@ -313,6 +314,7 @@ begin
 
     D.ParamsToControls(params);
     D.ColorsToControls(colors);
+    D.GuiParamsToControls(GUIParams);
 
     if D.ShowModal = mrOK then
     begin
@@ -322,10 +324,13 @@ begin
       if Assigned(F) then begin
         F.ApplyHexParams(params);
         ApplyColorsToHexEditor(colors, F.HexEditor);
+        F.UpdateIconSet;
       end else begin
         HexParams := params;
         ColorParams := colors;
       end;
+      D.GuiParamsFromControls(GUIParams);
+      UpdateIconSet;
     end;
   finally
     D.Free;
@@ -768,6 +773,9 @@ begin
       AcEditOverwriteMode.Checked := true;
 
     ReadColorsFromIni(ini, INI_COLORS);
+
+    ReadGuiParamsFromIni(ini, INI_GUI);
+    UpdateIconSet;
   finally
     ini.Free;
   end;
@@ -828,6 +836,7 @@ begin
   acFileSave.Enabled := Hex_ok;
   acFileSaveAs.Enabled := Hex_ok;
   acEditFind.Enabled := Hex_ok;
+  acEditReplace.Enabled := Hex_ok;
 
   if (F = nil) then
   begin
@@ -861,6 +870,24 @@ begin
   end;
 end;
 
+procedure TMainForm.UpdateIconSet;
+var
+  i: Integer;
+  F: THexEditorFrame;
+begin
+  if CommonData = nil then
+    exit;
+
+  ActionList.Images := CommonData.Images;
+  MainMenu.Images := CommonData.Images;
+  Toolbar.Images := CommonData.Images;
+
+  for i := 0 to PageControl.PageCount-1 do begin
+    F := GetHexEditorFrame(i);
+    F.UpdateIconSet;
+  end;
+end;
+
 procedure TMainForm.WriteIni;
 var
   ini : TCustomIniFile;
@@ -879,6 +906,7 @@ begin
     ini.WriteBool(INI_MAINFORM, 'ShowStatusbar', acShowStatusbar.Checked);
     WriteParamsToIni(ini, INI_PARAMS);
     WriteColorsToIni(ini, INI_COLORS);
+    WriteGuiParamsToIni(ini, INI_GUI);
     ini.UpdateFile;
   finally
     ini.Free;

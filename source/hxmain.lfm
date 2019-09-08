@@ -35,6 +35,7 @@ object MainForm: TMainForm
       end>
     EdgeBorders = []
     GrabStyle = gsGripper
+    Images = CommonData.Images_Office
     object ToolBar: TToolBar
       AnchorSideLeft.Control = CoolBar1
       AnchorSideTop.Control = CoolBar1
@@ -50,7 +51,7 @@ object MainForm: TMainForm
       ButtonWidth = 24
       Caption = 'ToolBar'
       EdgeBorders = []
-      Images = CommonData.Images
+      Images = CommonData.Images_Office
       TabOrder = 0
       Transparent = True
       object tbFileOpen: TToolButton
@@ -109,7 +110,7 @@ object MainForm: TMainForm
     end
   end
   object ActionList: TActionList
-    Images = CommonData.Images
+    Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
     left = 112
     top = 163
@@ -515,20 +516,21 @@ object MainForm: TMainForm
       Category = 'Edit'
       Caption = 'Find...'
       Hint = 'Find|Find expression'
-      ImageIndex = 16
+      ImageIndex = 18
       OnExecute = acEditFindExecute
       ShortCut = 16454
     end
     object acEditReplace: TAction
       Category = 'Edit'
-      Caption = 'Replace...'
+      Caption = 'Find and replace...'
       Hint = 'Replace|Replace expression'
+      ImageIndex = 19
       OnExecute = acEditReplaceExecute
       ShortCut = 16466
     end
   end
   object MainMenu: TMainMenu
-    Images = CommonData.Images
+    Images = CommonData.Images_Office
     left = 112
     top = 104
     object mnuFile: TMenuItem

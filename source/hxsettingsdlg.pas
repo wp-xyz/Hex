@@ -67,6 +67,7 @@ type
     gbDataViewerDataTypes: TGroupBox;
     gbObjectViewer: TGroupBox;
     gbSampleHexEditor: TGroupBox;
+    gbIcons: TGroupBox;
     lblFont: TLabel;
     lblMaskChar: TLabel;
     lblCurrentOffsetColor: TLabel;
@@ -86,26 +87,34 @@ type
     lblHexIndicator: TLabel;
     lblActiveFieldBackground: TLabel;
     PageControl: TPageControl;
+    pbOffice: TPaintBox;
+    pbSimpleSmall: TPaintBox;
     pgColors: TTabSheet;
     pgFormat: TTabSheet;
     pgViewer: TTabSheet;
     pgEditor: TTabSheet;
+    rbOfficeIconSet: TRadioButton;
+    rbSimpleSmallIconSet: TRadioButton;
     rgByteOrder: TRadioGroup;
+    pgGUI: TTabSheet;
     procedure btnRestoreDefaultsClick(Sender: TObject);
     procedure cbOffsetDisplayBaseChange(Sender: TObject);
-    procedure FormatChanged(Sender: TObject);
     procedure cbDataViewerVisibleChange(Sender: TObject);
     procedure cbObjectViewerVisibleChange(Sender: TObject);
     procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbViewOnlyChange(Sender: TObject);
     procedure ColorChanged(Sender: TObject);
+    procedure FormatChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure OKButtonClick(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
     procedure PageControlChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure pbOfficePaint(Sender: TObject);
+    procedure pbSimpleSmallPaint(Sender: TObject);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
     FSampleHexEditor: TMPHexEditor;
+    procedure DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
     procedure PrepareSampleHexEditor;
     procedure SetEditorData(const AParams: THexParams);
     procedure SetFormatData(const AParams: THexParams);
@@ -115,6 +124,9 @@ type
   public
     procedure ColorsFromControls(var AParams: TColorParams);
     procedure ColorsToControls(const AParams: TColorParams);
+
+    procedure GuiParamsFromControls(var AParams: TGuiParams);
+    procedure GuiParamsToControls(const AParams: TGuiParams);
 
     procedure ParamsFromControls(var AParams: THexParams);
     procedure ParamsToControls(const AParams: THexParams);
@@ -233,6 +245,30 @@ begin
   ApplyColorsToHexEditor(AParams, FSampleHexEditor);
 end;
 
+procedure TSettingsForm.DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
+const
+  MARGIN = 2;
+var
+  i: Integer;
+  ppi: Integer;
+  w: Integer;
+  x: Integer;
+begin
+  ppi := Font.PixelsPerInch;
+  w := AImages.WidthForPPI[AImages.Width, ppi];
+
+  APaintbox.Canvas.Brush.Color := clWindow;
+  APaintbox.Canvas.FillRect(0, 0, APaintbox.Width, APaintbox.Height);
+  x := MARGIN;
+  for i:=0 to AImages.Count-1 do
+    if x + w + MARGIN <= APaintbox.Width then
+    begin
+      AImages.Draw(APaintbox.Canvas, x, 0, i);
+      inc(x, w + MARGIN);
+    end else
+      break;
+end;
+
 procedure TSettingsForm.FormCreate(Sender: TObject);
 const
   FONT_SIZES: array[0..14] of PtrInt = (6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24);
@@ -266,6 +302,25 @@ begin
     cmbFontSize.Items.AddObject(IntToStr(i) + ' pt', TObject(i));
 
   PrepareSampleHexEditor;
+
+  pbOffice.Height := CommonData.Images.WidthForPPI[CommonData.Images.Width, Font.PixelsPerInch];
+  pbSimpleSmall.Height := pbOffice.Height;
+end;
+
+procedure TSettingsForm.GuiParamsFromControls(var AParams: TGuiParams);
+begin
+  if rbOfficeIconSet.Checked then
+    AParams.IconSet := isOffice;
+  if rbSimpleSmallIconSet.Checked then
+    AParams.IconSet := isSimpleSmall;
+end;
+
+procedure TSettingsForm.GuiParamsToControls(const AParams: TGuiParams);
+begin
+  case AParams.IconSet of
+    isOffice: rbOfficeIconSet.Checked := true;
+    isSimpleSmall: rbSimpleSmallIconSet.Checked := true;
+  end;
 end;
 
 procedure TSettingsForm.OKButtonClick(Sender: TObject);
@@ -428,6 +483,16 @@ begin
   //  SetWinData(WinParams);
 
   ApplyParamsToHexEditor(AParams, FSampleHexEditor);
+end;
+
+procedure TSettingsForm.pbOfficePaint(Sender: TObject);
+begin
+  DrawIcons(pbOffice, CommonData.Images_Office);
+end;
+
+procedure TSettingsForm.pbSimpleSmallPaint(Sender: TObject);
+begin
+  DrawIcons(pbSimpleSmall, CommonData.Images_SimpleSmall);
 end;
 
 procedure TSettingsForm.PrepareSampleHexEditor;

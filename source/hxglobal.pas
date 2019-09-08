@@ -126,6 +126,7 @@ const
   INI_COLORS = 'Colors';
   INI_PARAMS = 'Params';
   INI_SEARCH_REPLACE = 'SearchReplace';
+  INI_GUI = 'UserInterface';
 
   MAX_SEARCH_HISTORY = 10;
   DROP_DOWN_COUNT = 32;
@@ -288,6 +289,18 @@ var
     ReplaceDataType: dtCharArray;
     ReplaceTextIsHex: false;
     ReplaceConfirmation: true;
+  );
+
+type
+  TIconSet = (isOffice, isSimpleSmall);
+
+  TGuiParams = record
+    IconSet: TIconSet;
+  end;
+
+var
+  GuiParams: TGuiParams = (
+    IconSet: isOffice
   );
 
 

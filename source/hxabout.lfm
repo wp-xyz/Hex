@@ -258,7 +258,7 @@ object AboutForm: TAboutForm
     BorderSpacing.Bottom = 12
     Caption = 'Close'
     ModalResult = 11
-    Images = CommonData.Images
+    Images = CommonData.Images_Office
     ImageIndex = 5
     TabOrder = 1
   end
