@@ -77,6 +77,7 @@ type
     function SelectedSearchDataType: TDataType;
     procedure TryPrepareBuffer(const AExpression: String; ADataType: TDataType;
       ABytesDisplay: TControl; out ABuffer: TBytes);
+    procedure UpdateIconSet;
     function ValidData(out AControl: TWinControl; out AMsg: String): Boolean;
 
     procedure ReadIni;
@@ -305,6 +306,8 @@ begin
   gbReplace.Width := gbSearch.Width;
   gbReplace.Visible := FMode = srmReplace;
   AutoSize := true;
+
+  UpdateIconSet;
 end;
 
 procedure TSearchReplaceForm.PrepareBuffer(const AExpression: String; ADataType: TDataType;
@@ -468,11 +471,13 @@ begin
       begin
         Caption := 'Search';
         btnSearchReplace.Caption := 'Search';
+        btnSearchReplace.ImageIndex := IMG_INDEX_FIND;
       end;
     srmReplace:
       begin
         Caption := 'Replace';
         btnSearchReplace.Caption := 'Replace';
+        btnSearchReplace.ImageIndex := IMG_INDEX_REPLACE;
       end;
   end;
 
@@ -500,12 +505,10 @@ end;
 procedure TSearchReplaceForm.TryPrepareBuffer(const AExpression: String;
   ADataType: TDataType; ABytesDisplay: TControl; out ABuffer: TBytes);
 begin
-{
   try
     PrepareBuffer(AExpression, ADataType, ABytesDisplay, ABuffer);
   except
   end;
-  }
 end;
 
 procedure TSearchReplaceForm.txtSearchSequenceChange(Sender: TObject);
@@ -518,6 +521,13 @@ begin
     cbSearchTextIsHex.Enabled := true;
   end;
   *)
+end;
+
+procedure TSearchReplaceForm.UpdateIconSet;
+begin
+   btnSearchReplace.Images := CommonData.Images;
+   btnRepeat.Images := CommonData.Images;
+   btnClose.Images := CommonData.Images;
 end;
 
 function TSearchReplaceForm.ValidData(out AControl: TWinControl; out AMsg: String): Boolean;

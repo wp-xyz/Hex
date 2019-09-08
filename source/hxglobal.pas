@@ -119,7 +119,8 @@ const
   IMG_INDEX_EXIT = 1;
   IMG_INDEX_OK = 5;
   IMG_INDEX_CANCEL = 6;
-  IMG_INDEX_FIND = 16;
+  IMG_INDEX_FIND = 18;
+  IMG_INDEX_REPLACE = 19;
 
   // Ini file sections
   INI_MAINFORM = 'MainForm';

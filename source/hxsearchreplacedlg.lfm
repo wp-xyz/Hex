@@ -422,7 +422,7 @@ object SearchReplaceForm: TSearchReplaceForm
       Caption = 'Search'
       Default = True
       Images = CommonData.Images_SimpleSmall
-      ImageIndex = 16
+      ImageIndex = 18
       OnClick = Execute
       TabOrder = 0
     end
@@ -452,12 +452,14 @@ object SearchReplaceForm: TSearchReplaceForm
       Left = 89
       Height = 26
       Top = 9
-      Width = 62
+      Width = 82
       Anchors = [akTop, akLeft, akBottom]
       AutoSize = True
       BorderSpacing.Left = 8
       Caption = 'Repeat'
       Enabled = False
+      Images = CommonData.Images_SimpleSmall
+      ImageIndex = 20
       OnClick = Execute
       TabOrder = 2
     end

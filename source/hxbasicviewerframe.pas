@@ -15,6 +15,7 @@ type
   TBasicViewerFrame = class(TFrame)
     lblHeader: TLabel;
   public
+    constructor Create(AOwner: TComponent); override;
     procedure UpdateData({%H-}AHexEditor: TMPHexEditor); virtual;
     procedure UpdateIconSet; virtual;
   end;
@@ -27,6 +28,12 @@ implementation
 
 
 { TBasicViewerFrame }
+
+constructor TBasicViewerFrame.Create(AOwner: TComponent);
+begin
+  inherited;
+  UpdateIconSet;
+end;
 
 procedure TBasicViewerFrame.UpdateData(AHexEditor: TMPHexEditor);
 begin

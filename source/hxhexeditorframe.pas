@@ -698,7 +698,7 @@ begin
   if Assigned(FDataViewer) then
     FDataViewer.UpdateIconSet;
   if Assigned(FRecordViewer) then
-    FDataViewer.UpdateIconSet;
+    FRecordViewer.UpdateIconSet;
   if Assigned(FObjectViewer) then
     FObjectViewer.UpdateIconSet;
 end;

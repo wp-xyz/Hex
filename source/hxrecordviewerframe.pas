@@ -87,7 +87,7 @@ type
     procedure acPrevRecordExecute(Sender: TObject);
     procedure acSaveAsExecute(Sender: TObject);
     procedure acSaveExecute(Sender: TObject);
-    procedure ActionListUpdate(AAction: TBasicAction; var {%H-}Handled: Boolean);
+    procedure ActionListUpdate(AnAction: TBasicAction; var {%H-}Handled: Boolean);
   private
     FToolButtons: array of TToolButton;  // stores original order of toolbuttons
   protected
@@ -98,7 +98,7 @@ type
     procedure SetParent(AValue: TWinControl); override;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure UpdateIconSet;
+    procedure UpdateIconSet; override;
   end;
 
 
@@ -617,13 +617,23 @@ begin
     RecordViewerGrid.SaveRecordToFile(RecordViewerGrid.FileName);
 end;
 
-procedure TRecordViewerFrame.ActionListUpdate(AAction: TBasicAction;
+procedure TRecordViewerFrame.ActionListUpdate(AnAction: TBasicAction;
   var Handled: Boolean);
+var
+  hasData: Boolean;
 begin
-  if AAction = acMoveUp then
+  hasData := FGrid.DataCount > 0;
+  if (AnAction = acEdit) or (AnAction = acDelete) or
+     (AnAction = acSave) or (AnAction = acSaveAs) or
+     (AnAction = acPrevRecord) or (AnAction = acNextRecord) or
+     (AnAction = acMakePascalRecord)
+  then
+    TAction(AnAction).Enabled := hasData
+  else
+  if AnAction = acMoveUp then
     acMoveUp.Enabled := FGrid.Row > FGrid.FixedRows
-  else if AAction = acMoveDown then
-    acMoveDown.Enabled := FGrid.Row < FGrid.RowCount-1;
+  else if AnAction = acMoveDown then
+    acMoveDown.Enabled := hasData and (FGrid.Row < FGrid.RowCount-1);
 end;
 
 function TRecordViewerFrame.CreateViewerGrid: TViewerGrid;

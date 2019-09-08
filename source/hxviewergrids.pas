@@ -13,6 +13,7 @@ type
   TViewerGrid = class(TCustomDrawGrid)
   private
     FHexEditor: TMPHexEditor;
+    function GetDataCount: Integer;
 
   protected
     FDataList: TDataList;
@@ -40,6 +41,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure UpdateData(AHexEditor: TMPHexEditor); virtual;
+    property DataCount: Integer read GetDataCount;
     property DataItemClass: TDataItemClass read FDataItemClass;
   published
 
@@ -151,6 +153,11 @@ begin
     AState := cbChecked
   else
     AState := cbUnchecked;
+end;
+
+function TViewerGrid.GetDataCount: Integer;
+begin
+  Result := FDataList.Count;
 end;
 
 function TViewerGrid.GetValueAsText(AItem: TDataItem): String;

@@ -108,7 +108,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
     Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
     left = 114
-    top = 70
+    top = 72
     object acAdd: TAction
       Category = 'Record'
       Caption = 'Add...'
@@ -177,6 +177,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
     object acMakePascalRecord: TAction
       Category = 'Record'
       Caption = 'Write Pascal record'
+      Hint = 'Pascal record|Create record declaration in Pascal'
       ImageIndex = 14
       OnExecute = acMakePascalRecordExecute
     end
