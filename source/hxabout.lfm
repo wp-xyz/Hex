@@ -218,12 +218,12 @@ object AboutForm: TAboutForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = lblMPHexEditor
       AnchorSideRight.Side = asrBottom
-      Left = 119
+      Left = 77
       Height = 15
       Top = 83
-      Width = 31
+      Width = 73
       Anchors = [akTop, akRight]
-      Caption = 'Icons:'
+      Caption = 'Toolbar icons:'
       ParentColor = False
     end
     object lblIcons8: TLabel

@@ -551,6 +551,7 @@ object MainForm: TMainForm
       Hint = 'Undo|Undo last modification'
       ImageIndex = 21
       OnExecute = acEditUndoExecute
+      ShortCut = 16474
     end
     object acEditRedo: TAction
       Category = 'Edit'
@@ -558,6 +559,14 @@ object MainForm: TMainForm
       Hint = 'Revoke last undo'
       ImageIndex = 22
       OnExecute = acEditRedoExecute
+      ShortCut = 24666
+    end
+    object acEditSelectAll: TAction
+      Category = 'Edit'
+      Caption = 'Select all'
+      Hint = 'Select all'
+      OnExecute = acEditSelectAllExecute
+      ShortCut = 16449
     end
   end
   object MainMenu: TMainMenu
@@ -607,6 +616,12 @@ object MainForm: TMainForm
       end
       object MenuItem6: TMenuItem
         Action = acEditRedo
+      end
+      object MenuItem11: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem10: TMenuItem
+        Action = acEditSelectAll
       end
       object MenuItem8: TMenuItem
         Caption = '-'

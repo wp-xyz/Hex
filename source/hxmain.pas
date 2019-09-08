@@ -67,10 +67,13 @@ type
     acEditReplace: TAction;
     acEditUndo: TAction;
     acEditRedo: TAction;
+    acEditSelectAll: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
     MenuItem1: TMenuItem;
+    MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -168,6 +171,7 @@ type
     procedure acEditEditingForbiddenExecute(Sender: TObject);
     procedure acEditRedoExecute(Sender: TObject);
     procedure acEditReplaceExecute(Sender: TObject);
+    procedure acEditSelectAllExecute(Sender: TObject);
     procedure acEditUndoExecute(Sender: TObject);
     procedure acFileCloseAllExecute(Sender: TObject);
     procedure acFileCloseExecute(Sender: TObject);
@@ -383,6 +387,15 @@ begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) and Assigned(F.HexEditor) then
     F.ReplaceDlg;
+end;
+
+procedure TMainForm.acEditSelectAllExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.SelectAll;
 end;
 
 procedure TMainForm.acEditUndoExecute(Sender: TObject);
@@ -852,21 +865,20 @@ var
   F: THexEditorFrame;
   i: Integer;
   ac: TAction;
-  F_ok: Boolean;
-  Hex_ok: Boolean;
+  hasData: Boolean;
 begin
   F := GetActiveHExEditorFrame;
-  F_ok := (F <> nil);
-  Hex_ok := F_ok and (F.HexEditor <> nil);
+  hasData := Assigned(F) and Assigned(F.HexEditor) and (F.HexEditor.DataSize > 0);
 
-  acFileClose.Enabled := Hex_ok;
-  acFileCloseAll.Enabled := Hex_ok;
-  acFileSave.Enabled := Hex_ok;
-  acFileSaveAs.Enabled := Hex_ok;
-  acEditUndo.Enabled := Hex_ok and F.HexEditor.CanUndo;
-  acEditRedo.Enabled := Hex_ok and F.HexEditor.CanRedo;
-  acEditFind.Enabled := Hex_ok;
-  acEditReplace.Enabled := Hex_ok;
+  acFileClose.Enabled := hasData;
+  acFileCloseAll.Enabled := hasData;
+  acFileSave.Enabled := hasdata;
+  acFileSaveAs.Enabled := hasData;
+  acEditUndo.Enabled := hasData and F.HexEditor.CanUndo;
+  acEditRedo.Enabled := hasData and F.HexEditor.CanRedo;
+  acEditFind.Enabled := hasData;
+  acEditReplace.Enabled := hasData;
+  acEditSelectAll.Enabled := hasData;
 
   if (F = nil) then
   begin
@@ -892,11 +904,11 @@ begin
   begin
     ac := TAction(ActionList[i]);
     if InRange(ac.tag, TAG_SET_BOOKMARK, TAG_SET_BOOKMARK + 10) then
-      ac.Enabled := Hex_ok;
+      ac.Enabled := hasData;
     if InRange(ac.Tag, TAG_GOTO_BOOKMARK, TAG_GOTO_BOOKMARK + 10) then
-      ac.Enabled := Hex_ok and (F.HexEditor.Bookmark[ac.Tag - TAG_GOTO_BOOKMARK].mPosition <> -1);
+      ac.Enabled := hasData and (F.HexEditor.Bookmark[ac.Tag - TAG_GOTO_BOOKMARK].mPosition <> -1);
     if InRange(ac.Tag, TAG_CLEAR_BOOKMARK, TAG_CLEAR_BOOKMARK + 10) then
-      ac.Enabled := Hex_ok and (F.HexEditor.Bookmark[ac.Tag - TAG_CLEAR_BOOKMARK].mPosition <> -1);
+      ac.Enabled := hasData and (F.HexEditor.Bookmark[ac.Tag - TAG_CLEAR_BOOKMARK].mPosition <> -1);
   end;
 end;
 
