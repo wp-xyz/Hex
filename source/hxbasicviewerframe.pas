@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls,
-  MPHexEditor;
+  HxHexEditor;
 
 type
 
@@ -16,7 +16,7 @@ type
     lblHeader: TLabel;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure UpdateData({%H-}AHexEditor: TMPHexEditor); virtual;
+    procedure UpdateData({%H-}AHexEditor: THxHexEditor); virtual;
     procedure UpdateIconSet; virtual;
   end;
 
@@ -35,7 +35,7 @@ begin
   UpdateIconSet;
 end;
 
-procedure TBasicViewerFrame.UpdateData(AHexEditor: TMPHexEditor);
+procedure TBasicViewerFrame.UpdateData(AHexEditor: THxHexEditor);
 begin
   // to be overridden...
 end;

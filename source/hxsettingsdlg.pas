@@ -7,8 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel,
   ComCtrls, StdCtrls, ExtCtrls,
-  MPHexEditor,
-  hxGlobal;
+  hxGlobal, hxHexEditor;
 
 type
 
@@ -113,7 +112,7 @@ type
     procedure pbSimpleSmallPaint(Sender: TObject);
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
-    FSampleHexEditor: TMPHexEditor;
+    FSampleHexEditor: THxHexEditor;
     procedure DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
     procedure PrepareSampleHexEditor;
     procedure SetEditorData(const AParams: THexParams);
@@ -500,7 +499,7 @@ var
   stream: TStream;
 begin
   FSampleHexEditor.Free;
-  FSampleHexEditor := TMPHexEditor.Create(self);
+  FSampleHexEditor := THxHexEditor.Create(self);
   FSampleHexEditor.ParentFont := false;
   FSampleHexEditor.Parent := gbSampleHexEditor;
   FSampleHexEditor.Align := alClient;

@@ -100,7 +100,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="23">
+    <Units Count="24">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -256,6 +256,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxHexEditor"/>
       </Unit22>
+      <Unit23>
+        <Filename Value="thirdparty\mphexeditorex.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MPHexEditorEx"/>
+      </Unit23>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

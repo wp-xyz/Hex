@@ -42,10 +42,10 @@ object SettingsForm: TSettingsForm
     Height = 581
     Top = 6
     Width = 794
-    ActivePage = pgGUI
+    ActivePage = pgViewer
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 4
+    TabIndex = 3
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging

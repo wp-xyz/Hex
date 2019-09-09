@@ -5,10 +5,10 @@ unit hxHexEditor;
 interface
 
 uses
-  Graphics, Classes, SysUtils, MPHexEditor;
+  Graphics, Classes, SysUtils, MPHexEditor, MPHexEditorEx;
 
 type
-  THxHexEditor = class(TMPHexEditor)
+  THxHexEditor = class(TMPHexEditorEx)
   private
     FSecondSelStart: Integer;
     FSecondSelEnd: Integer;

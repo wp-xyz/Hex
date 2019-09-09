@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics, IniFiles, Forms,
-  MPHexEditor,
-  hxGlobal;
+  hxGlobal, hxHexEditor;
 
 // Ini file
 function CreateIniFile : TCustomIniFile;
@@ -24,8 +23,8 @@ procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteGuiParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 
-procedure ApplyColorsToHexEditor(const AParams: TColorParams; AHexEditor: TMPHexEditor);
-procedure ApplyParamsToHexEditor(const AParams: THexParams; AHexEditor: TMPHexEditor);
+procedure ApplyColorsToHexEditor(const AParams: TColorParams; AHexEditor: THxHexEditor);
+procedure ApplyParamsToHexEditor(const AParams: THexParams; AHexEditor: THxHexEditor);
 
 // Simple dialogs
 function Confirm(const AMsg: string): boolean;
@@ -399,7 +398,7 @@ begin
 end;
 
 procedure ApplyColorsToHexEditor(const AParams: TColorParams;
-  AHexEditor: TMPHexEditor);
+  AHexEditor: THxHexEditor);
 var
   i: Integer;
 begin
@@ -420,7 +419,7 @@ begin
 end;
 
 procedure ApplyParamsToHexEditor(const AParams: THexParams;
-  AHexEditor: TMPHexEditor);
+  AHexEditor: THxHexEditor);
 begin
   if Assigned(AHexEditor) then
   begin

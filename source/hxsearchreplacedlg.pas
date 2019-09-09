@@ -10,8 +10,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ExtCtrls,
   StdCtrls, Buttons,
-  MPHexEditor,
-  hxGlobal;
+  hxGlobal, hxHexEditor;
 
 type
   TSearchReplaceMode = (srmSearch, srmReplace);
@@ -59,7 +58,7 @@ type
     procedure rgSearchStartClick(Sender: TObject);
     procedure txtSearchSequenceChange(Sender: TObject);
   private
-    FHexEditor: TMPHexEditor;
+    FHexEditor: THxHexEditor;
     FSearchBuffer: TBytes;
     FReplaceBuffer: TBytes;
     FBigEndian: Boolean;
@@ -85,7 +84,7 @@ type
 
   public
     property BigEndian: Boolean read FBigEndian write FBigEndian;
-    property HexEditor: TMPHexEditor read FHexEditor write FHexEditor;
+    property HexEditor: THxHexEditor read FHexEditor write FHexEditor;
     property Mode: TSearchReplaceMode read FMode write SetMode;
 
   end;

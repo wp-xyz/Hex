@@ -6,13 +6,13 @@ interface
 
 uses
   Classes, SysUtils, StdCtrls, Grids,
-  MPHexEditor,
-  hxGlobal, hxViewerItems;
+//  MPHexEditor,
+  hxGlobal, hxHexEditor, hxViewerItems;
 
 type
   TViewerGrid = class(TCustomDrawGrid)
   private
-    FHexEditor: TMPHexEditor;
+    FHexEditor: THxHexEditor;
     function GetDataCount: Integer;
 
   protected
@@ -35,12 +35,12 @@ type
     procedure SetCheckboxState(const ACol, ARow: Integer;
       const aState: TCheckboxState); override;
 
-    property HexEditor: TMPHexEditor read FHexEditor;
+    property HexEditor: THxHexEditor read FHexEditor;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure UpdateData(AHexEditor: TMPHexEditor); virtual;
+    procedure UpdateData(AHexEditor: THxHexEditor); virtual;
     property DataCount: Integer read GetDataCount;
     property DataItemClass: TDataItemClass read FDataItemClass;
   published
@@ -370,7 +370,7 @@ begin
     item.BigEndian := false;
 end;
 
-procedure TViewerGrid.UpdateData(AHexEditor: TMPHexEditor);
+procedure TViewerGrid.UpdateData(AHexEditor: THxHexEditor);
 begin
   FHexEditor := AHexEditor;
   if Assigned(FHexEditor) then

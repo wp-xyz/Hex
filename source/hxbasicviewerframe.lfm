@@ -5,7 +5,6 @@ object BasicViewerFrame: TBasicViewerFrame
   Width = 320
   ClientHeight = 240
   ClientWidth = 320
-  LCLVersion = '2.1.0.0'
   TabOrder = 0
   DesignLeft = 340
   DesignTop = 128

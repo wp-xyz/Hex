@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids,
   MPHexEditor,
-  hxViewerGrids, hxBasicViewerFrame;
+  hxHexEditor, hxViewerGrids, hxBasicViewerFrame;
 
 type
   TGridViewerFrame = class(TBasicViewerFrame)
@@ -21,7 +21,7 @@ type
     procedure Loaded; override;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure UpdateData(AHexEditor: TMPHexEditor); override;
+    procedure UpdateData(AHexEditor: THxHexEditor); override;
     property ColWidths[AIndex: Integer]: Integer read GetColWidths write SetColWidths;
   end;
 
@@ -75,7 +75,7 @@ begin
     FGrid.Columns[AIndex].Width := AValue;
 end;
 
-procedure TGridViewerFrame.UpdateData(AHexEditor: TMPHexEditor);
+procedure TGridViewerFrame.UpdateData(AHexEditor: THxHexEditor);
 begin
   if Assigned(FGrid) then
     FGrid.UpdateData(AHexEditor);

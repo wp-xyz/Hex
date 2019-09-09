@@ -122,12 +122,9 @@ end;
 
 destructor TRecordViewerGrid.Destroy;
 begin
-  if (HexEditor is THxHexEditor) then
-  begin
-    HexEditor.SelCount := 0;
-    THxHexEditor(HexEditor).SecondSelStart := -1;
-    THxHexEditor(HexEditor).SecondSelEnd := -1;
-  end;
+  HexEditor.SelCount := 0;
+  HexEditor.SecondSelStart := -1;
+  HexEditor.SecondSelEnd := -1;
   inherited;
 end;
 

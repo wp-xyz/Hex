@@ -7,8 +7,9 @@ interface
 uses
   Classes, SysUtils, Graphics,
   Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
-  MPHexEditor, OMultiPanel,
-  hxGlobal,
+  //MPHexEditor,
+  OMultiPanel,
+  hxGlobal, hxHexEditor,
   hxBasicViewerFrame, hxDataViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
@@ -24,7 +25,7 @@ type
     RightPanel: TOMultiPanel;
     StatusBar: TStatusBar;
   private
-    FHexEditor: TMPHexEditor;
+    FHexEditor: THxHexEditor;
     FDataViewer: TDataViewerFrame;
     FRecordViewer: TRecordViewerFrame;
     FObjectViewer: TObjectViewerFrame;
@@ -90,7 +91,7 @@ type
     property Caption;
     property FileName: String
       read GetFileName;
-    property HexEditor: TMPHexEditor
+    property HexEditor: THxHexEditor
       read FHexEditor;
     property DataViewerPosition: TViewerPosition
       read GetDataViewerPosition write SetDataViewerPosition;
@@ -114,8 +115,8 @@ implementation
 {$R *.lfm}
 
 uses
-  StrUtils, IniFiles,
-  hxStrings, hxUtils, hxHexEditor, hxSearchReplaceDlg;
+  StrUtils, IniFiles, Math,
+  hxStrings, hxUtils, hxSearchReplaceDlg;
 
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
