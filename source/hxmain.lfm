@@ -42,7 +42,7 @@ object MainForm: TMainForm
       Left = 22
       Height = 22
       Top = 3
-      Width = 225
+      Width = 302
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
@@ -62,12 +62,12 @@ object MainForm: TMainForm
         Style = tbsDropDown
       end
       object tbFileQuit: TToolButton
-        Left = 201
+        Left = 278
         Top = 0
         Action = acFileQuit
       end
       object tbSettings: TToolButton
-        Left = 172
+        Left = 249
         Top = 0
         Action = acCfgSettings
       end
@@ -91,19 +91,19 @@ object MainForm: TMainForm
         Style = tbsDivider
       end
       object tbFind: TToolButton
-        Left = 119
+        Left = 196
         Top = 0
         Action = acEditFind
       end
       object tbDivider3: TToolButton
-        Left = 196
+        Left = 273
         Height = 22
         Top = 0
         Caption = 'tbDivider3'
         Style = tbsDivider
       end
       object ToolButton1: TToolButton
-        Left = 143
+        Left = 220
         Top = 0
         Action = acEditReplace
       end
@@ -118,10 +118,32 @@ object MainForm: TMainForm
         Action = acEditRedo
       end
       object ToolButton4: TToolButton
-        Left = 167
+        Left = 244
         Height = 22
         Top = 0
         Caption = 'ToolButton4'
+        Style = tbsDivider
+      end
+      object ToolButton5: TToolButton
+        Left = 119
+        Top = 0
+        Action = acEditCut
+      end
+      object ToolButton6: TToolButton
+        Left = 143
+        Top = 0
+        Action = acEditCopy
+      end
+      object ToolButton7: TToolButton
+        Left = 167
+        Top = 0
+        Action = acEditPaste
+      end
+      object ToolButton8: TToolButton
+        Left = 191
+        Height = 22
+        Top = 0
+        Caption = 'ToolButton8'
         Style = tbsDivider
       end
     end
@@ -568,6 +590,30 @@ object MainForm: TMainForm
       OnExecute = acEditSelectAllExecute
       ShortCut = 16449
     end
+    object acEditCut: TAction
+      Category = 'Edit'
+      Caption = 'Cut'
+      Hint = 'Cut|Cut to clipboard'
+      ImageIndex = 15
+      OnExecute = acEditCutExecute
+      ShortCut = 16472
+    end
+    object acEditCopy: TAction
+      Category = 'Edit'
+      Caption = 'Copy'
+      Hint = 'Copy|Copy selection to clipboard'
+      ImageIndex = 16
+      OnExecute = acEditCopyExecute
+      ShortCut = 16451
+    end
+    object acEditPaste: TAction
+      Category = 'Edit'
+      Caption = 'Paste'
+      Hint = 'Paste|Paste clipboard into hex editor'
+      ImageIndex = 17
+      OnExecute = acEditPasteExecute
+      ShortCut = 16470
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -616,6 +662,18 @@ object MainForm: TMainForm
       end
       object MenuItem6: TMenuItem
         Action = acEditRedo
+      end
+      object MenuItem12: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem18: TMenuItem
+        Action = acEditCut
+      end
+      object MenuItem17: TMenuItem
+        Action = acEditCopy
+      end
+      object MenuItem16: TMenuItem
+        Action = acEditPaste
       end
       object MenuItem11: TMenuItem
         Caption = '-'

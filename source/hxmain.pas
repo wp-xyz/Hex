@@ -68,12 +68,19 @@ type
     acEditUndo: TAction;
     acEditRedo: TAction;
     acEditSelectAll: TAction;
+    acEditCut: TAction;
+    acEditCopy: TAction;
+    acEditPaste: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
+    MenuItem12: TMenuItem;
+    MenuItem16: TMenuItem;
+    MenuItem17: TMenuItem;
+    MenuItem18: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -160,15 +167,22 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    ToolButton7: TToolButton;
+    ToolButton8: TToolButton;
     procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
     procedure acBookmarkSet(Sender: TObject);
     procedure acCfgSettingsExecute(Sender: TObject);
+    procedure acEditCopyExecute(Sender: TObject);
+    procedure acEditCutExecute(Sender: TObject);
     procedure acEditFindExecute(Sender: TObject);
     procedure acEditMode(Sender: TObject);
     procedure acEditInsertOverwriteModeExecute(Sender: TObject);
     procedure acEditEditingForbiddenExecute(Sender: TObject);
+    procedure acEditPasteExecute(Sender: TObject);
     procedure acEditRedoExecute(Sender: TObject);
     procedure acEditReplaceExecute(Sender: TObject);
     procedure acEditSelectAllExecute(Sender: TObject);
@@ -351,6 +365,24 @@ begin
   end;
 end;
 
+procedure TMainForm.acEditCopyExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.CBCopy;
+end;
+
+procedure TMainForm.acEditCutExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.CBCut;
+end;
+
 procedure TMainForm.acEditInsertOverwriteModeExecute(Sender: TObject);
 var
   F: THexEditorFrame;
@@ -369,6 +401,15 @@ begin
     F.HexEditor.ReadOnlyView := acEditEditingForbidden.Checked
   else
     HexParams.ViewOnly := acEditEditingForbidden.Checked;
+end;
+
+procedure TMainForm.acEditPasteExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) and Assigned(F.HexEditor) then
+    F.HexEditor.CBPaste;
 end;
 
 procedure TMainForm.acEditRedoExecute(Sender: TObject);
