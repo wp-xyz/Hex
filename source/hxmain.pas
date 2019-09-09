@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ActnList,
   StdCtrls, ComCtrls, mrumanager,
-  hxGlobal, hxHexEditorFrame;
+  hxGlobal, hxHexEditor, hxHexEditorFrame;
 
 type
 
@@ -204,6 +204,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
   private
+    FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
 
     procedure ApplyParams(const AParams: THexParams);
@@ -218,6 +219,7 @@ type
     procedure ShowToolbar(AEnable: boolean);
     procedure UpdateCaption;
     procedure UpdateCmds;
+    procedure UpdateCurrentHexEditor;
     procedure UpdateIconSet;
 
     procedure ReadIni;
@@ -265,15 +267,14 @@ procedure TMainForm.acBookmarkClear(Sender: TObject);
 var
   i, idx: integer;
   ac: TAction;
-  F: THexEditorFrame;
   bm: TMPHBookmark;
 begin
   inherited;
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) then begin
+  if Assigned(FCurrentHexEditor) then
+  begin
     bm.MPosition := -1;
     idx := (Sender as TAction).Tag - TAG_CLEAR_BOOKMARK;
-    F.HexEditor.Bookmark[idx] := bm;
+    FCurrentHexEditor.Bookmark[idx] := bm;
     for i := 0 to ActionList.ActionCount - 1 do begin
       ac := TAction(ActionList[i]);
       if ac.Tag - TAG_SET_BOOKMARK = idx then
@@ -287,29 +288,24 @@ begin
 end;
 
 procedure TMainForm.acBookmarkGoto(Sender:TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) then
-    F.HexEditor.GotoBookmark((Sender as TAction).Tag - TAG_GOTO_BOOKMARK);
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.GotoBookmark((Sender as TAction).Tag - TAG_GOTO_BOOKMARK);
 end;
 
 procedure TMainForm.acBookmarkSet(Sender: TObject);
 var
   i : integer;
   ac : TAction;
-  F: THexEditorFrame;
   bm: TMPHBookmark;
   idx: Integer;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) then
+  if Assigned(FCurrentHexEditor) then
   begin
     idx := (Sender as TAction).Tag - TAG_SET_BOOKMARK;
-    bm.mPosition := F.HexEditor.GetCursorPos; //SelStart;
-    bm.mInCharField := F.HexEditor.InCharField;
-    F.HexEditor.Bookmark[idx] := bm;
+    bm.mPosition := FCurrentHexEditor.GetCursorPos; //SelStart;
+    bm.mInCharField := FCurrentHexEditor.InCharField;
+    FCurrentHexEditor.Bookmark[idx] := bm;
     (Sender as TAction).Checked := true;
     for i := 0 to ActionList.ActionCount - 1 do begin
       ac := TAction(ActionList[i]);
@@ -366,21 +362,15 @@ begin
 end;
 
 procedure TMainForm.acEditCopyExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.CBCopy;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.CBCopy;
 end;
 
 procedure TMainForm.acEditCutExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.CBCut;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.CBCut;
 end;
 
 procedure TMainForm.acEditInsertOverwriteModeExecute(Sender: TObject);
@@ -393,32 +383,23 @@ begin
 end;
 
 procedure TMainForm.acEditMode(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) then
-    F.HexEditor.ReadOnlyView := acEditEditingForbidden.Checked
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.ReadOnlyView := acEditEditingForbidden.Checked
   else
     HexParams.ViewOnly := acEditEditingForbidden.Checked;
 end;
 
 procedure TMainForm.acEditPasteExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.CBPaste;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.CBPaste;
 end;
 
 procedure TMainForm.acEditRedoExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.Redo;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.Redo;
 end;
 
 procedure TMainForm.acEditReplaceExecute(Sender: TObject);
@@ -431,30 +412,21 @@ begin
 end;
 
 procedure TMainForm.acEditSelectAllExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.SelectAll;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.SelectAll;
 end;
 
 procedure TMainForm.acEditUndoExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.Undo;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.Undo;
 end;
 
 procedure TMainForm.acEditEditingForbiddenExecute(Sender: TObject);
-var
-  F: THexEditorFrame;
 begin
-  F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then
-    F.HexEditor.ReadOnlyView := acEditEditingForbidden.Checked;
+  if Assigned(FCurrentHexEditor) then
+    FCurrentHexEditor.ReadOnlyView := acEditEditingForbidden.Checked;
 end;
 
 procedure TMainForm.acEditFindExecute(Sender: TObject);
@@ -508,6 +480,7 @@ begin
   if PageControl.PageCount = 0 then
     PageControl.Hide;
 
+  UpdateCurrentHexEditor;
   UpdateCmds;
   UpdateCaption;
 end;
@@ -548,6 +521,7 @@ begin
       PageControlChange(nil)
     else
       PageControl.Hide;
+    UpdateCurrentHexEditor;
     UpdateCmds;
     UpdateCaption;
   end;
@@ -647,7 +621,7 @@ var
   n: integer;
 begin
   F := GetActiveHexEditorFrame;
-  if Assigned(F) and Assigned(F.HexEditor) then //and not (GotoParams.JumpAbs) then
+  if Assigned(F) and Assigned(F.HexEditor) then
   begin
     if Sender = acGotoRepeat then      // jump forward
     begin
@@ -745,6 +719,7 @@ begin
     page.Caption := F.Caption;
     PageControl.ActivePage := page;
     PageControl.Show;
+    FCurrentHexEditor := F.HexEditor;
     UpdateCaption;
     UpdateCmds;
   finally
@@ -831,6 +806,7 @@ end;
 
 procedure TMainForm.PageControlChange(Sender: TObject);
 begin
+  UpdateCurrentHexEditor;
   UpdateCaption;
 end;
 
@@ -894,9 +870,12 @@ begin
 end;
 
 procedure TMainForm.UpdateCaption;
+var
+  F: THexEditorFrame;
 begin
-  if Assigned(GetActiveHexEditorFrame) then
-    Caption := Format('%s - %s', [PROG_NAME, GetActiveHexEditorFrame.Caption])
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    Caption := Format('%s - %s', [PROG_NAME, F.Caption])
   else
     Caption := PROG_NAME;
 end;
@@ -917,6 +896,9 @@ begin
   acFileSaveAs.Enabled := hasData;
   acEditUndo.Enabled := hasData and F.HexEditor.CanUndo;
   acEditRedo.Enabled := hasData and F.HexEditor.CanRedo;
+  acEditCut.Enabled := hasData and F.HexEditor.CanCut;
+  acEditCopy.Enabled := hasData and F.HexEditor.CanCopy;
+  acEditPaste.Enabled := hasData and F.HexEditor.CanPaste;
   acEditFind.Enabled := hasData;
   acEditReplace.Enabled := hasData;
   acEditSelectAll.Enabled := hasData;
@@ -951,6 +933,17 @@ begin
     if InRange(ac.Tag, TAG_CLEAR_BOOKMARK, TAG_CLEAR_BOOKMARK + 10) then
       ac.Enabled := hasData and (F.HexEditor.Bookmark[ac.Tag - TAG_CLEAR_BOOKMARK].mPosition <> -1);
   end;
+end;
+
+procedure TMainForm.UpdateCurrentHexEditor;
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    FCurrentHexEditor := F.HexEditor
+  else
+    FCurrentHexEditor := nil;
 end;
 
 procedure TMainForm.UpdateIconSet;
