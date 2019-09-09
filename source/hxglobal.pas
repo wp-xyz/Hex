@@ -132,6 +132,9 @@ const
   MAX_SEARCH_HISTORY = 10;
   DROP_DOWN_COUNT = 32;
 
+  // List all GroupIndex value of TActions here to avoid collisions
+  GROUP_INDEX_VIEW_OFFSET = 20;
+
 type
   TStatusbarItem = (sbPos, sbSel, sbSize);
   TStatusbarItems = set of TStatusbarItem;
@@ -176,6 +179,7 @@ type
     SettingsPageIndex: Integer;
 
     function GetOffsetFormat: String;
+    function GetOffsetFormat(ADisplayBase: Integer): String;
   end;
 
   TColorParams = record
@@ -315,6 +319,17 @@ begin
     odbOct: Result := '-!08:&|';
   end;
 end;
+
+function THexParams.GetOffsetFormat(ADisplayBase: Integer): String;
+begin
+  case ADisplayBase of
+    16: Result := '-!10:' + OffsetDisplayHexPrefix + '|';
+    10: Result := '1!0a:|';
+     8: Result := '-!08:&|';
+    else raise Exception.CreateFmt('DisplayBase %d not supported.', [ADisplayBase]);
+  end;
+end;
+
 
 initialization
   DefaultHexParams := HexParams;

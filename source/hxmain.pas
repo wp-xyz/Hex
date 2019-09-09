@@ -71,6 +71,9 @@ type
     acEditCut: TAction;
     acEditCopy: TAction;
     acEditPaste: TAction;
+    acViewOffsetHex: TAction;
+    acViewOffsetDec: TAction;
+    acViewOffsetOctal: TAction;
     ActionList: TActionList;
     CoolBar1: TCoolBar;
     MainMenu: TMainMenu;
@@ -81,6 +84,11 @@ type
     MenuItem16: TMenuItem;
     MenuItem17: TMenuItem;
     MenuItem18: TMenuItem;
+    MenuItem19: TMenuItem;
+    MenuItem20: TMenuItem;
+    MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -199,6 +207,7 @@ type
     procedure acShowStatusbarExecute(Sender: TObject);
     procedure acShowToolbarExecute(Sender: TObject);
     procedure ActionListUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
+    procedure acViewOffsetFormatHandler(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -663,6 +672,16 @@ begin
   if Assigned(F) then
     F.UpdateStatusBar;
   UpdateCmds;
+end;
+
+procedure TMainForm.acViewOffsetFormatHandler(Sender: TObject);
+begin
+  if Assigned(FCurrentHexEditor) then
+    with FCurrentHexEditor do
+    begin
+      RulerNumberBase := (Sender as TAction).Tag;
+      FCurrentHexEditor.OffsetFormat := HexParams.GetOffsetFormat(RulerNumberBase);
+    end;
 end;
 
 procedure TMainForm.ApplyParams(const AParams: THexParams);

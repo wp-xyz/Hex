@@ -64,6 +64,7 @@ function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;
 
 function BytesToHex(AValue: TBytes): String;
 
+
 implementation
 
 uses

@@ -614,6 +614,34 @@ object MainForm: TMainForm
       OnExecute = acEditPasteExecute
       ShortCut = 16470
     end
+    object acViewOffsetHex: TAction
+      Tag = 16
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Hex'
+      Checked = True
+      GroupIndex = 20
+      Hint = 'Display offset as hex number'
+      OnExecute = acViewOffsetFormatHandler
+    end
+    object acViewOffsetDec: TAction
+      Tag = 10
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Decimal'
+      GroupIndex = 20
+      Hint = 'Display offset as decimal number'
+      OnExecute = acViewOffsetFormatHandler
+    end
+    object acViewOffsetOctal: TAction
+      Tag = 8
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'Octal'
+      GroupIndex = 20
+      Hint = 'Display offset as octal number'
+      OnExecute = acViewOffsetFormatHandler
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -725,6 +753,24 @@ object MainForm: TMainForm
       object MenuItem3: TMenuItem
         Action = acShowStatusbar
         AutoCheck = True
+      end
+      object MenuItem19: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem20: TMenuItem
+        Caption = 'Offset format'
+        object MenuItem21: TMenuItem
+          Action = acViewOffsetDec
+          AutoCheck = True
+        end
+        object MenuItem22: TMenuItem
+          Action = acViewOffsetHex
+          AutoCheck = True
+        end
+        object MenuItem23: TMenuItem
+          Action = acViewOffsetOctal
+          AutoCheck = True
+        end
       end
     end
     object mnuNavigation: TMenuItem

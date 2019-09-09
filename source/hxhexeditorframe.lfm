@@ -32,7 +32,9 @@ object HexEditorFrame: THexEditorFrame
       item
         Width = 50
       end>
+    ParentShowHint = False
     SimplePanel = False
+    ShowHint = True
   end
   object MainPanel: TOMultiPanel
     Left = 0
@@ -60,6 +62,8 @@ object HexEditorFrame: THexEditorFrame
       end>
     MinPosition = 0.02
     Align = alClient
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 1
     object LeftPanel: TOMultiPanel
       Left = 0
