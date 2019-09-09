@@ -11,7 +11,7 @@ uses
   hxViewerItems, hxViewerGrids, hxBasicViewerFrame, hxDataViewerFrame,
   hxRecordViewerFrame, hxObjectViewerFrame, hxSettingsDlg, hxGotoDlg,
   hxRecordEditorForm, hxGridViewerFrame, hxAbout, hxPascalRecordForm, 
-  hxSearchReplaceDlg;
+  hxSearchReplaceDlg, hxHexEditor;
 
 {$R *.res}
 

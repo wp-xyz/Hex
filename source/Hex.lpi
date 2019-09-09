@@ -100,7 +100,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="22">
+    <Units Count="23">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -251,6 +251,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="hxSearchReplaceDlg"/>
       </Unit21>
+      <Unit22>
+        <Filename Value="hxhexeditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hxHexEditor"/>
+      </Unit22>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
