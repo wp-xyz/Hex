@@ -14,7 +14,7 @@ object MainForm: TMainForm
   LCLVersion = '2.1.0.0'
   object PageControl: TPageControl
     Left = 0
-    Height = 437
+    Height = 414
     Top = 28
     Width = 914
     Align = alClient
@@ -147,6 +147,19 @@ object MainForm: TMainForm
         Style = tbsDivider
       end
     end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 442
+    Width = 914
+    AutoHint = True
+    Panels = <    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+    OnHint = StatusBarHint
   end
   object ActionList: TActionList
     Images = CommonData.Images_Office

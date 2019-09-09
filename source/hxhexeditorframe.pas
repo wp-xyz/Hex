@@ -23,7 +23,6 @@ type
     BottomPanel: TOMultiPanel;
     HexPanel: TPanel;
     RightPanel: TOMultiPanel;
-    StatusBar: TStatusBar;
   private
     FHexEditor: THxHexEditor;
     FDataViewer: TDataViewerFrame;
@@ -33,6 +32,7 @@ type
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
     FOnChange: TNotifyEvent;
+    FOnUpdateStatusBar: TNotifyEvent;
     function GetFileName: String;
 
     function GetOffsetDisplayBase(AOffsetFormat: String): TOffsetDisplayBase;
@@ -60,12 +60,12 @@ type
     procedure CreateDataViewer;
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
+    procedure DoUpdateStatusBar;
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     procedure HexEditorChanged(Sender: TObject);
     procedure SetParent(AParent: TWinControl); override;
     procedure SetViewerPosition(AViewer: TBasicViewerFrame; AValue: TViewerPosition);
-    procedure UpdateStatusBarPanelWidths;
     procedure UpdateViewerPanelVisible(APanel: TOMultiPanel);
 
     procedure LoadFromIni;
@@ -86,7 +86,8 @@ type
     procedure SaveFileAs(const AFileName: string);
     procedure UpdateCaption;
     procedure UpdateIconSet;
-    procedure UpdateStatusBar;
+    procedure UpdateStatusBar(AStatusBar: TStatusBar);
+    procedure UpdateStatusBarPanelWidths(AStatusBar: TStatusBar);
 
     property Caption;
     property FileName: String
@@ -107,6 +108,8 @@ type
       read GetShowRecordViewer write SetShowRecordViewer;
     property OnChange: TNotifyEvent
       read FOnChange write SetOnChange;
+    property OnUpdateStatusBar: TNotifyEvent
+      read FOnUpdateStatusBar write FOnUpdateStatusBar;
 
   end;
 
@@ -177,7 +180,7 @@ begin
     AParams.DrawGutter3D := HexEditor.DrawGutter3D;
   end;
 
-  AParams.ShowStatusBar := StatusBar.Visible;
+//  AParams.ShowStatusBar := StatusBar.Visible;
   AParams.StatusbarItems := FStatusbarItems;
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
@@ -211,7 +214,7 @@ var
 begin
   ApplyParamsToHexEditor(AParams, HexEditor);
 
-  StatusBar.Visible := AParams.ShowStatusBar;
+  //StatusBar.Visible := AParams.ShowStatusBar;
   FStatusbarItems := AParams.StatusbarItems;
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
@@ -240,7 +243,6 @@ begin
 
 //  LoadFromIni;                 // why this?
 
-  UpdateStatusbarPanelWidths;
   UpdateViewerPanelVisible(LeftPanel);
   UpdateViewerPanelVisible(RightPanel);
   UpdateViewerPanelVisible(BottomPanel);
@@ -323,6 +325,12 @@ begin
   with panel.PanelCollection.Add do
     Control := FObjectViewer;
   UpdateViewerPanelVisible(panel);
+end;
+
+procedure THexEditorFrame.DoUpdateStatusBar;
+begin
+  if Assigned(FOnUpdateStatusBar) then
+    FOnUpdateStatusBar(self);
 end;
 
 procedure THexEditorFrame.FindDlg;
@@ -429,7 +437,7 @@ end;
 
 procedure THexEditorFrame.HexEditorChanged(Sender: TObject);
 begin
-  UpdateStatusBar;
+  DoUpdateStatusBar;
   if Assigned(FDataViewer) then
     FDataViewer.UpdateData(FHexEditor);
   if Assigned(FObjectViewer) then
@@ -445,7 +453,7 @@ begin
   if Assigned(FHexEditor) then
   begin
     FHexEditor.InsertMode := AEnable;
-    UpdateStatusBar;
+    DoUpdateStatusBar;
   end;
 end;
 
@@ -497,7 +505,6 @@ begin
     HexEditor.LoadFromFile(AFileName);
     HexEditor.ReadOnlyFile := WriteProtected;
     UpdateCaption;
-    UpdateStatusbarPanelWidths;
     (*
     EnableActions(true);
     AdjustWidth;
@@ -680,7 +687,7 @@ begin
   UpdateViewerPanelVisible(newPanel);
   if oldPanel <> newPanel then UpdateViewerPanelVisible(oldPanel);
 
-  StatusBar.Top := Height * 2;
+  //StatusBar.Top := Height * 2;
 end;
 
 procedure THexEditorFrame.UpdateCaption;
@@ -704,7 +711,7 @@ begin
     FObjectViewer.UpdateIconSet;
 end;
 
-procedure THexEditorFrame.UpdateStatusbar;
+procedure THexEditorFrame.UpdateStatusbar(AStatusBar: TStatusBar);
 // Panel 0: Modified           (width=40)
 // Panel 1: ReadOnly           (      30)
 // Panel 2: Insert / Overwrite (      40)
@@ -722,11 +729,11 @@ begin
   begin
     hexprefix := GetOffsetDisplayHexPrefix(HexEditor.OffsetFormat);
 
-    Statusbar.Panels[0].Text := IfThen(HexEditor.Modified, 'MOD', '');
+    AStatusbar.Panels[0].Text := IfThen(HexEditor.Modified, 'MOD', '');
     if HexEditor.ReadOnlyView then
-      StatusBar.Panels[1].Text := 'R/O'
+      AStatusBar.Panels[1].Text := 'R/O'
     else
-      Statusbar.Panels[1].Text := IfThen(HexEditor.InsertMode, 'INS', 'OVW');
+      AStatusbar.Panels[1].Text := IfThen(HexEditor.InsertMode, 'INS', 'OVW');
 
     p := 2;
     if sbPos in FStatusbarItems then
@@ -737,7 +744,7 @@ begin
         odbOct: s := Format('&%s', [IntToOctal(HexEditor.GetCursorPos)]);
       end;
       s := Format(SMaskPos, [s]);
-      Statusbar.Panels[p].Text := s;
+      AStatusbar.Panels[p].Text := s;
       inc(p);
     end;
 
@@ -755,34 +762,80 @@ begin
         end;
       end else
         s := '';
-      StatusBar.Panels[p].Text := s;
+      AStatusBar.Panels[p].Text := s;
       inc(p);
     end;
 
     if sbSize in FStatusbarItems then
     begin
       s := Format('%.0n', [1.0 * HexEditor.DataSize]);
-      StatusBar.Panels[p].Text := Format(SMaskSize, [s]);
-      inc(p);
-    end;
-
-    while p < Statusbar.Panels.Count do
-    begin
-      StatusBar.Panels[p].Text := '';
+      AStatusBar.Panels[p].Text := Format(SMaskSize, [s]);
       inc(p);
     end;
   end;
 end;
 
-procedure THexEditorFrame.UpdateStatusbarPanelWidths;
+procedure THexEditorFrame.UpdateStatusbarPanelWidths(AStatusBar: TStatusBar);
 var
   p, n: integer;
   s: String;
   hexPrefix: String;
 begin
-  Statusbar.Canvas.Font.Assign(Statusbar.Font);
+  AStatusbar.Canvas.Font.Assign(AStatusbar.Font);
   hexprefix := GetOffsetDisplayHexPrefix(HexEditor.OffsetFormat);
 
+  AStatusBar.Panels.Clear;
+
+  // "Modified" flag
+  AStatusBar.Panels.Add.Width := 40;
+
+  // "ReadOnly" flag
+  AStatusBar.Panels.Add.Width := 30;
+
+  // Position
+  if (sbPos in FStatusBarItems) then
+    if Assigned(HexEditor) then
+    begin
+      case FStatusBarPosDisplay of
+        odbDec: s := Format('%.0n', [1.0*HexEditor.DataSize]);
+        odbHex: s := Format('%s%x', [hexprefix, HexEditor.DataSize]);
+        odbOct: s := Format('&%s', [IntToOctal(HexEditor.DataSize)]);
+      end;
+      s := Format(SMaskPos, [s]);
+      AStatusBar.Panels.Add.Width := AStatusbar.Canvas.TextWidth(s) + 10;
+    end else
+      AStatusBar.Panels.Add.Width := 120;
+
+  // Selection
+  if sbSel in FStatusbarItems then
+    if Assigned(FHexEditor) then
+    begin
+      n := HexEditor.DataSize;
+      case FStatusbarSelDisplay of
+        odbDec: s := Format('%.0n ... %.0n (%.0n)', [1.0*n, 1.0*n, 1.0*n]);
+        odbHex: s := Format('%0:s%1:x ... %0:s%2:x (%0:s%3:x)', [hexPrefix, n, n, n]);
+        odbOct: s := Format('&%s ... &%s (&%s)', [IntToOctal(n), IntToOctal(n), IntToOctal(n)]);
+      end;
+      AStatusbar.Panels.Add.Width := AStatusbar.Canvas.TextWidth(s) + 10;
+    end else
+      AStatusbar.Panels.Add.Width := 250;
+
+  // Data size
+  if sbSize in FStatusbarItems then
+    if Assigned(HexEditor) then
+    begin
+      s := Format('%.0n', [1.0 * HexEditor.DataSize]);
+      s := Format(SMaskSize, [s]);
+      AStatusBar.Panels.Add.Width := AStatusBar.Canvas.TextWidth(s) + 10;
+    end else
+      AStatusbar.Panels.Add.Width := 150;
+
+  // Hint texts
+  AStatusBar.Panels.Add.Width := 200;
+end;
+
+
+{
   p := 2;
   if sbPos in FStatusbarItems then
   begin
@@ -794,9 +847,9 @@ begin
         odbOct: s := Format('&%s', [IntToOctal(HexEditor.DataSize)]);
       end;
       s := Format(SMaskPos, [s]);
-      Statusbar.Panels[p].Width := Statusbar.Canvas.TextWidth(s) + 10;
+      AStatusbar.Panels[p].Width := AStatusbar.Canvas.TextWidth(s) + 10;
     end else
-      Statusbar.Panels[p].Width := 120;
+      AStatusbar.Panels[p].Width := 120;
     inc(p);
   end;
 
@@ -810,9 +863,9 @@ begin
         odbHex: s := Format('%0:s%1:x ... %0:s%2:x (%0:s%3:x)', [hexPrefix, n, n, n]);
         odbOct: s := Format('&%s ... &%s (&%s)', [IntToOctal(n), IntToOctal(n), IntToOctal(n)]);
       end;
-      Statusbar.Panels[p].Width := Statusbar.Canvas.TextWidth(s) + 10;
+      AStatusbar.Panels[p].Width := AStatusbar.Canvas.TextWidth(s) + 10;
     end else
-      Statusbar.Panels[p].Width := 250;
+      AStatusbar.Panels[p].Width := 250;
     inc(p);
   end;
 
@@ -822,11 +875,12 @@ begin
     begin
       s := Format('%.0n', [1.0 * HexEditor.DataSize]);
       s := Format(SMaskSize, [s]);
-      StatusBar.Panels[p].Width := StatusBar.Canvas.TextWidth(s) + 10;
+      AStatusBar.Panels[p].Width := AStatusBar.Canvas.TextWidth(s) + 10;
     end else
-      Statusbar.Panels[p].Width := 150;
+      AStatusbar.Panels[p].Width := 150;
   end;
 end;
+}
 
 procedure THexEditorFrame.UpdateViewerPanelVisible(APanel: TOMultiPanel);
 var

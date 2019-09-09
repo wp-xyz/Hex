@@ -8,37 +8,9 @@ object HexEditorFrame: THexEditorFrame
   TabOrder = 0
   DesignLeft = 340
   DesignTop = 128
-  object StatusBar: TStatusBar
-    Left = 0
-    Height = 23
-    Top = 372
-    Width = 812
-    Panels = <    
-      item
-        Width = 40
-      end    
-      item
-        Width = 40
-      end    
-      item
-        Width = 80
-      end    
-      item
-        Width = 180
-      end    
-      item
-        Width = 100
-      end    
-      item
-        Width = 50
-      end>
-    ParentShowHint = False
-    SimplePanel = False
-    ShowHint = True
-  end
   object MainPanel: TOMultiPanel
     Left = 0
-    Height = 372
+    Height = 395
     Top = 0
     Width = 812
     PanelCollection = <    
@@ -64,10 +36,10 @@ object HexEditorFrame: THexEditorFrame
     Align = alClient
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 1
+    TabOrder = 0
     object LeftPanel: TOMultiPanel
       Left = 0
-      Height = 372
+      Height = 395
       Top = 0
       Width = 203
       PanelType = ptVertical
@@ -79,7 +51,7 @@ object HexEditorFrame: THexEditorFrame
     end
     object CenterPanel: TOMultiPanel
       Left = 206
-      Height = 372
+      Height = 395
       Top = 0
       Width = 403
       PanelType = ptVertical
@@ -101,8 +73,8 @@ object HexEditorFrame: THexEditorFrame
       TabOrder = 1
       object BottomPanel: TOMultiPanel
         Left = 0
-        Height = 90
-        Top = 282
+        Height = 96
+        Top = 299
         Width = 403
         PanelCollection = <>
         MinPosition = 0.02
@@ -112,7 +84,7 @@ object HexEditorFrame: THexEditorFrame
       end
       object HexPanel: TPanel
         Left = 0
-        Height = 279
+        Height = 296
         Top = 0
         Width = 403
         Anchors = []
@@ -122,7 +94,7 @@ object HexEditorFrame: THexEditorFrame
     end
     object RightPanel: TOMultiPanel
       Left = 612
-      Height = 372
+      Height = 395
       Top = 0
       Width = 200
       PanelType = ptVertical

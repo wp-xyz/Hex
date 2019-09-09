@@ -162,6 +162,7 @@ type
     PageControl: TPageControl;
     RecentFilesPopup: TPopupMenu;
     SaveDialog: TSaveDialog;
+    StatusBar: TStatusBar;
     ToolBar: TToolBar;
     tbFileOpen: TToolButton;
     tbFileQuit: TToolButton;
@@ -212,6 +213,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
+    procedure StatusBarHint(Sender: TObject);
   private
     FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
@@ -221,6 +223,7 @@ type
     function GetActiveHexEditorFrame: THexEditorFrame;
     function GetHexEditorFrame(APageIndex: Integer): THexEditorFrame;
     procedure HexEditorChanged(Sender: TObject);
+    procedure HexEditorUpdateStatusBar(Sender: TObject);
 
     procedure RecentFileHandler(Sender: TObject; const AFileName: String);
     procedure ShowStatusbar(AEnable: boolean);
@@ -670,7 +673,7 @@ var
 begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) then
-    F.UpdateStatusBar;
+    HexEditorUpdateStatusBar(F);
   UpdateCmds;
 end;
 
@@ -726,13 +729,15 @@ begin
     F.Name := '';
     F.Parent := page;
     F.Align := alClient;
-    F.OnChange := @HexEditorChanged;
     if AFileName <> '' then
     begin
       F.OpenFile(AFileName, WriteProtected);
       FRecentFilesManager.AddToRecent(AFileName);
     end else
       F.Caption := Format(SNoName, [CountEmpty]);
+    F.UpdateStatusbarPanelWidths(StatusBar);
+    F.OnChange := @HexEditorChanged;
+    F.OnUpdateStatusBar := @HexEditorUpdateStatusBar;
     F.ApplyHexParams(HexParams);
     ApplyColorsToHexEditor(ColorParams, F.HexEditor);
     page.Caption := F.Caption;
@@ -823,10 +828,20 @@ begin
     end;
 end;
 
+procedure TMainForm.HexEditorUpdateStatusBar(Sender: TObject);
+begin
+  (Sender as THexEditorFrame).UpdateStatusBar(StatusBar);
+end;
+
 procedure TMainForm.PageControlChange(Sender: TObject);
+var
+  F: THexEditorFrame;
 begin
   UpdateCurrentHexEditor;
   UpdateCaption;
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    F.UpdateStatusBarPanelWidths(StatusBar);
 end;
 
 procedure TMainForm.ReadIni;
@@ -877,7 +892,7 @@ end;
 
 procedure TMainForm.ShowStatusbar(AEnable: boolean);
 begin
-  HexParams.ShowStatusBar := AEnable;
+  StatusBar.Visible := AEnable;
   AcShowstatusbar.Checked := AEnable;
   ApplyParams(HexParams);
 end;
@@ -886,6 +901,18 @@ procedure TMainForm.ShowToolbar(AEnable: boolean);
 begin
   Toolbar.Visible := AEnable;
   acShowToolbar.Checked := AEnable;
+end;
+
+procedure TMainForm.StatusBarHint(Sender: TObject);
+var
+  txt: String;
+begin
+  txt := GetLongHint(Application.Hint);
+  with StatusBar do
+  begin
+    Panels[Panels.Count-1].Text := txt;
+    Refresh;
+  end;
 end;
 
 procedure TMainForm.UpdateCaption;
@@ -961,8 +988,11 @@ begin
   F := GetActiveHexEditorFrame;
   if Assigned(F) then
     FCurrentHexEditor := F.HexEditor
-  else
+  else begin
     FCurrentHexEditor := nil;
+    while StatusBar.Panels.Count > 1 do
+      StatusBar.Panels.Delete(0);
+  end;
 end;
 
 procedure TMainForm.UpdateIconSet;
