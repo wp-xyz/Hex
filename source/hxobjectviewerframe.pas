@@ -23,19 +23,22 @@ type
     FInfo: string;
     FEmbeddedClass: TClass;
     FOnCheckUserAbort: TCheckUserAbortEvent;
+    function GetFirstFileExt: String;
   protected
+    class function CheckSignature(AHexEditor: THxHexEditor; AEmbeddedClass: TClass;
+      const ASignature: String): boolean; virtual;
     function CreateView({%H-}AOwner: TWinControl; out AInfo: String): TControl; virtual;
     function FindView(AParent: TWinControl): TControl;
-    function HasSignature(AHexEditor: THxHexEditor): boolean; virtual;
     procedure HideView(AParent: TWinControl);
   public
     constructor Create(AEmbeddedClass: TClass; AFileExt, ASignature: string); virtual;
     function CanExtract(AHexEditor: THxHexEditor; AOffset: integer): boolean;
     function CheckAndShow(AHexEditor: THxHexEditor; AOffset: integer; AParent: TWinControl): TControl;
+    function ExtractorFilter: String;
     function Find(AHexEditor: THxHexEditor; AStart, AEnd: integer): integer;
     procedure Reset;
     procedure SaveToStream(AStream: TStream); virtual;
-    property FileExt: string read FFileExt;
+    property FirstFileExt: string read GetFirstFileExt;
     property Info: string read FInfo;
     property Signature: string read FSignature;
     property Size: integer read FSize;
@@ -46,38 +49,12 @@ type
 
   TGraphicExtractor = class(TExtractor)
   protected
+    class function CheckSignature(AHexEditor: THxHexEditor; AEmbeddedClass: TClass;
+      const ASignature: String): Boolean; override;
     function CreateInfo(APicture: TPicture): String; virtual;
     function CreateView(AOwner: TWinControl; out AInfo: String): TControl; override;
-    function HasSignature(AHexEditor: THxHexEditor): Boolean; override;
-  end;
-                      (*
-  TBmpExtractor = class(TGraphicExtractor)
-  protected
-    function HasSignature(AHexEditor: THxHexEditor): Boolean; override;
   end;
 
-  TPngExtractor = class(TGraphicExtractor)
-  protected
-    function HasSignature(AHexEditor: THxHexEditor): Boolean; override;
-  end;                  *)
-  (*
-  TGifExtractor = class(TExtractor)
-  protected
-    function CreateView(AOwner: TWinControl): TControl; override;
-//    function HasSignature(AHexEditor: THxHexEditor; AOffset: Integer): boolean; override;
-  end;
-
-  TIcoExtractor = class(TExtractor)
-  protected
-    function CreateView(AOwner: TWinControl): TControl; override;
-  end;
-
-  TJpegExtractor = class(TExtractor)
-  protected
-    function CreateView(AOwner: TWinControl): TControl; override;
-    function HasSignature(AHexEditor: THxHexEditor; AOffset: Integer): Boolean;
-  end;
-           *)
   { ------ }
 
   { TObjectViewerFrame }
@@ -98,11 +75,13 @@ function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
   AExt, ASignature: string): integer; overload;
 
 function CanExtract(AHexEditor: THxHexEditor): TExtractor;
+{
 function ExtractAndDisplay(AHexEditor: THxHexEditor; AOffset: integer;
   AParent: TWinControl; var AControl: TControl): TExtractor;
-function ExtractorFilter(AExtractor: TExtractor): string;
+  }
+//function ExtractorFilter(AExtractor: TExtractor): string;
 function Extractor(AExt: string): TExtractor; overload;
-function Extractor(AIndex: integer): TExtractor; overload;
+//function Extractor(AIndex: integer): TExtractor; overload;
 function NumExtractors: integer;
 
 implementation
@@ -121,12 +100,43 @@ const
 { Extractor list }
 
 type
+  TExtractorItem = class
+    FExtractorClass: TExtractorClass;
+    FEmbeddedClass: TClass;
+    FSignature: String;
+    FExtensions: String;
+    function CreateExtractor: TExtractor;
+    function MatchesExt(AExt: String): Boolean;
+  end;
+
+  function TExtractorItem.CreateExtractor: TExtractor;
+  begin
+    Result := FExtractorClass.Create(FEmbeddedClass, FExtensions, FSignature);
+  end;
+
+  function TExtractorItem.MatchesExt(AExt: String): Boolean;
+  var
+    sa: TStringArray;
+    ext: String;
+  begin
+    sa := FExtensions.Split('|');
+    for ext in sa do
+      if ext = AExt then begin
+        Result := true;
+        exit;
+      end;
+    Result := false;
+  end;
+
+{ ---- }
+
+type
   TExtractorList = class(TFPList)
   private
-    function GetItem(AIndex: integer): TExtractor;
+    function GetItem(AIndex: integer): TExtractorItem;
   public
     destructor Destroy; override;
-    property Items[AIndex: integer]: TExtractor read GetItem; default;
+    property Items[AIndex: integer]: TExtractorItem read GetItem; default;
   end;
 
 var
@@ -140,9 +150,9 @@ begin
   inherited Destroy;
 end;
 
-function TExtractorList.GetItem(AIndex: integer): TExtractor;
+function TExtractorList.GetItem(AIndex: integer): TExtractorItem;
 begin
-  Result := TExtractor(inherited Items[AIndex]);
+  Result := TExtractorItem(inherited Items[AIndex]);
 end;
 
 { ---------- }
@@ -150,12 +160,16 @@ end;
 function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
   AExt, ASignature: string): integer;
 var
-  Ex: TExtractor;
+  item: TExtractorItem;
 begin
-  Ex := AClass.Create(AEmbeddedClass, AExt, ASignature);
-  Result := RegisteredExtractors.Add(Ex);
+  item := TExtractorItem.Create;
+  item.FExtractorClass := AClass;
+  item.FEmbeddedClass := AEmbeddedClass;
+  item.FExtensions := AExt;
+  item.FSignature := ASignature;
+  Result := RegisteredExtractors.Add(item);
 end;
-
+                         (*
 function ExtractAndDisplay(AHexEditor: THxHexEditor; AOffset: Integer;
   AParent: TWinControl; var AControl: TControl): TExtractor;
 var
@@ -174,33 +188,36 @@ begin
     end;
   end;
 end;
+*)
 
 function CanExtract(AHexEditor: THxHexEditor): TExtractor;
 var
   i: integer;
-  Ex: TExtractor;
+  item: TExtractorItem;
 begin
   for i := 0 to RegisteredExtractors.Count-1 do
   begin
-    Ex := RegisteredExtractors[i];
-    if Ex.HasSignature(AHexEditor) then
+    item := RegisteredExtractors[i];
+    if item.FExtractorClass.CheckSignature(AHexEditor, item.FEmbeddedClass, item.FSignature) then
     begin
-      Result := Ex;
+      Result := item.CreateExtractor;
       exit;
     end;
   end;
   Result := nil;
 end;
-
+                       {
 function ExtractorFilter(AExtractor: TExtractor): string;
 var
   i: integer;
+  item: TExtractorItem;
   Ex: TExtractor;
 begin
-  Result := '';
+  Result := '';                           (*
   for i := 0 to RegisteredExtractors.Count-1 do
   begin
-    Ex := RegisteredExtractors[i];
+    item := RegisteredExtractors[i];
+    if (item.FExtractorClass = AExtractor.Class) and (item.FSignature = AExtractor.Signature)
     if AExtractor = Ex then
     begin
       Result := Format(SExtractorFilterMask,
@@ -208,13 +225,14 @@ begin
       exit;
     end;
   end;
-end;
+  *)
+end;                    }
 
 function Extractor(AExt: string): TExtractor;
 var
   i: integer;
+  item: TExtractorItem;
 begin
-  Result := nil;
   if (AExt <> '') then
   begin
     while AExt[1] = '.' do
@@ -223,21 +241,24 @@ begin
     if AExt = '' then
       for i := 0 to RegisteredExtractors.Count-1 do
       begin
-        if SameText(RegisteredExtractors[i].FileExt, AExt) then begin
-          Result := RegisteredExtractors[i];
+        item := RegisteredExtractors[i];
+        if item.MatchesExt(AExt) then
+        begin
+          Result := item.CreateExtractor;
           exit;
         end;
       end;
   end;
+  Result := nil;
 end;
-
+                               (*
 function Extractor(AIndex: Integer): TExtractor;
 begin
   if (AIndex >= 0) and (AIndex < RegisteredExtractors.Count) then
     Result := RegisteredExtractors[AIndex]
   else
     Result := nil;
-end;
+end;                             *)
 
 function NumExtractors: Integer;
 begin
@@ -267,7 +288,7 @@ begin
   if Assigned(AHexEditor) and Assigned(AHexEditor.DataStorage) and (AOffset >= 0) then
   begin
     AHexEditor.Seek(AOffset, soFromBeginning);
-    if HasSignature(AHexEditor) then
+    if CheckSignature(AHexEditor, FEmbeddedClass, FSignature) then
     begin
       try
         P := AHexEditor.GetCursorPos;
@@ -318,7 +339,7 @@ begin
     if Assigned(FHexEditor) then
     begin
       AHexEditor.Seek(FOffset, soFromBeginning);
-      if HasSignature(FHexEditor) then
+      if CheckSignature(FHexEditor, FembeddedClass, FSignature) then
         try
           Result := CreateView(AParent, FInfo);
           if Assigned(Result) then
@@ -350,6 +371,48 @@ begin
     Result := FindView(AParent);
 end;
 
+{ Checks whether the signature (a specific byte sequence) of the embedded object
+  handled by the Extractor is found at the current offset of the hex editor.
+  Example: The signature of bmp files is "BM"
+  When the function result is true the calling method "CheckAndShow" tries to
+  display the found object (which still may fail).
+  The signature is provided as a parameter when the Extractor is created.
+  MUST BE OVERRIDDEN IF A DIFFERENT CHECKING METHOD IS REQUIRED. }
+class function TExtractor.CheckSignature(AHexEditor: THxHexEditor;
+  AEmbeddedClass: TClass; const ASignature: String): Boolean;
+var
+  s: string;
+  n: integer;
+  P: Integer;
+begin
+  Result := false;
+  P := AHexEditor.GetCursorPos;  //DataStorage.Position;
+  try
+    AHexEditor.DataStorage.Position := P;
+    n := Length(ASignature);
+    if (n > 0) and Assigned(AHexEditor) and
+       (P >= 0) and (P <= AHexEditor.DataSize - n) then
+    begin
+      SetLength(s, n);
+      AHexEditor.ReadBuffer(s[1], P, n);
+      Result := (ASignature = s);
+    end;
+  finally
+    AHexEditor.DataStorage.Position := P;
+  end;
+end;
+
+function TExtractor.ExtractorFilter: String;
+var
+  sa: TStringArray;
+  i: Integer;
+begin
+  sa := Lowercase(FFileExt).Split('|');
+  Result := Format(SExtractorFilterMask, [sa[0], sa[0], sa[0]]);
+  for i := 1 to High(sa) do
+    Result := Result + ';' + Format(SExtractorFilterMask, [sa[i], sa[i], sa[i]]);
+end;
+
 { Searches the signature of the embedded object known to the Extractor in the
   specified HexEditor between offset positions AStart and AEnd. Returns the
   offset of the first byte of the embedded object if the search was successful.
@@ -377,7 +440,7 @@ begin
     EnsureOrder(AStart, AEnd);
 
     p := AStart;
-    while (p <= AEnd - Length(FSignature)) and ( p <> -1) do
+    while (p <= AEnd - Length(FSignature)) and (p <> -1) do
     begin
       s := FSignature;
       if s <> '' then
@@ -389,7 +452,7 @@ begin
           exit;
         end;
       end;
-      if HasSignature(AHexEditor) then
+      if CheckSignature(AHexEditor, FEmbeddedClass, FSignature) then
       begin
         Result := p;
         exit;
@@ -428,34 +491,15 @@ begin
   Result := nil;
 end;
 
-{ Checks whether the signature (a specific byte sequence) of the embedded object
-  handled by the Extractor is found at the current offset of the hex editor.
-  Example: The signature of bmp files is "BM"
-  When the function result is true the calling method "CheckAndShow" tries to
-  display the found object (which still may fail).
-  The signature is provided as a parameter when the Extractor is created.
-  MUST BE OVERRIDDEN IF A DIFFERENT CHECKING METHOD IS REQUIRED. }
-function TExtractor.HasSignature(AHexEditor: THxHexEditor): Boolean;
+function TExtractor.GetFirstFileExt: String;
 var
-  s: string;
-  n: integer;
-  P: Integer;
+  sa: TStringArray;
 begin
-  Result := false;
-  P := AHexEditor.GetCursorPos;  //DataStorage.Position;
-  try
-    AHexEditor.DataStorage.Position := P;
-    n := Length(FSignature);
-    if (n > 0) and Assigned(AHexEditor) and
-       (P >= 0) and (P <= AHexEditor.DataSize - n) then
-    begin
-      SetLength(s, n);
-      AHexEditor.ReadBuffer(s[1], P, n);
-      Result := (FSignature = s);
-    end;
-  finally
-    AHexEditor.DataStorage.Position := P;
-  end;
+  sa := FFileExt.Split('|');
+  if Length(sa) > 0 then
+    Result := sa[0]
+  else
+    Result := '';
 end;
 
 { Checks whether the viewing component of the Extractor already exists inside
@@ -506,6 +550,18 @@ end;
 
 { TGraphicExtractor }
 
+class function TGraphicExtractor.CheckSignature(AHexEditor: THxHexEditor;
+  AEmbeddedClass: TClass; const ASignature: String): Boolean;
+var
+  lGraphicclass: TGraphicClass;
+begin
+  Result := inherited CheckSignature(AHexEditor, AEmbeddedClass, ASignature);
+  if Result or (ASignature = '') then begin
+    lGraphicClass := TGraphicClass(AEmbeddedClass);
+    Result := lGraphicClass.IsStreamFormatSupported(AHexEditor.DataStorage);
+  end;
+end;
+
 function TGraphicExtractor.CreateView(AOwner: TWinControl;
   out AInfo: String): TControl;
 var
@@ -536,17 +592,6 @@ begin
       PIXEL_FORMATS[TRasterImage(APicture.Graphic).PixelFormat];
 end;
 
-function TGraphicExtractor.HasSignature(AHexEditor: THxHexEditor): Boolean;
-var
-  lGraphicclass: TGraphicClass;
-begin
-  Result := inherited;
-  if Result then begin
-    lGraphicClass := TGraphicClass(FEmbeddedClass);
-    Result := lGraphicClass.IsStreamFormatSupported(AHexEditor.DataStorage);
-  end;
-end;
-
 
 { TObjectViewerFrame }
 
@@ -558,8 +603,6 @@ begin
   if Ex <> nil then
   begin
     FExtractorControl := Ex.CheckAndShow(AHexEditor, AHexEditor.GetCursorPos, ScrollBox);
-//    Ex := ExtractAndDisplay(AHexEditor, AHexEditor.GetCursorPos,
-//      Scrollbox, FExtractorControl);
   end else begin
     FreeAndNil(FExtractorControl);
   end;
@@ -581,7 +624,7 @@ initialization
   RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp', 'BM');
   RegisterExtractor(TGraphicExtractor, TGifImage, 'gif', 'GIF');
   RegisterExtractor(TGraphicExtractor, TIcon, 'ico', #0#0#1#0);
-  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg', #$FF#$D8);
+  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe', #$FF#$D8);
   RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png', #137'PNG'#13#10#26#10);
 
   {

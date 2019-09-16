@@ -334,22 +334,28 @@ end;
 procedure THexEditorFrame.ExportObject;
 var
   stream: TStream;
+  ex: TExtractor;
 begin
-  if (not ShowObjectViewer) or (not Assigned(FObjectViewer.Extractor)) or
-     (not FObjectViewer.Extractor.CanExtract(FHexEditor, FHexEditor.GetCursorPos))
+  if FObjectViewer = nil then
+    exit;
+
+  ex := FObjectViewer.Extractor;
+
+  if (not ShowObjectViewer) or (not Assigned(ex)) or
+     (not ex.CanExtract(FHexEditor, FHexEditor.GetCursorPos))
   then
     exit;
 
   with SaveDialog do begin
     InitialDir := FObjectSaveDir;
-    DefaultExt := Lowercase(Format('*.%s', [FObjectViewer.Extractor.FileExt]));
-    Filter := ExtractorFilter(FObjectViewer.Extractor);
+    DefaultExt := Lowercase(Format('*.%s', [ex.FirstFileExt]));
+    Filter := ex.ExtractorFilter;
     FileName := '';
     if Execute then begin
       Application.ProcessMessages;
       stream := TFileStream.Create(FileName, fmCreate + fmShareDenyNone);
       try
-        FObjectViewer.Extractor.SaveToStream(stream);
+        ex.SaveToStream(stream);
         FObjectSaveDir := ExtractFileDir(FileName);
       finally
         stream.Free;
