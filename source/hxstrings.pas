@@ -28,6 +28,9 @@ resourcestring
   // hxFindDlg
   SNotFound = 'Byte sequence not found.';
 
+  // hxObjectViewerFrame
+  SExtractorFilterMask = '%s files (*.%s)|*.%s|';
+
 
 implementation
 

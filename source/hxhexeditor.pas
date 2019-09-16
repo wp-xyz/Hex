@@ -19,6 +19,7 @@ type
 
   public
     constructor Create(AOwner: TComponent); override;
+    property DataStorage;
     property SecondSelStart: Integer read FSecondSelStart write SetSecondSelStart;
     property SecondSelEnd: Integer read FSecondSelEnd write SetSecondSelEnd;
   end;

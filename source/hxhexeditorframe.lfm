@@ -105,4 +105,8 @@ object HexEditorFrame: THexEditorFrame
       Visible = False
     end
   end
+  object SaveDialog: TSaveDialog
+    left = 326
+    top = 78
+  end
 end

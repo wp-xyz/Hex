@@ -2,4 +2,31 @@ inherited ObjectViewerFrame: TObjectViewerFrame
   inherited lblHeader: TLabel
     Caption = ' Object viewer'
   end
+  object ScrollBox: TScrollBox[1]
+    Left = 0
+    Height = 192
+    Top = 48
+    Width = 320
+    HorzScrollBar.Increment = 1
+    HorzScrollBar.Page = 1
+    HorzScrollBar.Smooth = True
+    HorzScrollBar.Tracking = True
+    VertScrollBar.Increment = 1
+    VertScrollBar.Page = 1
+    VertScrollBar.Smooth = True
+    VertScrollBar.Tracking = True
+    Align = alClient
+    TabOrder = 0
+  end
+  object lblInfo: TLabel[2]
+    Left = 6
+    Height = 15
+    Top = 27
+    Width = 308
+    Align = alTop
+    BorderSpacing.Around = 6
+    Caption = 'lblInfo'
+    ParentColor = False
+    WordWrap = True
+  end
 end

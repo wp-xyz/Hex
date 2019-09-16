@@ -23,6 +23,7 @@ type
     BottomPanel: TOMultiPanel;
     HexPanel: TPanel;
     RightPanel: TOMultiPanel;
+    SaveDialog: TSaveDialog;
   private
     FHexEditor: THxHexEditor;
     FDataViewer: TDataViewerFrame;
@@ -31,6 +32,7 @@ type
     FStatusbarItems: TStatusbarItems;
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
+    FObjectSaveDir: String;
     FOnChange: TNotifyEvent;
     FOnUpdateStatusBar: TNotifyEvent;
     function GetFileName: String;
@@ -77,6 +79,7 @@ type
     procedure ActiveHexParams(var AParams: THexParams);
     procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
+    procedure ExportObject;
     procedure FindDlg;
     procedure InsertMode(const AEnable: Boolean);
     procedure JumpToPosition(APosition: Integer);
@@ -84,6 +87,7 @@ type
     procedure ReplaceDlg;
     procedure SaveFile;
     procedure SaveFileAs(const AFileName: string);
+    procedure SelectObject;
     procedure UpdateCaption;
     procedure UpdateIconSet;
     procedure UpdateStatusBar(AStatusBar: TStatusBar);
@@ -327,6 +331,33 @@ begin
   UpdateViewerPanelVisible(panel);
 end;
 
+procedure THexEditorFrame.ExportObject;
+var
+  stream: TStream;
+begin
+  if (not ShowObjectViewer) or (not Assigned(FObjectViewer.Extractor)) or
+     (not FObjectViewer.Extractor.CanExtract(FHexEditor, FHexEditor.GetCursorPos))
+  then
+    exit;
+
+  with SaveDialog do begin
+    InitialDir := FObjectSaveDir;
+    DefaultExt := Lowercase(Format('*.%s', [FObjectViewer.Extractor.FileExt]));
+    Filter := ExtractorFilter(FObjectViewer.Extractor);
+    FileName := '';
+    if Execute then begin
+      Application.ProcessMessages;
+      stream := TFileStream.Create(FileName, fmCreate + fmShareDenyNone);
+      try
+        FObjectViewer.Extractor.SaveToStream(stream);
+        FObjectSaveDir := ExtractFileDir(FileName);
+      finally
+        stream.Free;
+      end;
+    end;
+  end;
+end;
+
 procedure THexEditorFrame.DoUpdateStatusBar;
 begin
   if Assigned(FOnUpdateStatusBar) then
@@ -557,6 +588,22 @@ begin
     except
       on E: Exception do
         ErrorFmt(SErrorSavingFile + LineEnding + E.Message, [AFileName]);
+    end;
+  end;
+end;
+
+procedure THexEditorFrame.SelectObject;
+var
+  P: Integer;
+begin
+  if ShowObjectViewer and Assigned(FObjectViewer.Extractor) then
+  begin
+    P := FHexEditor.GetCursorPos;
+    if FObjectViewer.Extractor.CanExtract(FHexEditor, P) then
+    begin
+      FHexEditor.SelStart := P;
+      FHexEditor.SelEnd := P + FObjectViewer.Extractor.Size - 1;
+      FHexEditor.Invalidate;
     end;
   end;
 end;

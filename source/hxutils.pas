@@ -64,6 +64,9 @@ function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;
 
 function BytesToHex(AValue: TBytes): String;
 
+// misc
+procedure Exchange(var A, B: Integer);
+procedure EnsureOrder(var A, B: Integer);
 
 implementation
 
@@ -821,6 +824,25 @@ begin
     inc(j, 3);
   end;
   SetLength(Result, Length(Result) - 1);
+end;
+
+
+{==============================================================================}
+{                              Misc                                            }
+{==============================================================================}
+
+procedure Exchange(var A, B: Integer);
+var
+  C: Integer;
+begin
+  C := A;
+  A := B;
+  B := C;
+end;
+
+procedure EnsureOrder(var A, B: Integer);
+begin
+  if A > B then Exchange(A, B);
 end;
 
 end.

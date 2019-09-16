@@ -71,6 +71,8 @@ type
     acEditCut: TAction;
     acEditCopy: TAction;
     acEditPaste: TAction;
+    acObjectsSelect: TAction;
+    acObjectsExport: TAction;
     acViewOffsetHex: TAction;
     acViewOffsetDec: TAction;
     acViewOffsetOctal: TAction;
@@ -89,6 +91,9 @@ type
     MenuItem21: TMenuItem;
     MenuItem22: TMenuItem;
     MenuItem23: TMenuItem;
+    mnuObjectsExport: TMenuItem;
+    mnuObjectsSelect: TMenuItem;
+    mnuObjects: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -205,6 +210,8 @@ type
     procedure acFileSaveExecute(Sender: TObject);
     procedure acGoToExecute(Sender: TObject);
     procedure acGoToRepeatExecute(Sender: TObject);
+    procedure acObjectsExportExecute(Sender: TObject);
+    procedure acObjectsSelectExecute(Sender: TObject);
     procedure acShowStatusbarExecute(Sender: TObject);
     procedure acShowToolbarExecute(Sender: TObject);
     procedure ActionListUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
@@ -654,6 +661,24 @@ begin
 
     F.JumpToPosition(n);
   end;
+end;
+
+procedure TMainForm.acObjectsExportExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    F.ExportObject;
+end;
+
+procedure TMainForm.acObjectsSelectExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    F.SelectObject;
 end;
 
 procedure TMainForm.acShowStatusbarExecute(Sender: TObject);

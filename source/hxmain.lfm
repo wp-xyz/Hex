@@ -655,6 +655,18 @@ object MainForm: TMainForm
       Hint = 'Display offset as octal number'
       OnExecute = acViewOffsetFormatHandler
     end
+    object acObjectsSelect: TAction
+      Category = 'Objects'
+      Caption = 'Select object'
+      Hint = 'Select found object'
+      OnExecute = acObjectsSelectExecute
+    end
+    object acObjectsExport: TAction
+      Category = 'Objects'
+      Caption = 'Export object...'
+      Hint = 'Export object|Save object to file'
+      OnExecute = acObjectsExportExecute
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -911,6 +923,15 @@ object MainForm: TMainForm
       end
       object MenuItem14: TMenuItem
         Action = acGotoBackward
+      end
+    end
+    object mnuObjects: TMenuItem
+      Caption = 'Objects'
+      object mnuObjectsSelect: TMenuItem
+        Action = acObjectsSelect
+      end
+      object mnuObjectsExport: TMenuItem
+        Action = acObjectsExport
       end
     end
     object mnuConfig: TMenuItem
