@@ -607,9 +607,11 @@ begin
     P := FHexEditor.GetCursorPos;
     if FObjectViewer.Extractor.CanExtract(FHexEditor, P) then
     begin
-      FHexEditor.SelStart := P;
-      FHexEditor.SelEnd := P + FObjectViewer.Extractor.Size - 1;
-      //FHexEditor.Invalidate;
+      { The HexEditor moves the cursor to the end of the selection. But the
+        ObjectViewer analyzes the cursor position. --> We invert the
+        direction of selection }
+      FHexEditor.SelStart := P + FObjectViewer.Extractor.Size - 1;
+      FHexEditor.SelEnd := P;
     end;
   end;
 end;

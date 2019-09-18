@@ -400,7 +400,7 @@ var
   P: Integer;
 begin
   Result := false;
-  P := AHexEditor.GetCursorPos;  //DataStorage.Position;
+  P := AHexEditor.GetCursorPos;
   try
     AHexEditor.DataStorage.Position := P;
     n := Length(ASignature);
