@@ -609,7 +609,7 @@ begin
     begin
       FHexEditor.SelStart := P;
       FHexEditor.SelEnd := P + FObjectViewer.Extractor.Size - 1;
-      FHexEditor.Invalidate;
+      //FHexEditor.Invalidate;
     end;
   end;
 end;

@@ -307,9 +307,8 @@ end;
 procedure TRecordViewerGrid.LoadRecordFromFile(const AFileName: String);
 var
   i, i0: Integer;
-  L: TStringList;
+  lines, parts: TStringList;
   item: TRecordDataItem;
-  sa: TStringArray;
   dt: TDataType;  // DataType
   ds: Integer;    // DataSize
   endian: Boolean;
@@ -319,62 +318,65 @@ begin
 
   FFileName := AFileName;
 
-  L := TStringList.Create;
+  lines := TStringList.Create;
+  parts := TStringList.Create;
   try
-    L.LoadFromFile(AFileName);
-    if L.Count = 0 then
+    lines.LoadFromFile(AFileName);
+    if lines.Count = 0 then
       raise EHexError.CreateFmt('Empty file "%s"', [AFileName]);
 
     i0 := 0;
-    while (i0 < L.Count) and ((L[i0] = '') or (L[i0][1] = ';')) do
+    while (i0 < lines.Count) and ((lines[i0] = '') or (lines[i0][1] = ';')) do
       inc(i0);
 
-    if i0 >= L.Count then
+    if i0 >= lines.Count then
       raise EHexError.CreateFmt('No contents in file "%s"', [AFileName]);
 
-    if pos(DATA_FIELD_SEPARATOR, L[i0]) > 0 then
+    if pos(DATA_FIELD_SEPARATOR, lines[i0]) > 0 then
       sep := DATA_FIELD_SEPARATOR
-    else if pos(',', L[i0]) > 0 then
+    else if pos(',', lines[i0]) > 0 then
       sep := ','
-    else if pos(';', L[i0]) > 0 then
+    else if pos(';', lines[i0]) > 0 then
       sep := ';'
-    else if pos(#9, L[i0]) > 0 then
+    else if pos(#9, lines[i0]) > 0 then
       sep := #9
     else
       raise EHexError.CreateFmt('Unknown field separator in "%s"', [AfileName]);
 
-    for i := i0 to L.Count - 1 do
+    parts.Delimiter := sep[1];
+    parts.StrictDelimiter := true;
+
+    for i := i0 to lines.Count - 1 do
     begin
-      if L[i] = '' then
+      if lines[i] = '' then
         Continue;
 
-      sa := L[i].Split(sep);
-
-      if Length(sa) < 3 then
-        raise EHexError.Create('Invalid file structure, line "' +  L[i] + '".');
-
-      if sa[2] = 'BE' then
+      parts.DelimitedText := lines[i];
+      if parts.Count < 3 then
+        raise EHexError.Create('Invalid file structure, line "' +  lines[i] + '".');
+      if parts[2] = 'BE' then
         endian := true
-      else if sa[2] = 'LE' then
+      else if parts[2] = 'LE' then
         endian := false
       else
-        raise EHexError.Create('Invalid file structure, line "' + L[i] + '".');
+        raise EHexError.Create('Invalid file structure, line "' + lines[i] + '".');
 
-      dt := TDataType(GetEnumValue(TypeInfo(TDataType), sa[1]));
+      dt := TDataType(GetEnumValue(TypeInfo(TDataType), parts[1]));
       if not InRange(ord(dt), ord(Low(TDataType)), ord(High(TDataType))) then
-        raise EHexError.Create('Unknown data type, line "' + L[i] + '".');
+        raise EHexError.Create('Unknown data type, line "' + lines[i] + '".');
 
       if dt in StringDatatypes then
-        ds := StrToInt(sa[3])
+        ds := StrToInt(parts[3])
       else
         ds := DataTypeSizes[dt];
 
-      item := TRecordDataItem.Create(sa[0], dt, ds, endian);
+      item := TRecordDataItem.Create(parts[0], dt, ds, endian);
       FDataList.Add(item);
     end;
 
   finally
-    L.Free;
+    parts.Free;
+    lines.Free;
   end;
   RowCount := FDataList.Count + FixedRows;
   UpdateData(HexEditor);

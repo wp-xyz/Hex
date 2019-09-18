@@ -55,6 +55,14 @@ type
     function CreateView(AOwner: TWinControl; out AInfo: String): TControl; override;
   end;
 
+  TIconExtractor = class(TExtractor)
+  protected
+    class function CheckSignature(AHexEditor: THxHexEditor; AEmbeddedClass: TClass;
+      const ASignature: String): Boolean; override;
+    function CreateInfo(AIcon: TIcon): String;
+    function CreateView(AOwner: TWinControl; out AInfo: String): TControl; override;
+  end;
+
   { ------ }
 
   { TObjectViewerFrame }
@@ -65,8 +73,10 @@ type
   private
     FExtractor: TExtractor;
     FExtractorControl: TControl;
+    FLockUpdate: Integer;
 
   public
+    destructor Destroy; override;
     procedure UpdateData(AHexEditor: THxHexEditor); override;
     property Extractor: TExtractor read FExtractor;
   end;
@@ -75,13 +85,7 @@ function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
   AExt, ASignature: string): integer; overload;
 
 function CanExtract(AHexEditor: THxHexEditor): TExtractor;
-{
-function ExtractAndDisplay(AHexEditor: THxHexEditor; AOffset: integer;
-  AParent: TWinControl; var AControl: TControl): TExtractor;
-  }
-//function ExtractorFilter(AExtractor: TExtractor): string;
-function Extractor(AExt: string): TExtractor; overload;
-//function Extractor(AIndex: integer): TExtractor; overload;
+function CreateExtractor(AExt: string): TExtractor; overload;
 function NumExtractors: integer;
 
 implementation
@@ -228,7 +232,7 @@ begin
   *)
 end;                    }
 
-function Extractor(AExt: string): TExtractor;
+function CreateExtractor(AExt: string): TExtractor;
 var
   i: integer;
   item: TExtractorItem;
@@ -286,27 +290,37 @@ var
 begin
   Result := false;
   if Assigned(AHexEditor) and Assigned(AHexEditor.DataStorage) and (AOffset >= 0) then
+    Result := CheckSignature(AHexEditor, FEmbeddedClass, FSignature)
+  else
+    Result := false;
+  (*
   begin
     AHexEditor.Seek(AOffset, soFromBeginning);
+    AHexEditor.DataStorage.Position := AOffset;
     if CheckSignature(AHexEditor, FEmbeddedClass, FSignature) then
     begin
       try
         P := AHexEditor.GetCursorPos;
         FHexEditor := AHexEditor;
         FOffset := AOffset;
-        C := CreateView(nil, lInfo);   // Moves the stream pos to the end of the object
-        if Assigned(C) then
-        begin
-          FSize := FHexEditor.DataStorage.Position - FOffset;
-          Result := true;
-        end else
-          FSize := -1;
+        FSize := ObjectSize(AHexEditor);
+        if FSize = -1 then begin
+          C := CreateView(nil, lInfo);   // Moves the stream pos to the end of the object
+          if Assigned(C) then
+          begin
+            FSize := FHexEditor.DataStorage.Position - FOffset;
+            Result := true;
+          end else
+            FSize := -1;
+        end;
       finally
         C.Free;
+        FHexEditor.DataStorage.Position := P;
         FHexEditor.Seek(P, soFromBeginning);
       end;
     end;
   end;
+  *)
 end;
 
 { Possibly an embedded object exists at the "FOffset" of the HexEditor stream.
@@ -332,36 +346,36 @@ function TExtractor.CheckAndShow(AHexEditor: THxHexEditor; AOffset: integer;
   AParent: TWinControl): TControl;
 begin
   Result := nil;
-  if (FHexEditor <> AHexEditor) or (FOffset <> AOffset) then
+
+  FHexEditor := AHexEditor;
+  FOffset := AOffset;
+  if Assigned(FHexEditor) then
   begin
-    FHexEditor := AHexEditor;
-    FOffset := AOffset;
-    if Assigned(FHexEditor) then
-    begin
-      AHexEditor.Seek(FOffset, soFromBeginning);
-      if CheckSignature(FHexEditor, FembeddedClass, FSignature) then
-        try
-          Result := CreateView(AParent, FInfo);
-          if Assigned(Result) then
-          begin
-            FSize := FHexEditor.DataStorage.Position - FOffset;
-            FHexEditor.Seek(FOffset, soFromBeginning);  // Restore old stream pos
-            HideView(AParent);
-            Result.Parent := AParent;
-            Result.Tag := FTag;
-            FLastResult := true;
-            exit;
-          end;
-        except
-          FHexEditor.Seek(FOffset, soFromBeginning);  // Restore stream position
-          FreeAndNil(Result);
+    AHexEditor.Seek(FOffset, soFromBeginning);
+    if CheckSignature(FHexEditor, FEmbeddedClass, FSignature) then
+      try
+        HideView(AParent);
+        Result := CreateView(AParent, FInfo);
+        if Assigned(Result) then
+        begin
+          FSize := FHexEditor.DataStorage.Position - FOffset;
+          FHexEditor.Seek(FOffset, soFromBeginning);  // Restore old stream pos
+          //HideView(AParent);
+          Result.Parent := AParent;
+          Result.Tag := FTag;
+          FLastResult := true;
+          exit;
         end;
-    end;
-    FHexEditor := nil;
-    FOffset := -1;
-    FSize := 0;
-    FLastResult := false;
+      except
+        FHexEditor.Seek(FOffset, soFromBeginning);  // Restore stream position
+        FreeAndNil(Result);
+      end;
   end;
+  FHexEditor := nil;
+  FOffset := -1;
+  FSize := 0;
+  FLastResult := false;
+
   if not FLastResult then
   begin
     HideView(AParent);
@@ -574,8 +588,9 @@ begin
     with (Result as TImage) do
     begin
       Picture.Assign(pic);
-      Width := pic.Width;
-      Height := pic.Height;
+      Align := alClient;
+      Center := true;
+      Proportional := true;
       AInfo := CreateInfo(pic);
     end;
   finally
@@ -585,37 +600,135 @@ end;
 
 function TGraphicExtractor.CreateInfo(APicture: TPicture): String;
 begin
-  Result := Copy(FEmbeddedClass.ClassName, 2, MaxInt) + ' / ' +
-           Format('%d x %d', [APicture.Width, APicture.Height]);
+  Result :=
+    Copy(FEmbeddedClass.ClassName, 2, MaxInt) + ' / ' +
+    Format('%d x %d', [APicture.Width, APicture.Height]);
   if APicture.Graphic is TRasterImage then
     Result := Result + ' / '  +
       PIXEL_FORMATS[TRasterImage(APicture.Graphic).PixelFormat];
 end;
 
 
+{ TIconExtractor }
+
+class function TIconExtractor.CheckSignature(AHexEditor: THxHexEditor;
+  AEmbeddedClass: TClass; const ASignature: String): Boolean;
+type
+  TIconDirectory = packed record
+    Width: Byte;             // Image width, 0 means: 256
+    Height: Byte;            // Image height, 0 means: 256
+    PaletteSize: Byte;       // 0 when no palette is used
+    Reserved: byte;          // 0
+    ColorPlanes: Word;       // 0 or 1
+    BitsPerPixel: Word;
+    ImageDataSize: DWord;    // Image data size in bytes
+    OffsetToImage: DWord;
+  end;
+var
+  P: Integer;
+  n, m: Word;
+  i: Integer;
+  dir: TIconDirectory;
+  totalSize: Integer;
+begin
+  Result := inherited CheckSignature(AHexEditor, AEmbeddedClass, ASignature);
+  if Result then begin
+    // Read the icon images directory and do a plausibility check
+    P := AHexEditor.DataStorage.Position;
+    try
+      AHexEditor.DataStorage.Position := P + Length(ASignature);
+      // Read number of images
+      n := LEToN(AHexEditor.DataStorage.ReadWord);
+      if n = 0 then
+        exit(false);
+      totalSize := 0;
+      for i:=1 to n do begin
+        AHexEditor.DataStorage.Read(dir, SizeOf(dir));
+        if dir.Reserved <> 0 then exit(false);
+        if not (LEToN(dir.BitsPerPixel) in [1, 4, 8, 16, 24, 32]) then
+          exit(false);
+        if not (LEToN(dir.ColorPlanes) in [0, 1]) then
+          exit(false);
+        totalSize := totalSize + LEToN(dir.ImageDataSize);
+        if totalSize > AHexEditor.DataSize then
+          exit(false);
+        if LEToN(dir.OffsetToImage) > totalSize then
+          exit(false);
+      end;
+    finally
+      AHexEditor.DataStorage.Position := P;
+    end;
+  end;
+end;
+
+
+function TIconExtractor.CreateInfo(AIcon: TIcon): String;
+var
+  L: TStrings;
+  i: Integer;
+begin
+  L := TStringList.Create;
+  try
+    L.Add('Icon');
+    for i:=0 to AIcon.Count-1 do begin
+      AIcon.Current := i;
+      L.Add(Format('%d x %d, %s', [AIcon.Width, AIcon.Height, PIXEL_FORMATS[AIcon.PixelFormat]]));
+    end;
+    Result := L.Text;
+    while Result[Length(Result)] in [#13, #10] do
+      Delete(Result, Length(Result), 1);
+  finally
+    AIcon.Current := 0;
+    L.Free;
+  end;
+end;
+
+function TIconExtractor.CreateView(AOwner: TWinControl; out AInfo: String): TControl;
+var
+  ico: TIcon;
+  i: Integer;
+begin
+  ico := TIcon.Create;
+  try
+    ico.LoadFromStream(FHexEditor.DataStorage);
+    Result := TImage.Create(AOwner);
+    with (Result as TImage) do
+    begin
+      Picture.Assign(ico);
+      Align := alClient;
+      Center := true;
+      Proportional := true;
+      AInfo := CreateInfo(ico);
+    end;
+  finally
+    ico.Free;
+  end;
+end;
+
+
 { TObjectViewerFrame }
 
-procedure TObjectViewerFrame.UpdateData(AHexEditor: THxHexEditor);
-var
-  Ex: TExtractor;
+destructor TObjectViewerFrame.Destroy;
 begin
-  Ex := CanExtract(AHexEditor);
-  if Ex <> nil then
+  FreeAndNil(FExtractor);
+  inherited;
+end;
+
+procedure TObjectViewerFrame.UpdateData(AHexEditor: THxHexEditor);
+begin
+  if FLockUpdate > 0 then
+    exit;
+
+  FreeAndNil(FExtractor);
+  FExtractor := CanExtract(AHexEditor);       // creates a new extractor
+  if FExtractor <> nil then
   begin
-    FExtractorControl := Ex.CheckAndShow(AHexEditor, AHexEditor.GetCursorPos, ScrollBox);
+    FExtractorControl := FExtractor.CheckAndShow(AHexEditor, AHexEditor.GetCursorPos, ScrollBox);
+    lblInfo.Caption := FExtractor.Info;
   end else begin
     FreeAndNil(FExtractorControl);
+    lblInfo.caption := '';
   end;
-       {
-  if Assigned(FExtractor) then
-    FExtractor.Reset;
-        }
-  if Ex <> nil then
-    lblInfo.Caption := Ex.Info
-  else
-    lblInfo.Caption := '';
-
-  FExtractor := Ex;
 end;
 
 
@@ -623,17 +736,14 @@ initialization
   RegisteredExtractors := TExtractorList.Create;
   RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp', 'BM');
   RegisterExtractor(TGraphicExtractor, TGifImage, 'gif', 'GIF');
-  RegisterExtractor(TGraphicExtractor, TIcon, 'ico', #0#0#1#0);
+  RegisterExtractor(TIconExtractor, TIcon, 'ico', #0#0#1#0);
   RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe', #$FF#$D8);
   RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png', #137'PNG'#13#10#26#10);
+  RegisterExtractor(TGraphicExtractor, TTiffImage, 'tif|tiff', '');
 
   {
   RegisterRipper(TPcxRipper, rtGraphics, 'PCX', #10,
     TPcxGraphic);
-  RegisterRipper(TGraphicExRipper, rtGraphics, 'PNG', #137#80#78#71#13#10#26#10,
-    TPngGraphic);
-  RegisterRipper(TGraphicExRipper, rtGraphics, 'TIF', '',
-    TTiffGraphic);
 
   RegisterRipper(TWavRipper, rtMediaPlayer, 'WAV', 'RIFF');
   RegisterRipper(TAviRipper, rtMediaPlayer, 'AVI', 'RIFF');
