@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics,
-  Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs,
+  Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs, Menus, ActnList,
   //MPHexEditor,
   OMultiPanel,
   hxGlobal, hxHexEditor,
@@ -33,8 +33,13 @@ type
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
     FObjectSaveDir: String;
+    FFindObjectMenu: TMenuItem;
     FOnChange: TNotifyEvent;
     FOnUpdateStatusBar: TNotifyEvent;
+
+    FExtractorAborted: Boolean;
+    FExtractorIsSearching: Boolean;
+
     function GetFileName: String;
 
     function GetOffsetDisplayBase(AOffsetFormat: String): TOffsetDisplayBase;
@@ -58,11 +63,14 @@ type
     procedure SetOnChange(AValue: TNotifyEvent);
 
   protected
+    procedure CheckUserAbortHandler(Sender: TObject; var Aborted: Boolean);
     procedure CreateHexEditor;
     procedure CreateDataViewer;
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
     procedure DoUpdateStatusBar;
+    function FindObject(AIndex:integer) : integer;
+    procedure FindObjectHandler(Sender: TObject);
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     procedure HexEditorChanged(Sender: TObject);
@@ -77,6 +85,7 @@ type
     destructor Destroy; override;
     procedure ActiveColors(var AParams: TColorParams);
     procedure ActiveHexParams(var AParams: THexParams);
+    function AppendToObjectsMenu(TheActionList: TActionList; AParentMenu: TMenuItem): TMenuItem;
     procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
     procedure ExportObject;
@@ -132,6 +141,7 @@ end;
 
 destructor THexEditorFrame.Destroy;
 begin
+  FFindObjectMenu.Visible := false;
   SaveToIni;
   inherited;
 end;
@@ -212,6 +222,60 @@ begin
   end;
 end;
 
+{ Attaches the "Search ..." entries to the "Objects" menu, after the item
+  identified by TAG_OBJECTS }
+function THexEditorFrame.AppendToObjectsMenu(TheActionList: TActionList;
+  AParentMenu: TMenuItem): TMenuItem;
+
+  function CreateExtractorAction(AIndex: Integer; AFileExt: string): TAction;
+  begin
+    Result := TAction.Create(Self);
+    with Result do begin
+      ActionList := TheActionList;
+      Caption := Format('Find %s', [AFileExt]);
+      //Enabled := false;
+      Tag := TAG_FIND_OBJECTS + AIndex + 1;
+      Hint := Format('Find embedded object (%s)', [AFileExt]);
+      OnExecute := @FindObjectHandler;
+    end;
+  end;
+
+  function FindPrevItem: integer;
+  var
+    i : integer;
+  begin
+    Result := -1;
+    for i := 0 to AParentMenu.Count - 1 do
+    begin
+      if AParentMenu[i].Tag = TAG_FIND_OBJECTS then
+      begin
+        FFindObjectMenu := AParentMenu[i];
+        FFindObjectMenu.Visible := true;
+        Result := i + 1;
+        exit;
+      end;
+    end;
+  end;
+
+var
+  i, i0: integer;
+  item: TMenuItem;
+begin
+  i0 := FindPrevItem;
+  if i0 = -1 then
+    raise Exception.CreateFmt('Objects menu item with Tag=%s is missing.', [TAG_FIND_OBJECTS]);
+
+  for i := 0 to NumExtractors - 1 do
+  begin
+    item := TMenuItem.Create(self);
+    with item do
+    begin
+      Action := CreateExtractorAction(i, RegisteredExtension(i));
+    end;
+    AParentMenu.Insert(i0+i, item);
+  end;
+end;
+
 procedure THexEditorFrame.ApplyHexParams(const AParams: THexParams);
 var
   i: Integer;
@@ -256,6 +320,12 @@ end;
 function THexEditorFrame.CanSaveFileAs(const AFileName: String): Boolean;
 begin
   Result := not ((AFileName = GetFileName) and HexEditor.ReadOnlyFile);
+end;
+
+procedure THexEditorFrame.CheckUserAbortHandler(Sender: TObject;
+  var Aborted: boolean);
+begin
+  Aborted := FExtractorAborted;
 end;
 
 procedure THexEditorFrame.CreateHexEditor;
@@ -383,6 +453,73 @@ begin
   SearchReplaceForm.BigEndian := HexParams.BigEndian;
   SearchReplaceForm.Mode := srmSearch;
   SearchReplaceForm.Show;
+end;
+
+{ Starting at begin of file, tries to find the offset at which an embedded
+  object begins. The kind of object is determined by the index which points to
+  the RegisteredExtractors list. The index is noted in the tag of the related
+  menu item.
+  If such an object is found the cursor is moved to the the corresponding
+  position. The found extractor is stored in FExtractorToFind for the next
+  call by "FindNextObj" }
+function THexEditorFrame.FindObject(AIndex:integer) : integer;
+var
+  ex: TExtractor;
+  s: string;
+  p: integer;
+  crs: TCursor;
+begin
+  Result := -1;
+  ex := CreateExtractor(AIndex);
+  try
+    if Assigned(ex) then
+    begin
+      case SearchReplaceParams.SearchStart of
+        ssCursor : p := HexEditor.GetCursorPos;
+        ssBOF    : p := 0;
+      end;
+      ex.OnCheckUserAbort := @CheckUserAbortHandler;
+      FExtractorIsSearching := true;
+      FExtractorAborted := false;
+      crs := Screen.Cursor;
+      Screen.Cursor := crHourglass;
+      try
+        Result := ex.Find(HexEditor, p, HexEditor.DataSize-1);
+        if Result >= 0 then
+        begin
+          HexEditor.Seek(Result, soFromBeginning);
+          s := ex.Signature;
+//          SearchReplaceParams.FindPos := result;
+//          FExtractorToFind := ex;
+        end;
+      finally
+        FExtractorIsSearching := false;
+        Screen.Cursor := crs;
+      end;
+    end;
+    {
+    if Result < 0 then
+      FExtractorToFind := nil;
+      }
+    //EnableExtractorActions(true);
+  finally
+    ex.Free;
+  end;
+end;
+
+procedure THexEditorFrame.FindObjectHandler(Sender: TObject);
+var
+  i: integer;
+  s: string;
+begin
+  inherited;
+  i := (Sender as TComponent).Tag - TAG_FIND_OBJECTS - 1;
+  case FindObject(i) of
+    -1 : s := Format(SObjectNotFound, [RegisteredExtension(i)]);
+    -2 : s := Format(SExtractorSearchUserAbort, [RegisteredExtension(i)]);
+    else exit;
+  end;
+  MessageDlg(s, mtInformation, [mbOK], 0);
 end;
 
 function THexEditorFrame.GetFileName: String;

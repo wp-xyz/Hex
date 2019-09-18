@@ -91,6 +91,7 @@ type
     MenuItem21: TMenuItem;
     MenuItem22: TMenuItem;
     MenuItem23: TMenuItem;
+    MenuItem24: TMenuItem;
     mnuObjectsExport: TMenuItem;
     mnuObjectsSelect: TMenuItem;
     mnuObjects: TMenuItem;
@@ -259,13 +260,11 @@ implementation
 uses
   IniFiles, Math,
   MPHexEditor,
-  hxStrings, hxUtils, {%H-}hxDataModule, hxSettingsDlg, hxGotoDlg, hxAbout;
+  hxStrings, hxUtils, {%H-}hxDataModule, hxObjectViewerFrame,
+  hxSettingsDlg, hxGotoDlg, hxAbout;
 
 const
   PROG_NAME = 'Hex';
-  TAG_SET_BOOKMARK = 7000;
-  TAG_GOTO_BOOKMARK = 7100;
-  TAG_CLEAR_BOOKMARK = 7200;
 
 
 { TMainForm }
@@ -764,6 +763,7 @@ begin
     F.OnChange := @HexEditorChanged;
     F.OnUpdateStatusBar := @HexEditorUpdateStatusBar;
     F.ApplyHexParams(HexParams);
+    F.AppendToObjectsMenu(ActionList, mnuObjects);
     ApplyColorsToHexEditor(ColorParams, F.HexEditor);
     page.Caption := F.Caption;
     PageControl.ActivePage := page;

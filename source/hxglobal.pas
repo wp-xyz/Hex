@@ -135,6 +135,14 @@ const
   // List all GroupIndex value of TActions here to avoid collisions
   GROUP_INDEX_VIEW_OFFSET = 20;
 
+  // Action tags
+  TAG_FIND_OBJECTS = 5000;
+
+  TAG_SET_BOOKMARK = 7000;
+  TAG_GOTO_BOOKMARK = 7100;
+  TAG_CLEAR_BOOKMARK = 7200;
+
+
 type
   TStatusbarItem = (sbPos, sbSel, sbSize);
   TStatusbarItems = set of TStatusbarItem;

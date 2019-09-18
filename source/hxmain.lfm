@@ -933,6 +933,11 @@ object MainForm: TMainForm
       object mnuObjectsExport: TMenuItem
         Action = acObjectsExport
       end
+      object MenuItem24: TMenuItem
+        Tag = 5000
+        Caption = '-'
+        Visible = False
+      end
     end
     object mnuConfig: TMenuItem
       Caption = 'Configuration'

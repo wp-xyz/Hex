@@ -86,7 +86,9 @@ function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
 
 function CanExtract(AHexEditor: THxHexEditor): TExtractor;
 function CreateExtractor(AExt: string): TExtractor; overload;
+function CreateExtractor(AIndex: Integer): TExtractor; overload;
 function NumExtractors: integer;
+function RegisteredExtension(AIndex: Integer): String;
 
 implementation
 
@@ -110,12 +112,24 @@ type
     FSignature: String;
     FExtensions: String;
     function CreateExtractor: TExtractor;
+    function FirstExt: String;
     function MatchesExt(AExt: String): Boolean;
   end;
 
   function TExtractorItem.CreateExtractor: TExtractor;
   begin
     Result := FExtractorClass.Create(FEmbeddedClass, FExtensions, FSignature);
+  end;
+
+  function TExtractorItem.FirstExt: String;
+  var
+    sa: TStringArray;
+  begin
+    sa := FExtensions.Split('|');
+    if Length(sa) > 0 then
+      Result := sa[0]
+    else
+      Result := '';
   end;
 
   function TExtractorItem.MatchesExt(AExt: String): Boolean;
@@ -255,18 +269,26 @@ begin
   end;
   Result := nil;
 end;
-                               (*
-function Extractor(AIndex: Integer): TExtractor;
+
+function CreateExtractor(AIndex: Integer): TExtractor;
 begin
   if (AIndex >= 0) and (AIndex < RegisteredExtractors.Count) then
-    Result := RegisteredExtractors[AIndex]
+    Result := RegisteredExtractors[AIndex].CreateExtractor
   else
     Result := nil;
-end;                             *)
+end;
 
 function NumExtractors: Integer;
 begin
   Result := RegisteredExtractors.Count;
+end;
+
+function RegisteredExtension(AIndex: Integer): String;
+var
+  item: TExtractorItem;
+begin
+  item := RegisteredExtractors[AIndex];
+  Result := item.FirstExt;
 end;
 
 
@@ -459,6 +481,7 @@ begin
       s := FSignature;
       if s <> '' then
       begin
+        s := AHexEditor.PrepareFindReplaceData(s, false, false);
         p := AHexEditor.Find(PChar(s), Length(s), p, AEnd, false);
         if p = -1 then
         begin
@@ -466,6 +489,7 @@ begin
           exit;
         end;
       end;
+      AHexEditor.SelStart := p;
       if CheckSignature(AHexEditor, FEmbeddedClass, FSignature) then
       begin
         Result := p;
