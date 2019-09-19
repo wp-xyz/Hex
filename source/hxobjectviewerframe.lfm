@@ -4,8 +4,8 @@ inherited ObjectViewerFrame: TObjectViewerFrame
   end
   object ScrollBox: TScrollBox[1]
     Left = 0
-    Height = 192
-    Top = 48
+    Height = 155
+    Top = 21
     Width = 320
     HorzScrollBar.Increment = 1
     HorzScrollBar.Page = 1
@@ -18,15 +18,27 @@ inherited ObjectViewerFrame: TObjectViewerFrame
     Align = alClient
     TabOrder = 0
   end
-  object lblInfo: TLabel[2]
-    Left = 6
-    Height = 15
-    Top = 27
-    Width = 308
-    Align = alTop
-    BorderSpacing.Around = 6
-    Caption = 'lblInfo'
-    ParentColor = False
-    WordWrap = True
+  object mmoInfo: TMemo[2]
+    Left = 0
+    Height = 59
+    Top = 181
+    Width = 320
+    Align = alBottom
+    BorderStyle = bsNone
+    Lines.Strings = (
+      'mmoInfo'
+    )
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+  end
+  object Splitter1: TSplitter[3]
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 176
+    Width = 320
+    Align = alBottom
+    ResizeAnchor = akBottom
   end
 end

@@ -33,7 +33,6 @@ type
     FStatusbarPosDisplay: TOffsetDisplayBase;
     FStatusbarSelDisplay: TOffsetDisplayBase;
     FObjectSaveDir: String;
-    FFindObjectMenu: TMenuItem;
     FOnChange: TNotifyEvent;
     FOnUpdateStatusBar: TNotifyEvent;
 
@@ -70,7 +69,6 @@ type
     procedure CreateObjectViewer;
     procedure DoUpdateStatusBar;
     function FindObject(AIndex:integer) : integer;
-    procedure FindObjectHandler(Sender: TObject);
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     procedure HexEditorChanged(Sender: TObject);
@@ -85,11 +83,11 @@ type
     destructor Destroy; override;
     procedure ActiveColors(var AParams: TColorParams);
     procedure ActiveHexParams(var AParams: THexParams);
-    function AppendToObjectsMenu(TheActionList: TActionList; AParentMenu: TMenuItem): TMenuItem;
     procedure ApplyHexParams(const AParams: THexParams);
     function CanSaveFileAs(const AFileName: String): Boolean;
     procedure ExportObject;
     procedure FindDlg;
+    procedure FindObjectHandler(Sender: TObject);
     procedure InsertMode(const AEnable: Boolean);
     procedure JumpToPosition(APosition: Integer);
     procedure OpenFile(const AFileName: string; WriteProtected: boolean);
@@ -141,7 +139,6 @@ end;
 
 destructor THexEditorFrame.Destroy;
 begin
-  FFindObjectMenu.Visible := false;
   SaveToIni;
   inherited;
 end;
@@ -219,60 +216,6 @@ begin
     AParams.RecordViewerPosition := GetRecordViewerPosition;
     for i:=0 to High(AParams.RecordViewerColWidths) do
       AParams.RecordViewerColWidths[i] := FRecordViewer.ColWidths[i];
-  end;
-end;
-
-{ Attaches the "Search ..." entries to the "Objects" menu, after the item
-  identified by TAG_OBJECTS }
-function THexEditorFrame.AppendToObjectsMenu(TheActionList: TActionList;
-  AParentMenu: TMenuItem): TMenuItem;
-
-  function CreateExtractorAction(AIndex: Integer; AFileExt: string): TAction;
-  begin
-    Result := TAction.Create(Self);
-    with Result do begin
-      ActionList := TheActionList;
-      Caption := Format('Find %s', [AFileExt]);
-      //Enabled := false;
-      Tag := TAG_FIND_OBJECTS + AIndex + 1;
-      Hint := Format('Find embedded object (%s)', [AFileExt]);
-      OnExecute := @FindObjectHandler;
-    end;
-  end;
-
-  function FindPrevItem: integer;
-  var
-    i : integer;
-  begin
-    Result := -1;
-    for i := 0 to AParentMenu.Count - 1 do
-    begin
-      if AParentMenu[i].Tag = TAG_FIND_OBJECTS then
-      begin
-        FFindObjectMenu := AParentMenu[i];
-        FFindObjectMenu.Visible := true;
-        Result := i + 1;
-        exit;
-      end;
-    end;
-  end;
-
-var
-  i, i0: integer;
-  item: TMenuItem;
-begin
-  i0 := FindPrevItem;
-  if i0 = -1 then
-    raise Exception.CreateFmt('Objects menu item with Tag=%s is missing.', [TAG_FIND_OBJECTS]);
-
-  for i := 0 to NumExtractors - 1 do
-  begin
-    item := TMenuItem.Create(self);
-    with item do
-    begin
-      Action := CreateExtractorAction(i, RegisteredExtension(i));
-    end;
-    AParentMenu.Insert(i0+i, item);
   end;
 end;
 
@@ -405,6 +348,7 @@ procedure THexEditorFrame.ExportObject;
 var
   stream: TStream;
   ex: TExtractor;
+  lSize: Integer;
 begin
   if FObjectViewer = nil then
     exit;
@@ -412,7 +356,7 @@ begin
   ex := FObjectViewer.Extractor;
 
   if (not ShowObjectViewer) or (not Assigned(ex)) or
-     (not ex.CanExtract(FHexEditor, FHexEditor.GetCursorPos))
+     (not ex.CanExtract(FHexEditor, FHexEditor.GetCursorPos, lSize))
   then
     exit;
 
@@ -738,17 +682,15 @@ end;
 procedure THexEditorFrame.SelectObject;
 var
   P: Integer;
+  lSize: Integer;
 begin
   if ShowObjectViewer and Assigned(FObjectViewer.Extractor) then
   begin
     P := FHexEditor.GetCursorPos;
-    if FObjectViewer.Extractor.CanExtract(FHexEditor, P) then
+    if FObjectViewer.Extractor.CanExtract(FHexEditor, P, lSize) then
     begin
-      { The HexEditor moves the cursor to the end of the selection. But the
-        ObjectViewer analyzes the cursor position. --> We invert the
-        direction of selection }
-      FHexEditor.SelStart := P + FObjectViewer.Extractor.Size - 1;
-      FHexEditor.SelEnd := P;
+      FHexEditor.SelStart := P;
+      FHexEditor.SelEnd := P + lSize - 1;
     end;
   end;
 end;

@@ -19,7 +19,6 @@ object MainForm: TMainForm
     Width = 914
     Align = alClient
     TabOrder = 0
-    Visible = False
     OnChange = PageControlChange
   end
   object CoolBar1: TCoolBar
@@ -936,7 +935,6 @@ object MainForm: TMainForm
       object MenuItem24: TMenuItem
         Tag = 5000
         Caption = '-'
-        Visible = False
       end
     end
     object mnuConfig: TMenuItem

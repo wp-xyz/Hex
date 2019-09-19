@@ -226,8 +226,10 @@ type
     FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
 
+    function AppendToObjectsMenu(AParentMenu: TMenuItem): TMenuItem;
     procedure ApplyParams(const AParams: THexParams);
     procedure EvalCmdLine;
+    procedure FindObjectHandler(Sender: TObject);
     function GetActiveHexEditorFrame: THexEditorFrame;
     function GetHexEditorFrame(APageIndex: Integer): THexEditorFrame;
     procedure HexEditorChanged(Sender: TObject);
@@ -711,6 +713,57 @@ begin
     end;
 end;
 
+{ Attaches the "Search ..." entries to the "Objects" menu, after the item
+  identified by TAG_OBJECTS }
+function TMainForm.AppendToObjectsMenu(AParentMenu: TMenuItem): TMenuItem;
+
+  function CreateExtractorAction(AIndex: Integer; AFileExt: string): TAction;
+  begin
+    Result := TAction.Create(Self);
+    with Result do begin
+      ActionList := Self.ActionList;
+      Caption := Format('Find %s', [AFileExt]);
+      //Enabled := false;
+      Tag := TAG_FIND_OBJECTS + AIndex + 1;
+      Hint := Format('Find embedded object (%s)', [AFileExt]);
+      OnExecute := @FindObjectHandler;
+    end;
+  end;
+
+  function FindPrevItem: integer;
+  var
+    i : integer;
+  begin
+    Result := -1;
+    for i := 0 to AParentMenu.Count - 1 do
+    begin
+      if AParentMenu[i].Tag = TAG_FIND_OBJECTS then
+      begin
+        Result := i + 1;
+        exit;
+      end;
+    end;
+  end;
+
+var
+  i, i0: integer;
+  item: TMenuItem;
+begin
+  i0 := FindPrevItem;
+  if i0 = -1 then
+    raise Exception.CreateFmt('Objects menu item with Tag=%s is missing.', [TAG_FIND_OBJECTS]);
+
+  for i := 0 to NumExtractors - 1 do
+  begin
+    item := TMenuItem.Create(self);
+    with item do
+    begin
+      Action := CreateExtractorAction(i, RegisteredExtension(i));
+    end;
+    AParentMenu.Insert(i0+i, item);
+  end;
+end;
+
 procedure TMainForm.ApplyParams(const AParams: THexParams);
 var
   i: Integer;
@@ -763,7 +816,6 @@ begin
     F.OnChange := @HexEditorChanged;
     F.OnUpdateStatusBar := @HexEditorUpdateStatusBar;
     F.ApplyHexParams(HexParams);
-    F.AppendToObjectsMenu(ActionList, mnuObjects);
     ApplyColorsToHexEditor(ColorParams, F.HexEditor);
     page.Caption := F.Caption;
     PageControl.ActivePage := page;
@@ -792,6 +844,17 @@ begin
   end;
 end;
 
+procedure TMainForm.FindObjectHandler(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+  begin
+    F.FindObjectHandler(Sender);
+  end;
+end;
+
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := true;
@@ -812,6 +875,8 @@ begin
   FRecentFilesManager.OnRecentFile := @RecentFileHandler;
   FRecentFilesManager.IniFileName := GetIniFileName;
   FRecentFilesManager.IniSection := 'RecentFiles';
+
+  AppendToObjectsMenu(mnuObjects);
 
   ReadIni;
   UpdateCmds;
