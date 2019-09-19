@@ -755,12 +755,15 @@ begin
 
   for i := 0 to NumExtractors - 1 do
   begin
+    if not RegisteredExtractorSignature(i) then
+      Continue;
     item := TMenuItem.Create(self);
     with item do
     begin
       Action := CreateExtractorAction(i, RegisteredExtension(i));
     end;
-    AParentMenu.Insert(i0+i, item);
+    AParentMenu.Insert(i0, item);
+    inc(i0);
   end;
 end;
 

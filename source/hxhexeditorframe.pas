@@ -432,7 +432,7 @@ begin
         if Result >= 0 then
         begin
           HexEditor.Seek(Result, soFromBeginning);
-          s := ex.Signature;
+//          s := ex.Signature;
 //          SearchReplaceParams.FindPos := result;
 //          FExtractorToFind := ex;
         end;

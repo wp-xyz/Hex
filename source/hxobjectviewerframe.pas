@@ -18,7 +18,7 @@ type
     FSize: integer;
     FTag: integer;
     FLastResult: boolean;
-    FSignature: string;
+    FSignatures: TStringArray;
     FFileExt: string;
     FInfo: string;
     FEmbeddedClass: TClass;
@@ -32,7 +32,8 @@ type
     function FindView(AParent: TWinControl): TControl;
     procedure HideView(AParent: TWinControl);
   public
-    constructor Create(AEmbeddedClass: TClass; AFileExt, ASignature: string); virtual;
+    constructor Create(AEmbeddedClass: TClass; AFileExt: String;
+      const ASignatures: TStringArray); virtual;
     function CanExtract(AHexEditor: THxHexEditor; AOffset: integer; out ASize: Integer): boolean;
     function CheckAndShow(AHexEditor: THxHexEditor; AOffset: integer; AParent: TWinControl): TControl;
     function ExtractorFilter: String;
@@ -41,7 +42,7 @@ type
     procedure SaveToStream(AStream: TStream); virtual;
     property FirstFileExt: string read GetFirstFileExt;
     property Info: string read FInfo;
-    property Signature: string read FSignature;
+    property Signatures: TStringArray read FSignatures;
     property Size: integer read FSize;
     property OnCheckUserAbort: TCheckUserAbortEvent read FOnCheckUserAbort write FOnCheckUserAbort;
   end;
@@ -86,13 +87,14 @@ type
   end;
 
 function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
-  AExt, ASignature: string): integer; overload;
+  AExt: String; const ASignatures: array of string): integer; overload;
 
 function CanExtract(AHexEditor: THxHexEditor; AOffset: Integer): TExtractor;
 function CreateExtractor(AExt: string): TExtractor; overload;
 function CreateExtractor(AIndex: Integer): TExtractor; overload;
 function NumExtractors: integer;
 function RegisteredExtension(AIndex: Integer): String;
+function RegisteredExtractorSignature(AIndex: Integer): Boolean;
 
 
 implementation
@@ -114,7 +116,7 @@ type
   TExtractorItem = class
     FExtractorClass: TExtractorClass;
     FEmbeddedClass: TClass;
-    FSignature: String;
+    FSignatures: TStringArray;
     FExtensions: String;
     function CreateExtractor: TExtractor;
     function FirstExt: String;
@@ -123,7 +125,7 @@ type
 
   function TExtractorItem.CreateExtractor: TExtractor;
   begin
-    Result := FExtractorClass.Create(FEmbeddedClass, FExtensions, FSignature);
+    Result := FExtractorClass.Create(FEmbeddedClass, FExtensions, FSignatures);
   end;
 
   function TExtractorItem.FirstExt: String;
@@ -181,31 +183,35 @@ end;
 { ---------- }
 
 function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
-  AExt, ASignature: string): integer;
+  AExt: String; const  ASignatures: array of String): integer;
 var
   item: TExtractorItem;
+  i: Integer;
 begin
   item := TExtractorItem.Create;
   item.FExtractorClass := AClass;
   item.FEmbeddedClass := AEmbeddedClass;
   item.FExtensions := AExt;
-  item.FSignature := ASignature;
+  SetLength(item.FSignatures, Length(ASignatures));
+  for i := 0 to High(ASignatures) do
+    item.FSignatures[i] := ASignatures[i];
   Result := RegisteredExtractors.Add(item);
 end;
 
 function CanExtract(AHexEditor: THxHexEditor; AOffset: Integer): TExtractor;
 var
-  i: integer;
+  i, j: integer;
   item: TExtractorItem;
 begin
   for i := 0 to RegisteredExtractors.Count-1 do
   begin
     item := RegisteredExtractors[i];
-    if item.FExtractorClass.CheckSignature(AHexEditor, AOffset, item.FEmbeddedClass, item.FSignature) then
-    begin
-      Result := item.CreateExtractor;
-      exit;
-    end;
+    for j := 0 to High(item.FSignatures) do
+      if item.FExtractorClass.CheckSignature(AHexEditor, AOffset, item.FEmbeddedClass, item.FSignatures[j]) then
+      begin
+        Result := item.CreateExtractor;
+        exit;
+      end;
   end;
   Result := nil;
 end;
@@ -255,15 +261,27 @@ begin
   Result := item.FirstExt;
 end;
 
+function RegisteredExtractorSignature(AIndex: Integer): Boolean;
+var
+  item: TExtractorItem;
+begin
+  item := RegisteredExtractors[AIndex];
+  if Assigned(item) then
+    Result := Length(item.FSignatures) > 0
+  else
+    Result := false;
+end;
+
+
 
 { TExtractor basic class }
 
 constructor TExtractor.Create(AEmbeddedClass: TClass;
-  AFileExt, ASignature: string);
+  AFileExt: String; const ASignatures: TStringArray);
 begin
   inherited Create;
   FEmbeddedClass := AEmbeddedClass;
-  FSignature := ASignature;
+  FSignatures := ASignatures;
   FFileExt := AFileExt;
 end;
 
@@ -274,12 +292,23 @@ var
   C: TControl;
   P: Integer;
   lInfo: String;
+  sig: String;
+  found: Boolean;
 begin
   Result := false;
   if Assigned(AHexEditor) and Assigned(AHexEditor.DataStorage) and
-     (AOffset >= 0) and
-     CheckSignature(AHexEditor, AOffset, FEmbeddedClass, FSignature) then
+     (AOffset >= 0) then
   begin
+    found := false;
+    for sig in FSignatures do
+      if CheckSignature(AHexEditor, AOffset, FEmbeddedClass, sig) then
+      begin
+        found := true;
+        break;
+      end;
+    if not found then
+      exit;
+
     AHexEditor.Seek(AOffset, soFromBeginning);
     AHexEditor.DataStorage.Position := AOffset;
     try
@@ -321,6 +350,9 @@ end;
   returns nil in this case. }
 function TExtractor.CheckAndShow(AHexEditor: THxHexEditor; AOffset: integer;
   AParent: TWinControl): TControl;
+var
+  sig: String;
+  found: Boolean;
 begin
   Result := nil;
 
@@ -328,23 +360,31 @@ begin
   FOffset := AOffset;
   if Assigned(FHexEditor) then
   begin
-    //AHexEditor.Seek(FOffset, soFromBeginning);
-    if CheckSignature(FHexEditor, FOffset, FEmbeddedClass, FSignature) then
-      try
-        HideView(AParent);
-        Result := CreateView(AParent, FOffset, FInfo);
-        if Assigned(Result) then
-        begin
-          FSize := FHexEditor.DataStorage.Position - FOffset;
-          //FHexEditor.Seek(FOffset, soFromBeginning);  // Do not restore old stream pos because this will erase the selection needed by SelectObject
-          Result.Parent := AParent;
-          Result.Tag := FTag;
-          FLastResult := true;
-          exit;
-        end;
-      except
-        FreeAndNil(Result);
+    found := false;
+    for sig in FSignatures do
+      if CheckSignature(FHexEditor, FOffset, FEmbeddedClass, sig) then
+      begin
+        found := true;
+        break;
       end;
+    if not found then
+      exit;
+
+    try
+      HideView(AParent);
+      Result := CreateView(AParent, FOffset, FInfo);
+      if Assigned(Result) then
+      begin
+        FSize := FHexEditor.DataStorage.Position - FOffset;
+        //FHexEditor.Seek(FOffset, soFromBeginning);  // Do not restore old stream pos because this will erase the selection needed by SelectObject
+        Result.Parent := AParent;
+        Result.Tag := FTag;
+        FLastResult := true;
+        exit;
+      end;
+    except
+      FreeAndNil(Result);
+    end;
   end;
   FHexEditor := nil;
   FOffset := -1;
@@ -408,6 +448,7 @@ var
   crs: TCursor;
   aborted: boolean;
   s: string;
+  sig: String;
 begin
   Result := -1;
   if AHexEditor = nil then
@@ -422,37 +463,37 @@ begin
       AStart := 0;
     EnsureOrder(AStart, AEnd);
 
-    p := AStart;
-    while (p <= AEnd - Length(FSignature)) and (p <> -1) do
+    for sig in FSignatures do
     begin
-      s := FSignature;
-      if s <> '' then
+      p := AStart;
+      while (p <= AEnd - Length(sig)) and (p <> -1) do
       begin
-        s := AHexEditor.PrepareFindReplaceData(s, false, false);
-        p := AHexEditor.Find(PChar(s), Length(s), p, AEnd, false);
-        if p = -1 then
+        s := sig;
+        if s <> '' then
         begin
-          Result := -1;
+          s := AHexEditor.PrepareFindReplaceData(s, false, false);
+          p := AHexEditor.Find(PChar(s), Length(s), p, AEnd, false);
+          if p = -1 then
+            Continue;
+        end;
+
+        if CheckSignature(AHexEditor, p, FEmbeddedClass, sig) then
+        begin
+          Result := p;
           exit;
         end;
-      end;
 
-      if CheckSignature(AHexEditor, p, FEmbeddedClass, FSignature) then
-      begin
-        Result := p;
-        exit;
-      end;
+        Application.ProcessMessages;
+        aborted := false;
+        if Assigned(FOnCheckUserAbort) then
+          FOnCheckUserAbort(Self, aborted);
+        if aborted then begin
+          Result := -2;
+          exit;
+        end;
 
-      Application.ProcessMessages;
-      aborted := false;
-      if Assigned(FOnCheckUserAbort) then
-        FOnCheckUserAbort(Self, aborted);
-      if aborted then begin
-        Result := -2;
-        exit;
+        inc(p);
       end;
-
-      inc(p);
     end;
   finally
     Screen.Cursor := crs;
@@ -711,13 +752,14 @@ end;
 
 initialization
   RegisteredExtractors := TExtractorList.Create;
-  RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp', 'BM');
-  RegisterExtractor(TGraphicExtractor, TGifImage, 'gif', 'GIF');
-  RegisterExtractor(TIconExtractor, TIcon, 'ico', #0#0#1#0);
-  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe', #$FF#$D8);
-  RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png', #137'PNG'#13#10#26#10);
-  RegisterExtractor(TGraphicExtractor, TTiffImage, 'tif|tiff', '');
-  RegisterExtractor(TGraphicExtractor, TPixMap, 'xpm', '/* XPM */');
+  RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp', ['BM']);
+  RegisterExtractor(TGraphicExtractor, TGifImage, 'gif', ['GIF']);
+  RegisterExtractor(TIconExtractor, TIcon, 'ico', [#0#0#1#0]);
+  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe', [#$FF#$D8]);
+  RegisterExtractor(TGraphicExtractor, TPortableAnyMapGraphic, 'pnm|pbm|pgm|ppm', ['P1','P2','P3','P4','P5','P6']);
+  RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png', [#137'PNG'#13#10#26#10]);
+  RegisterExtractor(TGraphicExtractor, TTiffImage, 'tif|tiff', ['II'#42#00, 'MM'#00#42]);
+  RegisterExtractor(TGraphicExtractor, TPixMap, 'xpm', ['/* XPM */']);
 
   {
   RegisterRipper(TPcxRipper, rtGraphics, 'PCX', #10,
