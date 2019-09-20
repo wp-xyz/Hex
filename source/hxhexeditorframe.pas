@@ -38,6 +38,7 @@ type
 
     FExtractorAborted: Boolean;
     FExtractorIsSearching: Boolean;
+    FExtractorIndex: Integer;
 
     function GetFileName: String;
 
@@ -68,7 +69,6 @@ type
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
     procedure DoUpdateStatusBar;
-    function FindObject(AIndex:integer) : integer;
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     procedure HexEditorChanged(Sender: TObject);
@@ -101,12 +101,16 @@ type
     procedure UpdateStatusBarPanelWidths(AStatusBar: TStatusBar);
 
     property Caption;
+    property ExtractorIndex: Integer
+      read FExtractorIndex;
     property FileName: String
       read GetFileName;
     property HexEditor: THxHexEditor
       read FHexEditor;
     property DataViewerPosition: TViewerPosition
       read GetDataViewerPosition write SetDataViewerPosition;
+    property ObjectViewer: TObjectViewerFrame
+      read FObjectViewer;
     property ObjectViewerPosition: TViewerPosition
       read GetObjectViewerPosition write SetObjectViewerPosition;
     property RecordViewerPosition: TViewerPosition
@@ -124,6 +128,7 @@ type
 
   end;
 
+
 implementation
 
 {$R *.lfm}
@@ -135,6 +140,7 @@ uses
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
   inherited;
+  FExtractorIndex := -1;
 end;
 
 destructor THexEditorFrame.Destroy;
@@ -191,7 +197,6 @@ begin
     AParams.DrawGutter3D := HexEditor.DrawGutter3D;
   end;
 
-//  AParams.ShowStatusBar := StatusBar.Visible;
   AParams.StatusbarItems := FStatusbarItems;
   AParams.StatusbarPosDisplay := FStatusbarPosDisplay;
   AParams.StatusbarSelDisplay := FStatusbarSelDisplay;
@@ -225,7 +230,6 @@ var
 begin
   ApplyParamsToHexEditor(AParams, HexEditor);
 
-  //StatusBar.Visible := AParams.ShowStatusBar;
   FStatusbarItems := AParams.StatusbarItems;
   FStatusbarPosDisplay := AParams.StatusbarPosDisplay;
   FStatusbarSelDisplay := AParams.StatusbarSelDisplay;
@@ -277,7 +281,6 @@ begin
   FHexEditor.Parent := HexPanel;
   FHexEditor.Align := alClient;
   FHexEditor.DrawGutter3D := false;
-//  FHexEditor.GraySelectionIfNotFocused := true;
   FHexEditor.WantTabs := false;
   FHexEditor.OnChange := @HexEditorChanged;
   FHexEditor.OnSelectionChanged := @HexEditorChanged;
@@ -399,71 +402,21 @@ begin
   SearchReplaceForm.Show;
 end;
 
-{ Starting at begin of file, tries to find the offset at which an embedded
-  object begins. The kind of object is determined by the index which points to
-  the RegisteredExtractors list. The index is noted in the tag of the related
-  menu item.
-  If such an object is found the cursor is moved to the the corresponding
-  position. The found extractor is stored in FExtractorToFind for the next
-  call by "FindNextObj" }
-function THexEditorFrame.FindObject(AIndex:integer) : integer;
-var
-  ex: TExtractor;
-  s: string;
-  p: integer;
-  crs: TCursor;
-begin
-  Result := -1;
-  ex := CreateExtractor(AIndex);
-  try
-    if Assigned(ex) then
-    begin
-      case SearchReplaceParams.SearchStart of
-        ssCursor : p := HexEditor.GetCursorPos;
-        ssBOF    : p := 0;
-      end;
-      ex.OnCheckUserAbort := @CheckUserAbortHandler;
-      FExtractorIsSearching := true;
-      FExtractorAborted := false;
-      crs := Screen.Cursor;
-      Screen.Cursor := crHourglass;
-      try
-        Result := ex.Find(HexEditor, p, HexEditor.DataSize-1);
-        if Result >= 0 then
-        begin
-          HexEditor.Seek(Result, soFromBeginning);
-//          s := ex.Signature;
-//          SearchReplaceParams.FindPos := result;
-//          FExtractorToFind := ex;
-        end;
-      finally
-        FExtractorIsSearching := false;
-        Screen.Cursor := crs;
-      end;
-    end;
-    {
-    if Result < 0 then
-      FExtractorToFind := nil;
-      }
-    //EnableExtractorActions(true);
-  finally
-    ex.Free;
-  end;
-end;
-
 procedure THexEditorFrame.FindObjectHandler(Sender: TObject);
 var
-  i: integer;
-  s: string;
+  idx: Integer;
 begin
-  inherited;
-  i := (Sender as TComponent).Tag - TAG_FIND_OBJECTS - 1;
-  case FindObject(i) of
-    -1 : s := Format(SObjectNotFound, [RegisteredExtension(i)]);
-    -2 : s := Format(SExtractorSearchUserAbort, [RegisteredExtension(i)]);
-    else exit;
+  if Assigned(FObjectViewer) then
+  begin
+    idx := (Sender as TComponent).Tag - TAG_FIND_OBJECTS - 1;
+    if (idx < 0) and (FExtractorIndex >= 0) then  // "Find next"
+      FObjectViewer.FindObject(FExtractorIndex, HexEditor, HexEditor.GetCursorPos+1)
+    else
+    if (idx >= 0) and FObjectViewer.FindObject(idx, HexEditor, 0) then
+      FExtractorIndex := idx
+    else
+      FExtractorIndex := -1;
   end;
-  MessageDlg(s, mtInformation, [mbOK], 0);
 end;
 
 function THexEditorFrame.GetFileName: String;

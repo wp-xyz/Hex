@@ -666,6 +666,12 @@ object MainForm: TMainForm
       Hint = 'Export object|Save object to file'
       OnExecute = acObjectsExportExecute
     end
+    object acObjectsFindNext: TAction
+      Category = 'Objects'
+      Caption = 'Find next'
+      Hint = 'Find next embedded object'
+      OnExecute = acObjectsFindNextExecute
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -926,15 +932,21 @@ object MainForm: TMainForm
     end
     object mnuObjects: TMenuItem
       Caption = 'Objects'
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem25: TMenuItem
+        Action = acObjectsFindNext
+      end
+      object MenuItem24: TMenuItem
+        Tag = 5000
+        Caption = '-'
+      end
       object mnuObjectsSelect: TMenuItem
         Action = acObjectsSelect
       end
       object mnuObjectsExport: TMenuItem
         Action = acObjectsExport
-      end
-      object MenuItem24: TMenuItem
-        Tag = 5000
-        Caption = '-'
       end
     end
     object mnuConfig: TMenuItem

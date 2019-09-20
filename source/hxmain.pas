@@ -73,6 +73,7 @@ type
     acEditPaste: TAction;
     acObjectsSelect: TAction;
     acObjectsExport: TAction;
+    acObjectsFindNext: TAction;
     acViewOffsetHex: TAction;
     acViewOffsetDec: TAction;
     acViewOffsetOctal: TAction;
@@ -92,6 +93,8 @@ type
     MenuItem22: TMenuItem;
     MenuItem23: TMenuItem;
     MenuItem24: TMenuItem;
+    MenuItem25: TMenuItem;
+    N1: TMenuItem;
     mnuObjectsExport: TMenuItem;
     mnuObjectsSelect: TMenuItem;
     mnuObjects: TMenuItem;
@@ -212,6 +215,7 @@ type
     procedure acGoToExecute(Sender: TObject);
     procedure acGoToRepeatExecute(Sender: TObject);
     procedure acObjectsExportExecute(Sender: TObject);
+    procedure acObjectsFindNextExecute(Sender: TObject);
     procedure acObjectsSelectExecute(Sender: TObject);
     procedure acShowStatusbarExecute(Sender: TObject);
     procedure acShowToolbarExecute(Sender: TObject);
@@ -673,6 +677,11 @@ begin
     F.ExportObject;
 end;
 
+procedure TMainForm.acObjectsFindNextExecute(Sender: TObject);
+begin
+  FindObjectHandler(acObjectsFindNext);
+end;
+
 procedure TMainForm.acObjectsSelectExecute(Sender: TObject);
 var
   F: THexEditorFrame;
@@ -749,9 +758,12 @@ var
   i, i0: integer;
   item: TMenuItem;
 begin
+  {
   i0 := FindPrevItem;
   if i0 = -1 then
     raise Exception.CreateFmt('Objects menu item with Tag=%s is missing.', [TAG_FIND_OBJECTS]);
+  }
+  i0 := 0;
 
   for i := 0 to NumExtractors - 1 do
   begin
@@ -855,6 +867,7 @@ begin
   if Assigned(F) then
   begin
     F.FindObjectHandler(Sender);
+    UpdateCmds;
   end;
 end;
 
@@ -1025,9 +1038,13 @@ var
   i: Integer;
   ac: TAction;
   hasData: Boolean;
+  atObj: Boolean;
+  hasEx: Boolean;
 begin
-  F := GetActiveHExEditorFrame;
+  F := GetActiveHexEditorFrame;
   hasData := Assigned(F) and Assigned(F.HexEditor) and (F.HexEditor.DataSize > 0);
+  atObj := hasData and Assigned(F.Objectviewer) and F.ObjectViewer.AtObject;
+  hasEx := hasData and Assigned(F.ObjectViewer) and (F.ExtractorIndex >= 0);
 
   acFileClose.Enabled := hasData;
   acFileCloseAll.Enabled := hasData;
@@ -1071,7 +1088,14 @@ begin
       ac.Enabled := hasData and (F.HexEditor.Bookmark[ac.Tag - TAG_GOTO_BOOKMARK].mPosition <> -1);
     if InRange(ac.Tag, TAG_CLEAR_BOOKMARK, TAG_CLEAR_BOOKMARK + 10) then
       ac.Enabled := hasData and (F.HexEditor.Bookmark[ac.Tag - TAG_CLEAR_BOOKMARK].mPosition <> -1);
+
+    if InRange(ac.Tag, TAG_FIND_OBJECTS, TAG_FIND_OBJECTS + NumExtractors) then
+      ac.Enabled := hasData;
   end;
+
+  acObjectsFindNext.Enabled := hasEx;
+  acObjectsSelect.Enabled := atObj;
+  acObjectsExport.Enabled := atObj;
 end;
 
 procedure TMainForm.UpdateCurrentHexEditor;

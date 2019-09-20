@@ -31,7 +31,7 @@ resourcestring
   // hxObjectViewerFrame
   SExtractorFilterMask = '%s files (*.%s)|*.%s|';
 
-  SObjectNotFound = 'The file does not contain an embedded %s object.';
+  SObjectNotFound = 'Embedded %s object not found.';
   SExtractorSearchUserAbort = 'Search for embedded %s object aborted by user';
 
 

@@ -25,8 +25,6 @@ type
     FOnCheckUserAbort: TCheckUserAbortEvent;
     function GetFirstFileExt: String;
   protected
-    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
-      AEmbeddedClass: TClass; const ASignature: String): boolean; virtual;
     function CreateView({%H-}AOwner: TWinControl; AOffset: Integer;
       out AInfo: String): TControl; virtual;
     function FindView(AParent: TWinControl): TControl;
@@ -41,6 +39,12 @@ type
     procedure Reset;
     procedure SaveToStream(AStream: TStream); virtual;
     property FirstFileExt: string read GetFirstFileExt;
+    { class methods }
+    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
+      AEmbeddedClass: TClass; const ASignature: String): boolean; virtual;
+    class function FindOffset(AHexEditor: THxHexEditor; AOffset: Integer;
+      AEmbeddedClass: TClass; const ASignatures: TStringArray): Integer;
+    { properties }
     property Info: string read FInfo;
     property Signatures: TStringArray read FSignatures;
     property Size: integer read FSize;
@@ -79,10 +83,13 @@ type
     FExtractor: TExtractor;
     FExtractorControl: TControl;
     FLockUpdate: Integer;
+    function GetAtObject: Boolean;
 
   public
     destructor Destroy; override;
+    function FindObject(AIndex: Integer; AHexEditor: THxHexEditor; AOffset: Integer): Boolean;
     procedure UpdateData(AHexEditor: THxHexEditor); override;
+    property AtObject: Boolean read GetAtObject;
     property Extractor: TExtractor read FExtractor;
   end;
 
@@ -92,6 +99,7 @@ function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
 function CanExtract(AHexEditor: THxHexEditor; AOffset: Integer): TExtractor;
 function CreateExtractor(AExt: string): TExtractor; overload;
 function CreateExtractor(AIndex: Integer): TExtractor; overload;
+function FindOffsetForExtractor(AIndex: Integer; AHexEditor: THxHexEditor; AOffset: Integer): Integer;
 function NumExtractors: integer;
 function RegisteredExtension(AIndex: Integer): String;
 function RegisteredExtractorSignature(AIndex: Integer): Boolean;
@@ -246,6 +254,15 @@ begin
     Result := RegisteredExtractors[AIndex].CreateExtractor
   else
     Result := nil;
+end;
+
+function FindOffsetForExtractor(AIndex: Integer; AHexEditor: THxHexEditor;
+  AOffset: Integer): Integer;
+var
+  item: TExtractorItem;
+begin
+  item := RegisteredExtractors[AIndex];
+  Result := item.FExtractorClass.FindOffset(AHexEditor, AOffset, item.FEmbeddedClass, item.FSignatures);
 end;
 
 function NumExtractors: Integer;
@@ -500,6 +517,28 @@ begin
   end;
 end;
 
+class function TExtractor.FindOffset(AHexEditor: THxHexEditor; AOffset: Integer;
+  AEmbeddedClass: TClass; const ASignatures: TStringArray): Integer;
+var
+  s: String;
+  i: Integer;
+begin
+  for i := 0 to High(ASignatures) do
+  begin
+    // Prepare and execute search for the embedded object's signature
+    s := AHexEditor.PrepareFindReplaceData(ASignatures[i], false, false);
+    Result := AHexEditor.Find(PChar(s), Length(s), AOffset, AHexEditor.DataSize-1, false);
+    // Found
+    if Result <> -1 then
+    begin
+      if CheckSignature(AHexEditor, Result, AEmbeddedClass, s) then
+        exit;
+    end;
+  end;
+  // No embedded object found
+  Result := -1;
+end;
+
 { Searches for the viewing component of the Extractor in the specified parent.
   The component has a specific tag ("FTag"). }
 function TExtractor.FindView(AParent: TWinControl): TControl;
@@ -638,7 +677,7 @@ var
   P: Integer;
   n, m: Word;
   i: Integer;
-  dir: TIconDirectory;
+  directory: TIconDirectory;
   totalSize: Integer;
 begin
   Result := inherited CheckSignature(AHexEditor, AOffset, AEmbeddedClass, ASignature);
@@ -648,24 +687,24 @@ begin
     // Read number of images;
     AHexEditor.ReadBuffer(n, P, 2);
     if n = 0 then
-      exit;
+      exit(false);
     n := LEToN(n);
     totalSize := 0;
     inc(P, 2);
     for i := 1 to n do begin
-      AHexEditor.ReadBuffer(dir, P, SizeOf(dir));
-      if dir.Reserved <> 0 then
+      AHexEditor.ReadBuffer(directory, P, SizeOf(directory));
+      if directory.Reserved <> 0 then
         exit(false);
-      if not (LEToN(dir.BitsPerPixel) in [1, 4, 8, 16, 24, 32]) then
+      if not (LEToN(directory.BitsPerPixel) in [1, 4, 8, 16, 24, 32]) then
         exit(false);
-      if not (LEToN(dir.ColorPlanes) in [0, 1]) then
+      if not (LEToN(directory.ColorPlanes) in [0, 1]) then
         exit(false);
-      totalSize := totalSize + LEToN(dir.ImageDataSize);
+      totalSize := totalSize + LEToN(directory.ImageDataSize);
       if totalSize > AHexEditor.DataSize then
         exit(false);
-      if LEToN(dir.OffsetToImage) > totalSize then
+      if LEToN(directory.OffsetToImage) > totalSize then
         exit(false);
-      inc(P, SizeOf(dir));
+      inc(P, SizeOf(directory));
     end;
   end;
 end;
@@ -723,6 +762,37 @@ destructor TObjectViewerFrame.Destroy;
 begin
   FreeAndNil(FExtractor);
   inherited;
+end;
+
+function TObjectViewerFrame.FindObject(AIndex: Integer;
+  AHexEditor: THxHexEditor; AOffset: Integer): Boolean;
+var
+  P: Integer;
+  s: String;
+begin
+  inherited;
+
+  P := FindOffsetForExtractor(AIndex, AHexEditor, AOffset);
+  if P >= 0 then
+  begin
+    AHexEditor.Seek(P, soFromBeginning);
+    Result := true;
+  end else
+  begin
+    Result := false;
+    AHexEditor.SelStart := AHexEditor.GetCursorPos;
+    AHexEditor.SelEnd := -1;
+    if P = -1 then
+      s := Format(SObjectNotFound, [RegisteredExtension(AIndex)])
+    else if P = -2 then
+      s := Format(SExtractorSearchUserAbort, [RegisteredExtension(AIndex)]);
+    MessageDlg(s, mtInformation, [mbOK], 0);
+  end;
+end;
+
+function TObjectViewerFrame.GetAtObject: Boolean;
+begin
+  Result := Assigned(FExtractorControl);
 end;
 
 procedure TObjectViewerFrame.UpdateData(AHexEditor: THxHexEditor);
