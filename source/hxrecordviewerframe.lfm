@@ -24,7 +24,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
       Action = acEdit
     end
     object ToolButton3: TToolButton
-      Left = 177
+      Left = 200
       Top = 2
       Action = acSaveAs
     end
@@ -34,74 +34,79 @@ inherited RecordViewerFrame: TRecordViewerFrame
       Action = acDelete
     end
     object ToolButton5: TToolButton
-      Left = 70
+      Left = 93
       Height = 22
       Top = 2
       Caption = 'ToolButton6'
       Style = tbsDivider
     end
     object ToolButton6: TToolButton
-      Left = 126
+      Left = 149
       Top = 2
       Action = acLoad
     end
     object ToolButton7: TToolButton
-      Left = 75
+      Left = 98
       Top = 2
       Action = acMoveUp
     end
     object ToolButton8: TToolButton
-      Left = 98
+      Left = 121
       Top = 2
       Action = acMoveDown
     end
     object ToolButton10: TToolButton
-      Left = 154
+      Left = 177
       Top = 2
       Action = acSave
     end
     object ToolButton9: TToolButton
-      Left = 121
+      Left = 144
       Height = 22
       Top = 2
       Caption = 'ToolButton9'
       Style = tbsDivider
     end
     object ToolButton11: TToolButton
-      Left = 149
+      Left = 172
       Height = 22
       Top = 2
       Caption = 'ToolButton11'
       Style = tbsDivider
     end
     object ToolButton12: TToolButton
-      Left = 200
+      Left = 223
       Height = 22
       Top = 2
       Caption = 'ToolButton12'
       Style = tbsDivider
     end
     object ToolButton13: TToolButton
-      Left = 205
+      Left = 228
       Top = 2
       Action = acPrevRecord
     end
     object ToolButton14: TToolButton
-      Left = 228
+      Left = 251
       Top = 2
       Action = acNextRecord
     end
     object ToolButton15: TToolButton
-      Left = 251
+      Left = 274
       Height = 22
       Top = 2
       Caption = 'ToolButton15'
       Style = tbsDivider
     end
     object ToolButton16: TToolButton
-      Left = 256
+      Left = 279
       Top = 2
       Action = acMakePascalRecord
+    end
+    object ToolButton17: TToolButton
+      Left = 70
+      Top = 2
+      Action = acClear
     end
   end
   object ActionList: TActionList[2]
@@ -124,7 +129,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
     object acDelete: TAction
       Category = 'Record'
       Caption = 'Delete'
-      ImageIndex = 8
+      ImageIndex = 23
       OnExecute = acDeleteExecute
     end
     object acLoad: TAction
@@ -180,6 +185,13 @@ inherited RecordViewerFrame: TRecordViewerFrame
       Hint = 'Pascal record|Create record declaration in Pascal'
       ImageIndex = 14
       OnExecute = acMakePascalRecordExecute
+    end
+    object acClear: TAction
+      Category = 'Record'
+      Caption = 'Clear'
+      Hint = 'Clear list'
+      ImageIndex = 8
+      OnExecute = acClearExecute
     end
   end
   object OpenDialog: TOpenDialog[3]

@@ -32,6 +32,7 @@ type
     destructor Destroy; override;
     procedure AddItem(AItem: TRecordDataItem);
     procedure Advance(ADirection: Integer);
+    procedure ClearItems;
     procedure DeleteItem(ARow: Integer);
     procedure LoadRecordFromFile(const AFileName: String);
     procedure MakePascalRecord(AList: TStrings);
@@ -56,6 +57,7 @@ type
     acPrevRecord: TAction;
     acNextRecord: TAction;
     acMakePascalRecord: TAction;
+    acClear: TAction;
     ActionList: TActionList;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
@@ -68,6 +70,7 @@ type
     ToolButton14: TToolButton;
     ToolButton15: TToolButton;
     ToolButton16: TToolButton;
+    ToolButton17: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -77,6 +80,7 @@ type
     ToolButton8: TToolButton;
     ToolButton9: TToolButton;
     procedure acAddExecute(Sender: TObject);
+    procedure acClearExecute(Sender: TObject);
     procedure acDeleteExecute(Sender: TObject);
     procedure acEditExecute(Sender: TObject);
     procedure acLoadExecute(Sender: TObject);
@@ -189,6 +193,16 @@ begin
   finally
     Columns.EndUpdate;
   end;
+end;
+
+procedure TRecordViewerGrid.ClearItems;
+begin
+  FDataList.Clear;
+  RowCount := FixedRows;
+  HexEditor.SelEnd := -1;
+  HexEditor.SecondSelStart := -1;
+  HexEditor.SecondSelEnd := -1;
+  UpdateData(HexEditor);
 end;
 
 procedure TRecordViewerGrid.DeleteItem(ARow: Integer);
@@ -531,6 +545,13 @@ begin
   end;
 end;
 
+procedure TRecordViewerFrame.acClearExecute(Sender: TObject);
+begin
+  if MessageDlg('Do you really want to delete all record elements?',
+    mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+  RecordViewerGrid.ClearItems;
+end;
+
 procedure TRecordViewerFrame.acDeleteExecute(Sender: TObject);
 begin
   if MessageDlg('Do you really want to delete this record element?',
@@ -622,7 +643,7 @@ var
   hasData: Boolean;
 begin
   hasData := FGrid.DataCount > 0;
-  if (AnAction = acEdit) or (AnAction = acDelete) or
+  if (AnAction = acEdit) or (AnAction = acDelete) or (AnAction = acClear) or
      (AnAction = acSave) or (AnAction = acSaveAs) or
      (AnAction = acPrevRecord) or (AnAction = acNextRecord) or
      (AnAction = acMakePascalRecord)
