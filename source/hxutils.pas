@@ -47,7 +47,17 @@ function LEToN(AValue: Extended): Extended; overload;
 function LEToN(AValue: Real48): Real48; overload;
 function LEToN(AValue: Currency): Currency; overload;
 function LEToN(AValue: WideString): WideString; overload;
+function NtoBE(AValue: Single): Single; overload;
+function NtoBE(AValue: Double): Double; overload;
+function NtoBE(AValue: Extended): Extended; overload;
+function NtoBE(AValue: Real48): Real48; overload;
+function NtoBE(AValue: Currency): Currency; overload;
 function NToBE(AValue: WideString): WideString; overload;
+function NtoLE(AValue: Single): Single; overload;
+function NtoLE(AValue: Double): Double; overload;
+function NtoLE(AValue: Extended): Extended; overload;
+function NtoLE(AValue: Real48): Real48; overload;
+function NtoLE(AValue: Currency): Currency; overload;
 function NToLE(AValue: WideString): WideString; overload;
 
 // Data types
@@ -499,78 +509,79 @@ begin
     end;
 end;
 
+procedure SwapBytes(var AValue; NumBytes: Integer);
+var
+  b: array[0..15] of byte absolute AValue;
+  i, j: Integer;
+  tmp: byte;
+begin
+  j := NumBytes - 1;
+  for i := 0 to pred(NumBytes div 2) do
+  begin
+    tmp := b[i];
+    b[i] := b[j];
+    b[j] := tmp;
+    dec(j);
+  end;
+end;
+
+procedure BEtoN_Helper(var AValue; NumBytes: Integer);
+begin
+  {$IFNDEF ENDIAN_BIG}
+  SwapBytes(AValue, NumBytes);
+  {$ENDIF}
+end;
+
+procedure LEtoN_Helper(var AValue; NumBytes: Integer);
+begin
+  {$IFDEF ENDIAN_BIG}
+  SwapBytes(AValue, NumBytes);
+  {$ENDIF}
+end;
+
+procedure NtoBE_Helper(var AValue; NumBytes: Integer);
+begin
+  {$IFNDEF ENDIAN_BIG}
+  SwapBytes(AValue, NumBytes);
+  {$ENDIF}
+end;
+
+procedure NtoLE_Helper(var AValue; NumBytes: Integer);
+begin
+  {$IFDEF ENDIAN_BIG}
+  SwapBytes(AValue, NumBytes);
+  {$ENDIF}
+end;
+
 function BEToN(AValue: Single): Single; overload;
-{$IFDEF ENDIAN_BIG}
 begin
   Result := AValue;
+  BEtoN_Helper(Result, SizeOf(Single));
 end;
-{$ELSE}
-type
-  TData = array[0..3] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 3 do TData(Result)[i] := TData(AValue)[3-i];
-end;
-{$ENDIF}
 
 function BEToN(AValue: Double): Double; overload;
-{$IFDEF ENDIAN_BIG}
 begin
   Result := AValue;
+  BEToN_Helper(Result, SizeOf(Double));
 end;
-{$ELSE}
-type
-  TData = array[0..7] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 7 do TData(Result)[i] := TData(AValue)[7-i];
-end;
-{$ENDIF}
 
 function BEToN(AValue: Extended): Extended; overload;
-{$IFDEF ENDIAN_BIG}
 begin
   Result := AValue;
+  BEToN_Helper(Result, SizeOf(Extended));
 end;
-{$ELSE}
-type
-  TData = array[0..9] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 9 do TData(Result)[i] := TData(AValue)[9-i];
-end;
-{$ENDIF}
 
 function BEToN(AValue: Real48): Real48; overload;
-{$IFDEF ENDIAN_BIG}
 begin
   Result := AValue;
+  BEToN_Helper(Result, SizeOf(Real48));
 end;
-{$ELSE}
-var
-  i: Integer;
-begin
-  for i:=0 to 5 do Result[5-i] := AValue[i];
-end;
-{$ENDIF}
 
 function BEToN(AValue: Currency): Currency; overload;
-{$IFDEF ENDIAN_BIG}
 begin
   Result := AValue;
+  BEToN_Helper(Result, SizeOf(Currency));
 end;
-{$ELSE}
-type
-  TData = array[0..7] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 7 do TData(Result)[7-i] := TData(AValue)[i];
-end;
-{$ENDIF}
 
 function BEToN(AValue: WideString): WideString; overload;
 {$IFDEF ENDIAN_BIG}
@@ -592,77 +603,34 @@ end;
 {$ENDIF}
 
 function LEToN(AValue: Single): Single; overload;
-{$IFDEF ENDIAN_LITTLE}
 begin
   Result := AValue;
+  LEToN_Helper(Result, SizeOf(Single));
 end;
-{$ELSE}
-type
-  TData = array[0..3] of byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 5 do TData(Result)[3-i] := TData(Value)[i];
-end;
-{$ENDIF}
 
 function LEToN(AValue: Double): Double; overload;
-{$IFDEF ENDIAN_LITTLE}
 begin
   Result := AValue;
+  LEtoN_Helper(Result, SizeOf(Double));
 end;
-{$ELSE}
-type
-  TData = array[0..7] of byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 7 do TData(Result)[7-i] := TData(Value)[i];
-end;
-{$ENDIF}
 
 function LEToN(AValue: Extended): Extended; overload;
-{$IFDEF ENDIAN_LITTLE}
 begin
   Result := AValue;
+  LEtoN_Helper(Result, SizeOf(Extended));
 end;
-{$ELSE}
-type
-  TData = array[0..9] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 9 do TData(Result)[9-i] := TData(Value)[i];
-end;
-{$ENDIF}
 
 function LEToN(AValue: Real48): Real48; overload;
-{$IFDEF ENDIAN_LITTLE}
 begin
   Result := AValue;
+  LEtoN_Helper(Result, SizeOf(Real48));
 end;
-{$ELSE}
-var
-  i: Integer;
-begin
-  for i:=0 to 5 do Result[5-i] := Value[i];
-end;
-{$ENDIF}
 
 function LEToN(AValue: Currency): Currency; overload;
-{$IFDEF ENDIAN_LITTLE}
 begin
   Result := AValue;
+  LEtoN_Helper(Result, SizeOf(Currency));
 end;
-{$ELSE}
-type
-  TData = array[0..7] of Byte;
-var
-  i: Integer;
-begin
-  for i:=0 to 7 do TData(Result)[7-i] := TData(Value)[i];
-end;
-{$ENDIF}
 
 function LEToN(AValue: WideString): WideString; overload;
 {$IFDEF ENDIAN_LITTLE}
@@ -683,6 +651,36 @@ begin
 end;
 {$ENDIF}
 
+function NtoBE(AValue: Single): Single;
+begin
+  Result := AValue;
+  NtoBE_Helper(AValue, SizeOf(Single));
+end;
+
+function NtoBE(AValue: Double): Double;
+begin
+  Result := AValue;
+  NtoBE_Helper(AValue, SizeOf(Double));
+end;
+
+function NtoBE(AValue: Extended): Extended;
+begin
+  Result := AValue;
+  NtoBE_Helper(AValue, SizeOf(Extended));
+end;
+
+function NtoBE(AValue: Real48): Real48;
+begin
+  Result := AValue;
+  NtoBE_HElper(AValue, SizeOf(Real48));
+end;
+
+function NtoBE(AValue: Currency): Currency;
+begin
+  Result := AValue;
+  NtoBE_Helper(AValue, SizeOf(Currency));
+end;
+
 function NToBE(AValue: WideString): WideString;
 {$IFDEF ENDIAN_BIG}
 begin
@@ -702,6 +700,36 @@ begin
   end;
 end;
 {$ENDIF}
+
+function NtoLE(AValue: Single): Single;
+begin
+  Result := AValue;
+  NtoLE_Helper(AValue, SizeOf(Single));
+end;
+
+function NtoLE(AValue: Double): Double;
+begin
+  Result := AValue;
+  NtoLE_Helper(AValue, SizeOf(Double));
+end;
+
+function NtoLE(AValue: Extended): Extended;
+begin
+  Result := AValue;
+  NtoLE_Helper(AValue, SizeOf(Extended));
+end;
+
+function NtoLE(AValue: Real48): Real48;
+begin
+  Result := AValue;
+  NtoLE_HElper(AValue, SizeOf(Real48));
+end;
+
+function NtoLE(AValue: Currency): Currency;
+begin
+  Result := AValue;
+  NtoLE_Helper(AValue, SizeOf(Currency));
+end;
 
 function NToLE(AValue: WideString): WideString;
 {$IFDEF ENDIAN_LITTLE}

@@ -407,9 +407,16 @@ begin
 end;
 
 procedure TMainForm.acEditMode(Sender: TObject);
+var
+  F: THexEditorFrame;
 begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+    F.WriteProtected := acEditEditingForbidden.Checked
+    {
   if Assigned(FCurrentHexEditor) then
     FCurrentHexEditor.ReadOnlyView := acEditEditingForbidden.Checked
+    }
   else
     HexParams.ViewOnly := acEditEditingForbidden.Checked;
 end;
@@ -824,6 +831,7 @@ begin
     if AFileName <> '' then
     begin
       F.OpenFile(AFileName, WriteProtected);
+      F.WriteProtected := not acEditEditingAllowed.Checked;
       FRecentFilesManager.AddToRecent(AFileName);
     end else
       F.Caption := Format(SNoName, [CountEmpty]);

@@ -86,7 +86,7 @@ begin
     lCol.Tag := -1;  // Value column
     lCol.Title.Caption := 'Value';
     lCol.SizePriority := 1;  // Expand column to fill rest of grid width
-    lCol.ReadOnly := true;
+    //lCol.ReadOnly := true;
   finally
     Columns.EndUpdate;
   end;

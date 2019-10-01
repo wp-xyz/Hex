@@ -6,13 +6,14 @@ interface
 
 uses
   Classes, SysUtils, StdCtrls, Grids,
-//  MPHexEditor,
   hxGlobal, hxHexEditor, hxViewerItems;
 
 type
   TViewerGrid = class(TCustomDrawGrid)
   private
     FHexEditor: THxHexEditor;
+    FOldEditText: String;
+    FEditText: String;
     function GetDataCount: Integer;
 
   protected
@@ -26,23 +27,27 @@ type
     function GetValueAsText(AItem: TDataItem): String;
     procedure PopulateDataList; virtual;
     procedure Prepare; virtual;
+    procedure SetValueAsText(AItem: TDataItem; const AText: String);
 
     // inherited methods
     procedure DrawTextInCell(ACol, ARow: Integer; ARect: TRect;
       AState: TGridDrawState); override;
+    procedure EditorDoResetValue; override;
     procedure GetCheckBoxState(const ACol, ARow: Integer;
       var aState:TCheckboxState); override;
+    function GetEditText(ACol, ARow: LongInt): String; override;
     procedure SetCheckboxState(const ACol, ARow: Integer;
       const aState: TCheckboxState); override;
-
-    property HexEditor: THxHexEditor read FHexEditor;
+    procedure SetEditText(ACol, ARow: LongInt; const AText: String); override;
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure EditingDone; override;
     procedure UpdateData(AHexEditor: THxHexEditor); virtual;
     property DataCount: Integer read GetDataCount;
     property DataItemClass: TDataItemClass read FDataItemClass;
+    property HexEditor: THxHexEditor read FHexEditor;
   published
 
   end;
@@ -51,7 +56,7 @@ type
 implementation
 
 uses
-  LCLIntf, TypInfo,
+  LCLIntf, Math, TypInfo, Dialogs,
   real48utils,
   hxUtils;
 
@@ -124,6 +129,20 @@ begin
   Canvas.TextRect(ARect, ARect.Left, (ARect.Top + ARect.Bottom - h) div 2, s);
 end;
 
+procedure TViewerGrid.EditingDone;
+var
+  item: TDataItem;
+begin
+  if FOldEditText = FEditText then
+    exit;
+  item := FDataList[Row - FixedRows] as FDataItemClass;
+  SetValueAsText(item, FEditText);
+end;
+
+procedure TViewerGrid.EditorDoResetValue;
+begin
+  FEditText := FOldEditText;
+end;
 
 function TViewerGrid.GetCellText(ACol, ARow: Integer): String;
 var
@@ -158,6 +177,13 @@ end;
 function TViewerGrid.GetDataCount: Integer;
 begin
   Result := FDataList.Count;
+end;
+
+function TViewerGrid.GetEditText(ACol, ARow: LongInt): String;
+begin
+  Result := GetCellText(ACol, ARow);
+  FEditText := Result;
+  FOldEditText := Result;
 end;
 
 function TViewerGrid.GetValueAsText(AItem: TDataItem): String;
@@ -370,13 +396,168 @@ begin
     item.BigEndian := false;
 end;
 
+procedure TViewerGrid.SetEditText(ACol, ARow: LongInt; const AText: String);
+begin
+  FEditText := AText;
+end;
+
+procedure TViewerGrid.SetValueAsText(AItem: TDataItem; const AText: String);
+const
+  errOK = 0;
+  errOutOfRange = 1;
+  errNumberReq = 2;
+var
+  b: Byte;
+  i: Integer;
+  i64: Int64;
+  c: Currency;
+  w: Word;
+  dw: DWord;
+  sng: Single;
+  dbl: Double;
+  ext: Extended;
+  r48: Real48;
+  oldInsertMode: Boolean;
+  fs: TFormatSettings;
+  err: Integer;
+begin
+  err := errOK;
+  oldInsertMode := FHexEditor.InsertMode;
+  FHexEditor.InsertMode := false;
+  try
+    case AItem.DataType of
+      dtByte, dtShortInt, dtWord, dtSmallInt, dtLongWord, dtLongInt:
+        if TryStrToInt(AText, i) then
+          case AItem.DataType of
+            dtByte:
+              if ((AItem.DataType = dtByte) and (i >= 0) and (i <= 255)) or
+                 ((AItem.DataType = dtShortInt) and (i >= -128) and (i <= 127)) then
+              begin
+                b := byte(i);
+                FHexEditor.WriteBuffer(b, AItem.Offset, 1);
+              end else
+                err := errOutOfRange;
+            dtWord:
+              if (AItem.DataType = dtWord) and (i >= 0) and (word(i) <= word($FFFF)) then
+              begin
+                w := word(i);
+                if AItem.BigEndian then w := NtoBE(w) else w := NtoLE(w);
+                FHexEditor.WriteBuffer(w, AItem.Offset, SizeOf(w));
+              end else
+                err := errOutOfRange;
+            dtSmallInt:
+              if (SmallInt(i) >= SmallInt($8000)) and (word(i) <= $7FFF) then
+              begin
+                w := word(i);
+                if AItem.BigEndian then w := NToBE(w) else w := NToLE(w);
+                FHexEditor.WriteBuffer(w, AItem.Offset, 2);
+              end else
+                err := errOutOfRange;
+            dtLongWord:
+              if (i >= 0) and (LongWord(i) <= LongWord($FFFFFFFF)) then
+              begin
+                dw := DWord(i);
+                if AItem.BigEndian then dw := NtoBE(dw) else dw := NtoLE(dw);
+                FHexEditor.WriteBuffer(dw, AItem.Offset, SizeOf(dw));
+              end else
+                err := errOutOfRange;
+            dtLongInt:
+              if (LongInt(i) >= LongInt($80000000)) and (LongWord(i) <= $7FFFFFFF) then
+              begin
+                dw := DWord(i);
+                if AItem.BigEndian then dw := NToBE(dw) else dw := NToLE(dw);
+                  FHexEditor.WriteBuffer(dw, AItem.Offset, 4);
+              end else
+                err := errOutOfRange;
+          end
+        else
+          err := errNumberReq;
+
+      dtInt64, dtCurrency:
+        begin
+          case AItem.DataType of
+            dtInt64:
+              if not TryStrToInt64(AText, i64) then
+                err := errNumberReq;
+            dtCurrency:
+              if TryStrToCurr(AText, c) then
+                Move(c, i64, SizeOf(c))
+              else
+                err := errNumberReq;
+          end;
+          if err = errOK then
+          begin
+            if AItem.BigEndian then i64 := NToBE(i64) else i64 := NToLE(i64);
+            FHexEditor.WriteBuffer(i64, AItem.Offset, SizeOf(i64));
+          end;
+        end;
+
+      dtSingle, dtDouble, dtExtended, dtReal48:
+        begin
+          fs := DefaultFormatSettings;
+          if not TryStrToFloat(AText, ext, fs) then
+          begin
+            if fs.DecimalSeparator = '.' then
+              fs.DecimalSeparator := ','
+            else
+              fs.DecimalSeparator := '.';
+            if not TryStrToFloat(AText, ext, fs) then
+              err := errNumberReq;
+          end;
+          if err = errOK then
+            case AItem.DataType of
+              dtSingle:
+                if (abs(ext) >= MinSingle) and (abs(ext) <= MaxSingle) then
+                begin
+                  sng := ext;
+                  if AItem.BigEndian then sng := hxUtils.NtoBE(sng) else sng := hxUtils.NtoLE(sng);
+                  FHexEditor.WriteBuffer(sng, AItem.Offset, SizeOf(sng));
+                end else
+                  err := errOutOfRange;
+              dtDouble:
+                if (abs(ext) >= MinDouble) and (abs(ext) <= MaxDouble) then
+                begin
+                  dbl := ext;
+                  if AItem.BigEndian then dbl := NtoBE(dbl) else dbl := NtoLE(dbl);
+                  FHexEditor.WriteBuffer(dbl, AItem.Offset, SizeOf(dbl));
+                end else
+                  err := errOutOfRange;
+              dtExtended:
+                begin
+                  if AItem.BigEndian then ext := NtoBE(ext) else ext := NtoLE(ext);
+                  FHexEditor.WriteBuffer(ext, AItem.Offset, SizeOf(ext));
+                end;
+              dtReal48:
+                try
+                  r48 := ext;
+                  FHexEditor.WriteBuffer(r48, AItem.Offset, SizeOf(r48));
+                except
+                  err := errOutOfRange;
+                end;
+            end;
+        end;
+    end;
+
+    case err of
+      errOK: ;
+      errNumberReq:
+        MessageDlg('Numeric input required.', mtError, [mbOK], 0);
+      errOutOfRange:
+        MessageDlg('Value out of range.', mtError, [mbOK], 0);
+    end;
+
+  finally
+    FHexEditor.InsertMode := oldInsertMode;
+    FHexEditor.Invalidate;
+  end;
+end;
+
 procedure TViewerGrid.UpdateData(AHexEditor: THxHexEditor);
 begin
   FHexEditor := AHexEditor;
   if Assigned(FHexEditor) then
     DoUpdateData;
 end;
-
 
 end.
 

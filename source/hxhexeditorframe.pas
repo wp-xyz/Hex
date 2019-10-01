@@ -71,9 +71,11 @@ type
     procedure DoUpdateStatusBar;
     function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
+    function GetWriteProtected: Boolean;
     procedure HexEditorChanged(Sender: TObject);
     procedure SetParent(AParent: TWinControl); override;
     procedure SetViewerPosition(AViewer: TBasicViewerFrame; AValue: TViewerPosition);
+    procedure SetWriteProtected(const AValue: Boolean);
     procedure UpdateViewerPanelVisible(APanel: TOMultiPanel);
 
     procedure LoadFromIni;
@@ -121,6 +123,8 @@ type
       read GetShowObjectViewer write SetShowObjectViewer;
     property ShowRecordViewer: Boolean
       read GetShowRecordViewer write SetShowRecordViewer;
+    property WriteProtected: Boolean
+      read GetWriteProtected write SetWriteProtected;
     property OnChange: TNotifyEvent
       read FOnChange write SetOnChange;
     property OnUpdateStatusBar: TNotifyEvent
@@ -506,6 +510,11 @@ begin
     raise Exception.Create('[THexEditorFrame.GetViewerPosition] Unsupported Parent.');
 end;
 
+function THexEditorFrame.GetWriteProtected: Boolean;
+begin
+  Result := Assigned(FHexEditor) and FHexEditor.ReadOnlyView;
+end;
+
 procedure THexEditorFrame.HexEditorChanged(Sender: TObject);
 begin
   DoUpdateStatusBar;
@@ -775,6 +784,16 @@ begin
   if oldPanel <> newPanel then UpdateViewerPanelVisible(oldPanel);
 
   //StatusBar.Top := Height * 2;
+end;
+
+procedure THexEditorFrame.SetWriteProtected(const AValue: Boolean);
+begin
+  if Assigned(FHexEditor) then
+    FHexEditor.ReadOnlyView := AValue;
+  if Assigned(FDataViewer) then
+    FDataViewer.WriteProtected := AValue;
+  if Assigned(FRecordViewer) then
+    FRecordViewer.WriteProtected := AValue;
 end;
 
 procedure THexEditorFrame.UpdateCaption;

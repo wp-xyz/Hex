@@ -22,6 +22,7 @@ type
     function GetItem(ARow: Integer): TRecordDataItem;
     procedure SetItem(ARow: Integer; AItem: TRecordDataitem);
   protected
+    function CanEditShow: Boolean; override;
     procedure DefineColumns; override;
     function DistanceToZero(AOffset: Integer; IsForWideString: Boolean): Integer;
     procedure DoUpdateData; override;
@@ -152,6 +153,19 @@ begin
   UpdateSelection(Row);
 end;
 
+function TRecordViewerGrid.CanEditShow: Boolean;
+var
+  item: TDataItem;
+  c: TGridColumn;
+begin
+  Result := inherited;
+  // do not allow editing of string data values
+  c := ColumnFromGridColumn(Col);
+  item := FDataList[Row - FixedRows] as FDataItemClass;
+  if (item.DataType in StringDataTypes) and (c.Index = Columns.Count-1) then
+    Result := false;
+end;
+
 { Property indexes of TRecordDataItem:
   0=DataType, 1=DataSize, 2=Offset, 3=BigEndian, 4=Name }
 procedure TRecordViewerGrid.DefineColumns;
@@ -189,7 +203,7 @@ begin
     lCol.Title.Caption := 'Value';
     lCol.Width := 100;
     lCol.SizePriority := 1;  // Expand column to fill rest of grid width
-    lCol.ReadOnly := true;
+    //lCol.ReadOnly := true;
   finally
     Columns.EndUpdate;
   end;

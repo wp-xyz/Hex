@@ -13,7 +13,9 @@ type
   TGridViewerFrame = class(TBasicViewerFrame)
   private
     function GetColWidths(AIndex: Integer): Integer;
+    function GetWriteProtected: Boolean;
     procedure SetColWidths(AIndex: Integer; const AValue: Integer);
+    procedure SetWriteProtected(const AValue: Boolean);
   protected
     FGrid: TViewerGrid;
     function CreateViewerGrid: TViewerGrid; virtual; abstract;
@@ -23,6 +25,7 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure UpdateData(AHexEditor: THxHexEditor); override;
     property ColWidths[AIndex: Integer]: Integer read GetColWidths write SetColWidths;
+    property WriteProtected: Boolean read GetWriteProtected write SetWriteProtected;
   end;
 
 
@@ -55,6 +58,11 @@ begin
   Result := 100;
 end;
 
+function TGridViewerFrame.GetWriteProtected: Boolean;
+begin
+  Result := goEditing in FGrid.Options;
+end;
+
 procedure TGridViewerFrame.Loaded;
 begin
   inherited;
@@ -73,6 +81,14 @@ procedure TGridViewerFrame.SetColWidths(AIndex: Integer;
 begin
   if Assigned(FGrid) and (AIndex < FGrid.ColCount - FGrid.FixedCols) then
     FGrid.Columns[AIndex].Width := AValue;
+end;
+
+procedure TGridViewerFrame.SetWriteProtected(const AValue: Boolean);
+begin
+  if AValue then
+    FGrid.Options := FGrid.Options - [goEditing]
+  else
+    FGrid.Options := FGrid.Options + [goEditing];
 end;
 
 procedure TGridViewerFrame.UpdateData(AHexEditor: THxHexEditor);
