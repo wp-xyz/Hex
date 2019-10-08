@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, ActnList,
-  ComCtrls, StdCtrls, ExtCtrls,
+  ComCtrls, StdCtrls, ExtCtrls, Contnrs,
   MPHexEditor,
   hxGlobal, hxViewerItems, hxViewerGrids, hxGridViewerFrame;
 
@@ -29,17 +29,16 @@ type
     function SelectCell(ACol, ARow: Integer): Boolean; override;
     procedure UpdateSelection(ARow: Integer);
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AOwnsData: Boolean); override;
     destructor Destroy; override;
     procedure AddItem(AItem: TRecordDataItem);
     procedure Advance(ADirection: Integer);
     procedure ClearItems;
     procedure DeleteItem(ARow: Integer);
-    procedure LoadRecordFromFile(const AFileName: String);
     procedure MakePascalRecord(AList: TStrings);
     procedure MoveItemDown;
     procedure MoveItemUp;
-    procedure SaveRecordToFile(const AFileName: String);
+//    procedure SaveRecordToFile(const AFileName: String);
     property FileName: String read FFileName;
     property RowItems[ARow: Integer]: TRecordDataItem read GetItem write SetItem;
   end;
@@ -59,9 +58,14 @@ type
     acNextRecord: TAction;
     acMakePascalRecord: TAction;
     acClear: TAction;
+    acDeletePage: TAction;
+    acAddPage: TAction;
+    acEditPage: TAction;
+    acClearPages: TAction;
     ActionList: TActionList;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
+    TabControl: TTabControl;
     ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton10: TToolButton;
@@ -72,7 +76,12 @@ type
     ToolButton15: TToolButton;
     ToolButton16: TToolButton;
     ToolButton17: TToolButton;
+    ToolButton18: TToolButton;
+    ToolButton19: TToolButton;
     ToolButton2: TToolButton;
+    ToolButton20: TToolButton;
+    ToolButton21: TToolButton;
+    ToolButton22: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
     ToolButton5: TToolButton;
@@ -81,9 +90,13 @@ type
     ToolButton8: TToolButton;
     ToolButton9: TToolButton;
     procedure acAddExecute(Sender: TObject);
+    procedure acAddPageExecute(Sender: TObject);
     procedure acClearExecute(Sender: TObject);
+    procedure acClearPagesExecute(Sender: TObject);
     procedure acDeleteExecute(Sender: TObject);
+    procedure acDeletePageExecute(Sender: TObject);
     procedure acEditExecute(Sender: TObject);
+    procedure acEditPageExecute(Sender: TObject);
     procedure acLoadExecute(Sender: TObject);
     procedure acMakePascalRecordExecute(Sender: TObject);
     procedure acMoveDownExecute(Sender: TObject);
@@ -93,16 +106,24 @@ type
     procedure acSaveAsExecute(Sender: TObject);
     procedure acSaveExecute(Sender: TObject);
     procedure ActionListUpdate(AnAction: TBasicAction; var {%H-}Handled: Boolean);
+    procedure TabControlChange(Sender: TObject);
   private
+    FFileName: String;
     FToolButtons: array of TToolButton;  // stores original order of toolbuttons
+    FDataLists: TFPObjectList;
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;
+    procedure Loaded; override;
+    procedure LoadRecordsFromFile(const AFileName: String);
     function RecordViewerGrid: TRecordViewerGrid; inline;
     procedure RestoreToolButtons;
+    procedure SaveRecordsToFile(const AFileName: String);
     procedure SetParent(AValue: TWinControl); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure SelectDataList(AIndex: Integer);
     procedure UpdateIconSet; override;
   end;
 
@@ -112,17 +133,17 @@ implementation
 {$R *.lfm}
 
 uses
-  TypInfo, Math,
+  TypInfo, Math, IniFiles,
   hxDataModule, hxHexEditor, hxRecordEditorForm, hxPascalRecordForm;
 
 {------------------------------------------------------------------------------}
 {                           TRecordViewerGrid                                  }
 {------------------------------------------------------------------------------}
 
-constructor TRecordViewerGrid.Create(AOwner: TComponent);
+constructor TRecordViewerGrid.Create(AOwner: TComponent; AOwnsData: Boolean);
 begin
   FDataItemClass := TRecordDataItem;
-  inherited Create(AOwner);
+  inherited Create(AOwner, AOwnsData);
 end;
 
 destructor TRecordViewerGrid.Destroy;
@@ -281,6 +302,9 @@ var
   n: Integer;
 begin
   FRecordStart := HexEditor.GetCursorPos;
+  if FDataList = nil then
+    exit;
+
   P := FRecordStart;
   for i := 0 to FDataList.Count - 1 do
   begin
@@ -331,7 +355,7 @@ function TRecordViewerGrid.GetItem(ARow: Integer): TRecordDataItem;
 begin
   Result := FDataList[ARow - FixedRows] as TRecordDataItem;
 end;
-
+                      (*
 procedure TRecordViewerGrid.LoadRecordFromFile(const AFileName: String);
 var
   i, i0: Integer;
@@ -408,7 +432,7 @@ begin
   end;
   RowCount := FDataList.Count + FixedRows;
   UpdateData(HexEditor);
-end;
+end;             *)
 
 procedure TRecordViewerGrid.MakePascalRecord(AList: TStrings);
 const
@@ -468,7 +492,7 @@ begin
   Row := Row - 1;
   UpdateData(HexEditor);
 end;
-
+                      (*
 procedure TRecordViewerGrid.SaveRecordToFile(const AFileName: String);
 var
   i: integer;
@@ -499,7 +523,7 @@ begin
     L.Free;
   end;
 end;
-
+*)
 function TRecordViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
 begin
   Result := inherited SelectCell(ACol, ARow);
@@ -544,9 +568,19 @@ var
   i: Integer;
 begin
   inherited Create(AOwner);
+
+  if FDataLists = nil then
+    FDataLists := TFPObjectList.Create;
+
   SetLength(FToolButtons, Toolbar.ButtonCount);
   for i:=0 to Toolbar.ButtonCount-1 do
     FToolButtons[i] := Toolbar.Buttons[i];
+end;
+
+destructor TRecordViewerFrame.Destroy;
+begin
+  FDataLists.Free;
+  inherited;
 end;
 
 procedure TRecordViewerFrame.acAddExecute(Sender: TObject);
@@ -559,11 +593,40 @@ begin
   end;
 end;
 
+procedure TRecordViewerFrame.acAddPageExecute(Sender: TObject);
+var
+  idx: Integer;
+  lName: String;
+begin
+  lName := '';
+  if InputQuery('New set of record elements', 'Name', lName) then
+  begin
+    if lName = '' then begin
+      MessageDlg('Specify a name for the new set of record elements.', mtError, [mbOK], 0);
+      exit;
+    end;
+    idx := TabControl.Tabs.Add(lName);
+    FDataLists.Add(TDataList.Create);
+    SelectDataList(idx);
+  end;
+end;
+
 procedure TRecordViewerFrame.acClearExecute(Sender: TObject);
 begin
   if MessageDlg('Do you really want to delete all record elements?',
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
   RecordViewerGrid.ClearItems;
+end;
+
+procedure TRecordViewerFrame.acClearPagesExecute(Sender: TObject);
+begin
+  TabControl.Tabs.Clear;
+  FDataLists.Clear;
+
+  TabControl.Tabs.Add('no name');
+  FDataLists.Add(TDataList.Create);
+
+  SelectDataList(0);
 end;
 
 procedure TRecordViewerFrame.acDeleteExecute(Sender: TObject);
@@ -572,6 +635,22 @@ begin
     mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
 
   RecordViewerGrid.DeleteItem(RecordViewerGrid.Row);
+end;
+
+procedure TRecordViewerFrame.acDeletePageExecute(Sender: TObject);
+var
+  idx: Integer;
+begin
+  idx := TabControl.TabIndex;
+  if (idx < 0) or (idx >= TabControl.Tabs.Count) then
+    exit;
+  if MessageDlg('Do you really want to delete this set of record elements?',
+    mtConfirmation, [mbYes, mbNo], 0) <> mrYes then exit;
+  FDataLists.Delete(idx);
+  TabControl.Tabs.Delete(idx);
+  if idx = TabControl.Tabs.Count then
+    idx := TabControl.Tabs.Count - 1;
+  SelectDataList(idx);
 end;
 
 procedure TRecordViewerFrame.acEditExecute(Sender: TObject);
@@ -587,6 +666,15 @@ begin
   end;
 end;
 
+procedure TRecordViewerFrame.acEditPageExecute(Sender: TObject);
+var
+  lName: String;
+begin
+  lName := TabControl.Tabs[TabControl.TabIndex];
+  if InputQuery('Edit name of record element list', 'Name', lName) then
+    TabControl.Tabs[TabControl.TabIndex] := lName;
+end;
+
 procedure TRecordViewerFrame.acLoadExecute(Sender: TObject);
 begin
   with OpenDialog do
@@ -594,7 +682,7 @@ begin
     InitialDir := ExtractFileDir(FileName);
     FileName := ExtractFileName(FileName);
     if Execute then
-      RecordViewerGrid.LoadRecordFromFile(FileName);
+      LoadRecordsFromFile(FileName);
   end;
 end;
 
@@ -639,7 +727,7 @@ begin
     InitialDir := ExtractFileDir(FileName);
     FileName := ExtractFileName(FileName);
     if Execute then
-      RecordViewerGrid.SaveRecordToFile(FileName);
+      SaveRecordsToFile(FileName);
   end;
 end;
 
@@ -648,7 +736,7 @@ begin
   if RecordViewerGrid.FileName = '' then
     acSaveAsExecute(nil)
   else
-    RecordViewerGrid.SaveRecordToFile(RecordViewerGrid.FileName);
+    SaveRecordsToFile(RecordViewerGrid.FileName);
 end;
 
 procedure TRecordViewerFrame.ActionListUpdate(AnAction: TBasicAction;
@@ -656,28 +744,124 @@ procedure TRecordViewerFrame.ActionListUpdate(AnAction: TBasicAction;
 var
   hasData: Boolean;
 begin
-  hasData := FGrid.DataCount > 0;
+  hasData := (FDataLists.Count > 0) and (FGrid.DataCount > 0);
   if (AnAction = acEdit) or (AnAction = acDelete) or (AnAction = acClear) or
      (AnAction = acSave) or (AnAction = acSaveAs) or
      (AnAction = acPrevRecord) or (AnAction = acNextRecord) or
-     (AnAction = acMakePascalRecord)
+     (AnAction = acMakePascalRecord) or
+     (AnAction = acDeletePage) or (AnAction = acClearPages)
   then
     TAction(AnAction).Enabled := hasData
-  else
-  if AnAction = acMoveUp then
+  else if AnAction = acMoveUp then
     acMoveUp.Enabled := FGrid.Row > FGrid.FixedRows
   else if AnAction = acMoveDown then
-    acMoveDown.Enabled := hasData and (FGrid.Row < FGrid.RowCount-1);
+    acMoveDown.Enabled := hasData and (FGrid.Row < FGrid.RowCount-1)
+  else if AnAction = acEditPage then
+    acEditPage.Enabled := FDataLists.Count > 0;
 end;
 
 function TRecordViewerFrame.CreateViewerGrid: TViewerGrid;
 begin
-  Result := TRecordViewerGrid.Create(self);
+  Result := TRecordViewerGrid.Create(self, false);
 end;
 
 function TRecordViewerFrame.GetDefaultColWidths(AIndex: Integer): Integer;
 begin
   Result := DefaultHexParams.RecordViewerColWidths[AIndex];
+end;
+
+procedure TRecordViewerFrame.Loaded;
+begin
+  inherited;
+  FGrid.Parent := TabControl;
+  FGrid.DataList := TDataList.Create;
+  if FDataLists = nil then FDataLists := TFPObjectList.Create;
+  FDataLists.Add(FGrid.DataList);
+end;
+
+procedure TRecordViewerFrame.LoadRecordsFromFile(const AFileName: String);
+var
+  i, i0, j: Integer;
+  sections, elements, parts: TStringList;
+  item: TRecordDataItem;
+  dt: TDataType;  // DataType
+  ds: Integer;    // DataSize
+  endian: Boolean;
+  s, sep: String;
+  lDataList: TDataList;
+  ini: TIniFile;
+begin
+  TabControl.Tabs.Clear;
+  FDataLists.Clear;
+
+  FFileName := AFileName;
+
+  ini := TMemIniFile.Create(AFileName);
+  try
+    sections := TStringList.Create;
+    elements := TStringList.Create;
+    parts := TStringList.Create;
+    try
+      ini.ReadSections(sections);
+      for j := 0 to sections.Count - 1 do begin
+        ini.ReadSection(sections[j], elements);
+        if elements.Count = 0 then
+          Continue;
+        lDataList := TDataList.Create;
+        TabControl.Tabs.Add(sections[j]);
+        FDataLists.Add(lDataList);
+
+        for i := 0 to elements.Count - 1 do
+        begin
+          s := ini.ReadString(sections[j], elements[i], '');
+          if i = 0 then
+          begin
+            if pos(DATA_FIELD_SEPARATOR, s) > 0 then
+              sep := DATA_FIELD_SEPARATOR
+            else if pos(',', s) > 0 then
+              sep := ','
+            else if pos('|', s) > 0 then
+              sep := '|'
+            else if pos(#9, s) > 0 then
+              sep := #9
+            else
+              raise EHexError.CreateFmt('Unknown field separator in "%s", line "%s=%s"', [AFileName, elements[i], s]);
+            parts.Delimiter := sep[1];
+            parts.StrictDelimiter := true;
+          end;
+
+          parts.DelimitedText := s;
+          if parts.Count < 2 then
+            raise EHexError.CreateFmt('Invalid file structure, line "%s=%s.', [elements[i],s]);
+          if parts[1] = 'BE' then
+            endian := true
+          else if parts[1] = 'LE' then
+            endian := false
+          else
+            raise EHexError.CreateFmt('Invalid file structure, line "%s=%s".', [elements[i], s]);
+
+          dt := TDataType(GetEnumValue(TypeInfo(TDataType), parts[0]));
+          if not InRange(ord(dt), ord(Low(TDataType)), ord(High(TDataType))) then
+            raise EHexError.CreateFmt('Unknown data type, line "%s=%s".', [elements[i], s]);
+
+          if dt in StringDatatypes then
+            ds := StrToInt(parts[2])
+          else
+            ds := DataTypeSizes[dt];
+
+          item := TRecordDataItem.Create(elements[i], dt, ds, endian);
+          lDataList.Add(item);
+        end;
+      end;
+    finally
+      parts.Free;
+      elements.Free;
+      sections.Free;
+    end;
+  finally
+    ini.Free;
+  end;
+  SelectDataList(0);
 end;
 
 function TRecordViewerFrame.RecordViewerGrid: TRecordViewerGrid;
@@ -707,6 +891,81 @@ begin
   end;
 end;
 
+procedure TRecordViewerFrame.SaveRecordsToFile(const AFileName: String);
+var
+  ini: TCustomIniFile;
+  i, j: Integer;
+  lDataList: TDataList;
+  item: TRecordDataItem;
+  L: TStrings;
+begin
+  ini := TMemIniFile.Create(AFileName);
+  L := TStringList.Create;
+  try
+    L.Delimiter := DATA_FIELD_SEPARATOR;
+    L.StrictDelimiter := true;
+    for j := 0 to TabControl.Tabs.Count-1 do
+    begin
+      lDataList := TDataList(FDataLists[j]);
+      for i := 0 to lDataList.Count - 1 do begin
+        L.Clear;
+        item := lDataList[i] as TRecordDataItem;
+        L.Add(GetEnumName(TypeInfo(TDataType), Integer(item.DataType)));
+        L.Add(BigEndianStr[item.BigEndian]);
+        if item.DataType in StringDataTypes then
+          L.Add(IntToStr(item.Datasize));
+        ini.WriteString(TabControl.Tabs[j], item.Name, L.DelimitedText);
+      end;
+    end;
+  finally
+    L.Free;
+    ini.Free;
+  end;
+end;
+{
+
+
+var
+  i: integer;
+  L: TStringList;
+  Ls: TStringList;
+  item: TRecordDataItem;
+begin
+  FFileName := AFileName;
+
+  L := TStringList.Create;
+  Ls := TStringList.Create;
+  try
+    Ls.Delimiter := DATA_FIELD_SEPARATOR;
+    for i := 0 to FDataList.Count - 1 do
+    begin
+      item := FDataList[i] as TRecordDataItem;
+      Ls.Clear;
+      Ls.Add(item.Name);
+      Ls.Add(GetEnumName(TypeInfo(TDataType), Integer(item.DataType)));
+      Ls.Add(BigEndianStr[item.BigEndian]);
+      if item.DataType in StringDataTypes then
+        Ls.Add(IntToStr(item.DataSize));
+      L.Add(Ls.DelimitedText);
+    end;
+    L.SaveToFile(AFileName);
+  finally
+    Ls.Free;
+    L.Free;
+  end;
+end;
+}
+
+procedure TRecordViewerFrame.SelectDataList(AIndex: Integer);
+begin
+  if (AIndex > -1) and (FDataLists.Count > 0) then
+    FGrid.DataList := TDataList(FDataLists[AIndex])
+  else
+    FGrid.DataList := nil;
+  TabControl.TabIndex := AIndex;
+  UpdateData(FGrid.HexEditor);
+end;
+
 procedure TRecordViewerFrame.SetParent(AValue: TWinControl);
 begin
   inherited SetParent(AValue);
@@ -720,6 +979,11 @@ begin
     ToolBar.AutoSize := true;
     RestoreToolButtons;
   end;
+end;
+
+procedure TRecordViewerFrame.TabControlChange(Sender: TObject);
+begin
+  SelectDataList(TabControl.TabIndex);
 end;
 
 procedure TRecordViewerFrame.UpdateIconSet;

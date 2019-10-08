@@ -102,7 +102,7 @@ const
     0, 0, 0
   );
 
-  DATA_FIELD_SEPARATOR = '|';
+  DATA_FIELD_SEPARATOR = ';';
 
   BigEndianStr: array[Boolean] of String = (
     'LE', 'BE'

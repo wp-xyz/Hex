@@ -954,8 +954,9 @@ begin
   UpdateCurrentHexEditor;
   UpdateCaption;
   F := GetActiveHexEditorFrame;
-  if Assigned(F) then
+  if Assigned(F) then begin
     F.UpdateStatusBarPanelWidths(StatusBar);
+  end;
 end;
 
 procedure TMainForm.ReadIni;

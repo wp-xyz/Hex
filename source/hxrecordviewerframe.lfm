@@ -1,115 +1,160 @@
 inherited RecordViewerFrame: TRecordViewerFrame
+  Width = 469
+  ClientWidth = 469
+  Color = clForm
+  ParentColor = False
   DesignLeft = 582
   DesignTop = 345
   inherited lblHeader: TLabel
+    Width = 469
     Caption = ' Record Viewer'
   end
   object ToolBar: TToolBar[1]
     Left = 0
     Height = 24
     Top = 21
-    Width = 320
+    Width = 469
     AutoSize = True
     Caption = 'ToolBar'
     Images = CommonData.Images_Office
     TabOrder = 0
     object ToolButton1: TToolButton
-      Left = 1
+      Left = 98
       Top = 2
       Action = acAdd
     end
     object ToolButton2: TToolButton
-      Left = 24
+      Left = 121
       Top = 2
       Action = acEdit
     end
     object ToolButton3: TToolButton
-      Left = 200
+      Left = 297
       Top = 2
       Action = acSaveAs
     end
     object ToolButton4: TToolButton
-      Left = 47
+      Left = 144
       Top = 2
       Action = acDelete
     end
     object ToolButton5: TToolButton
-      Left = 93
+      Left = 190
       Height = 22
       Top = 2
       Caption = 'ToolButton6'
       Style = tbsDivider
     end
     object ToolButton6: TToolButton
-      Left = 149
+      Left = 246
       Top = 2
       Action = acLoad
     end
     object ToolButton7: TToolButton
-      Left = 98
+      Left = 195
       Top = 2
       Action = acMoveUp
     end
     object ToolButton8: TToolButton
-      Left = 121
+      Left = 218
       Top = 2
       Action = acMoveDown
     end
     object ToolButton10: TToolButton
-      Left = 177
+      Left = 274
       Top = 2
       Action = acSave
     end
     object ToolButton9: TToolButton
-      Left = 144
+      Left = 241
       Height = 22
       Top = 2
       Caption = 'ToolButton9'
       Style = tbsDivider
     end
     object ToolButton11: TToolButton
-      Left = 172
+      Left = 269
       Height = 22
       Top = 2
       Caption = 'ToolButton11'
       Style = tbsDivider
     end
     object ToolButton12: TToolButton
-      Left = 223
+      Left = 320
       Height = 22
       Top = 2
       Caption = 'ToolButton12'
       Style = tbsDivider
     end
     object ToolButton13: TToolButton
-      Left = 228
+      Left = 325
       Top = 2
       Action = acPrevRecord
     end
     object ToolButton14: TToolButton
-      Left = 251
+      Left = 348
       Top = 2
       Action = acNextRecord
     end
     object ToolButton15: TToolButton
-      Left = 274
+      Left = 371
       Height = 22
       Top = 2
       Caption = 'ToolButton15'
       Style = tbsDivider
     end
     object ToolButton16: TToolButton
-      Left = 279
+      Left = 376
       Top = 2
       Action = acMakePascalRecord
     end
     object ToolButton17: TToolButton
-      Left = 70
+      Left = 167
       Top = 2
       Action = acClear
     end
+    object ToolButton18: TToolButton
+      Left = 1
+      Top = 2
+      Action = acAddPage
+    end
+    object ToolButton19: TToolButton
+      Left = 24
+      Top = 2
+      Action = acEditPage
+    end
+    object ToolButton20: TToolButton
+      Left = 47
+      Top = 2
+      Action = acDeletePage
+    end
+    object ToolButton21: TToolButton
+      Left = 70
+      Top = 2
+      Action = acClearPages
+    end
+    object ToolButton22: TToolButton
+      Left = 93
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton22'
+      Style = tbsDivider
+    end
   end
-  object ActionList: TActionList[2]
+  object TabControl: TTabControl[2]
+    Left = 0
+    Height = 195
+    Top = 45
+    Width = 469
+    OnChange = TabControlChange
+    TabIndex = 0
+    Tabs.Strings = (
+      'no name'
+    )
+    Align = alClient
+    TabOrder = 1
+  end
+  object ActionList: TActionList[3]
     Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
     left = 114
@@ -193,14 +238,38 @@ inherited RecordViewerFrame: TRecordViewerFrame
       ImageIndex = 8
       OnExecute = acClearExecute
     end
+    object acAddPage: TAction
+      Category = 'Record'
+      Caption = 'Add page'
+      ImageIndex = 24
+      OnExecute = acAddPageExecute
+    end
+    object acDeletePage: TAction
+      Category = 'Record'
+      Caption = 'Delete page'
+      ImageIndex = 26
+      OnExecute = acDeletePageExecute
+    end
+    object acEditPage: TAction
+      Category = 'Record'
+      Caption = 'Edit page'
+      ImageIndex = 27
+      OnExecute = acEditPageExecute
+    end
+    object acClearPages: TAction
+      Category = 'Record'
+      Caption = 'Clear pages'
+      ImageIndex = 25
+      OnExecute = acClearPagesExecute
+    end
   end
-  object OpenDialog: TOpenDialog[3]
+  object OpenDialog: TOpenDialog[4]
     DefaultExt = '.hxr'
     Filter = 'Hex Record File (*.hxr)|*.hxr'
     left = 114
     top = 133
   end
-  object SaveDialog: TSaveDialog[4]
+  object SaveDialog: TSaveDialog[5]
     DefaultExt = '.hxr'
     Filter = 'Hex Record File (*.hxr)|*.hxr'
     left = 208

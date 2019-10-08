@@ -14,7 +14,9 @@ type
     FHexEditor: THxHexEditor;
     FOldEditText: String;
     FEditText: String;
+    FOwnsData: Boolean;
     function GetDataCount: Integer;
+    procedure SetDataList(AValue: TDataList);
 
   protected
     FDataList: TDataList;
@@ -41,12 +43,13 @@ type
     procedure SetEditText(ACol, ARow: LongInt; const AText: String); override;
 
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AOwnsData: Boolean); reintroduce; virtual;
     destructor Destroy; override;
     procedure EditingDone; override;
     procedure UpdateData(AHexEditor: THxHexEditor); virtual;
     property DataCount: Integer read GetDataCount;
     property DataItemClass: TDataItemClass read FDataItemClass;
+    property DataList: TDataList read FDataList write SetDatalist;
     property HexEditor: THxHexEditor read FHexEditor;
   published
 
@@ -60,11 +63,13 @@ uses
   real48utils,
   hxUtils;
 
-constructor TViewerGrid.Create(AOwner: TComponent);
+constructor TViewerGrid.Create(AOwner: TComponent; AOwnsData: Boolean);
 begin
-  inherited;
+  inherited Create(AOwner);
+  FOwnsData := AOwnsData;
   FixedCols := 0;
-  FDataList := TDataList.Create;
+  if FOwnsData then
+    FDataList := TDataList.Create;
   FDataItemClass := TDataItem;
   DefineColumns;
   AutoFillColumns := true;
@@ -73,7 +78,8 @@ end;
 
 destructor TViewerGrid.Destroy;
 begin
-  FDataList.Free;
+  if FOwnsData then
+    FDataList.Free;
   inherited;
 end;
 
@@ -176,7 +182,10 @@ end;
 
 function TViewerGrid.GetDataCount: Integer;
 begin
-  Result := FDataList.Count;
+  if Assigned(FDataList) then
+    Result := FDataList.Count
+  else
+    Result := 0;
 end;
 
 function TViewerGrid.GetEditText(ACol, ARow: LongInt): String;
@@ -374,7 +383,10 @@ end;
 procedure TViewerGrid.Prepare;
 begin
   PopulateDataList;
-  RowCount := FDataList.Count + FixedRows;
+  if FDataList = nil then
+    RowCount := FixedRows
+  else
+    RowCount := FDataList.Count + FixedRows;
   Invalidate;
 end;
 
@@ -394,6 +406,17 @@ begin
     item.BigEndian := true
   else if AState = cbUnchecked then
     item.BigEndian := false;
+end;
+
+procedure TViewerGrid.SetDataList(AValue: TDataList);
+begin
+  if not FOwnsData then begin
+    FDataList := AValue;
+    if Assigned(FDataList) then
+      RowCount := FDataList.Count + FixedRows
+    else
+      RowCount := FixedRows;
+  end;
 end;
 
 procedure TViewerGrid.SetEditText(ACol, ARow: LongInt; const AText: String);

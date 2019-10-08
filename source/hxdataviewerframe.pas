@@ -20,7 +20,7 @@ type
     procedure PopulateDataList; override;
     function SelectCell(ACol, ARow: Integer): Boolean; override;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent; AOwnsData: Boolean); override;
   end;
 
 
@@ -44,10 +44,10 @@ uses
 {                              TDataViewerGrid                                  }
 {------------------------------------------------------------------------------}
 
-constructor TDataViewerGrid.Create(AOwner: TComponent);
+constructor TDataViewerGrid.Create(AOwner: TComponent; AOwnsData: Boolean);
 begin
   FDataItemClass := TDataItem;
-  inherited Create(AOwner);
+  inherited Create(AOwner, AOwnsData);
 end;
 
 procedure TDataViewerGrid.DefineColumns;
@@ -155,7 +155,7 @@ end;
 
 function TDataViewerFrame.CreateViewerGrid: TViewerGrid;
 begin
-  Result := TDataViewerGrid.Create(self);
+  Result := TDataViewerGrid.Create(self, true);
 end;
 
 function TDataViewerFrame.GetDefaultColWidths(AIndex: Integer): Integer;
