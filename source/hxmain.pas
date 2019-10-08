@@ -223,6 +223,7 @@ type
     procedure acViewOffsetFormatHandler(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormDropFiles(Sender: TObject; const FileNames: Array of String);
     procedure FormShow(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
     procedure StatusBarHint(Sender: TObject);
@@ -904,6 +905,15 @@ begin
 
   ReadIni;
   UpdateCmds;
+end;
+
+procedure TMainForm.FormDropFiles(Sender: TObject;
+  const FileNames: Array of String);
+var
+  fn: String;
+begin
+  for fn in FileNames do
+     CreateEditor(fn, HexParams.WriteProtected);
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

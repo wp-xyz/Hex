@@ -3,12 +3,14 @@ object MainForm: TMainForm
   Height = 485
   Top = 236
   Width = 914
+  AllowDropFiles = True
   Caption = 'MainForm'
   ClientHeight = 465
   ClientWidth = 914
   Menu = MainMenu
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDropFiles = FormDropFiles
   OnShow = FormShow
   ShowHint = True
   LCLVersion = '2.1.0.0'
