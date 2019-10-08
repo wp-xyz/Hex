@@ -1,0 +1,13 @@
+[Header]
+Signature=dtCharArray;LE;4
+ImageCount=dtWord;LE
+
+[DirEntry]
+Width=dtByte;LE
+Height=dtByte;LE
+PaletteSize=dtByte;LE
+Reserved=dtByte;LE
+NumPlanes=dtWord;LE
+BitsPerPixel=dtWord;LE
+ImageSize=dtLongWord;LE
+ImageOffset=dtLongWord;LE
