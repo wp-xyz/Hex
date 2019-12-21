@@ -821,6 +821,12 @@ var
   c: TCursor;
   page: TTabSheet;
 begin
+  if not FileExists(AFileName) then
+  begin
+    MessageDlg(Format('File "%s" not found.', [AFileName]), mtError, [mbOK], 0);
+    exit;
+  end;
+
   c := Screen.Cursor;
   Screen.Cursor := crHourglass;
   try
