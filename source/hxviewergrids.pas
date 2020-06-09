@@ -201,6 +201,7 @@ var
   dbl: Double;
   len: Integer;
   ws: WideString;
+  ext10: TExtended10;
 begin
   if AItem = nil then
   begin
@@ -268,10 +269,21 @@ begin
         else
           Result := Format('%.15g', [LEToN(PDouble(@buffer[0])^)]);
       dtExtended:
+       {$IF SizeOf(extended) = 10}
         if AItem.BigEndian then
           Result := Format('%.15g', [BEToN(PExtended(@buffer[0])^)])
         else
           Result := Format('%.15g', [LEToN(PExtended(@buffer[0])^)]);
+       {$ELSE}
+        begin
+          ext10 := PExtended10(@buffer[0])^;
+          if AItem.BigEndian then
+            dbl := ExtendedToDouble(BEToN(ext10))
+          else
+            dbl := ExtendedToDouble(LEToN(ext10));
+          Result := Format('%.15g', [dbl]);
+        end;
+       {$IFEND}
       dtReal48:
         begin
           if AItem.BigEndian then
@@ -439,6 +451,7 @@ var
   sng: Single;
   dbl: Double;
   ext: Extended;
+  ext10: TExtended10;
   r48: Real48;
   oldInsertMode: Boolean;
   fs: TFormatSettings;
@@ -547,6 +560,8 @@ begin
                   err := errOutOfRange;
               dtExtended:
                 begin
+                  if SizeOf(ext) <> 10 then
+                    raise Exception.Create('Cannot write non ISO-extended.');
                   if AItem.BigEndian then ext := NtoBE(ext) else ext := NtoLE(ext);
                   FHexEditor.WriteBuffer(ext, AItem.Offset, SizeOf(ext));
                 end;

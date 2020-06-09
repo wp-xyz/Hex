@@ -272,7 +272,7 @@ procedure TSettingsForm.FormCreate(Sender: TObject);
 const
   FONT_SIZES: array[0..14] of PtrInt = (6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24);
 var
-  i: Integer;
+  i: PtrInt;
 begin
   with CommonData.Images do
   begin

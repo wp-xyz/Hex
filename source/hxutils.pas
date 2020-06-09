@@ -8,6 +8,10 @@ uses
   Classes, SysUtils, Graphics, IniFiles, Forms,
   hxGlobal, hxHexEditor;
 
+type
+  TExtended10 = array[0..9] of byte;     // covers that case that "extended" is not 10 bytes
+  PExtended10 = ^TExtended10;
+
 // Ini file
 function CreateIniFile : TCustomIniFile;
 function GetIniFileName: String;
@@ -37,28 +41,39 @@ procedure ErrorFmt(const AMsg: string; AParams: Array of const);
 function IntToOctal(AValue: Integer): String;
 function BEToN(AValue: Single): Single; overload;
 function BEToN(AValue: Double): Double; overload;
-function BEToN(AValue: Extended): Extended; overload;
 function BEToN(AValue: Real48): Real48; overload;
 function BEToN(AValue: Currency): Currency; overload;
 function BEToN(AValue: WideString): WideString; overload;
 function LEToN(AValue: Single): Single; overload;
 function LEToN(AValue: Double): Double; overload;
-function LEToN(AValue: Extended): Extended; overload;
 function LEToN(AValue: Real48): Real48; overload;
 function LEToN(AValue: Currency): Currency; overload;
 function LEToN(AValue: WideString): WideString; overload;
 function NtoBE(AValue: Single): Single; overload;
 function NtoBE(AValue: Double): Double; overload;
-function NtoBE(AValue: Extended): Extended; overload;
 function NtoBE(AValue: Real48): Real48; overload;
 function NtoBE(AValue: Currency): Currency; overload;
 function NToBE(AValue: WideString): WideString; overload;
 function NtoLE(AValue: Single): Single; overload;
 function NtoLE(AValue: Double): Double; overload;
-function NtoLE(AValue: Extended): Extended; overload;
 function NtoLE(AValue: Real48): Real48; overload;
 function NtoLE(AValue: Currency): Currency; overload;
 function NToLE(AValue: WideString): WideString; overload;
+
+{$IF SizeOf(Extended) = 10}
+function BEToN(AValue: Extended): Extended; overload;
+function LEToN(AValue: Extended): Extended; overload;
+function NtoBE(AValue: Extended): Extended; overload;
+function NtoLE(AValue: Extended): Extended; overload;
+{$ELSE}
+// replacement when extended <> 10 bytes
+function BEToN(AValue: TExtended10): TExtended10; overload;
+function LEToN(AValue: TExtended10): TExtended10; overload;
+function NtoBE(AValue: TExtended10): TExtended10; overload;
+function NtoLE(AValue: TExtended10): TExtended10; overload;
+{$IFEND}
+
+function ExtendedToDouble(x: TExtended10): Double;
 
 // Data types
 procedure CreateDataTypeList(AList: TStrings; const ADataTypes: Array of TDataType);
@@ -70,6 +85,7 @@ function CurrToBytes(AValue: Currency; BigEndian: Boolean): TBytes;
 function SingleToBytes(AValue: single; BigEndian: Boolean): TBytes;
 function DoubleToBytes(AValue: double; BigEndian: Boolean): TBytes;
 function ExtendedToBytes(AValue: Extended; BigEndian: Boolean): TBytes;
+function ExtendedToBytes(AValue: TExtended10; BigEndian: Boolean): TBytes;  // replacement when extended <> 10 bytes
 function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;
 
 function BytesToHex(AValue: TBytes): String;
@@ -78,10 +94,11 @@ function BytesToHex(AValue: TBytes): String;
 procedure Exchange(var A, B: Integer);
 procedure EnsureOrder(var A, B: Integer);
 
+
 implementation
 
 uses
-  LCLType, TypInfo, LazFileUtils, Dialogs;
+  LCLType, Math, TypInfo, LazFileUtils, Dialogs;
 
 
 {==============================================================================}
@@ -565,11 +582,19 @@ begin
   BEToN_Helper(Result, SizeOf(Double));
 end;
 
+{$IF SizeOf(Extended) = 10}
 function BEToN(AValue: Extended): Extended; overload;
 begin
   Result := AValue;
   BEToN_Helper(Result, SizeOf(Extended));
 end;
+{$ELSE}
+function BEToN(AValue: TExtended10): TExtended10; overload;
+begin
+  Result := AValue;
+  BEToN_Helper(Result, Sizeof(TExtended10));
+end;
+{$IFEND}
 
 function BEToN(AValue: Real48): Real48; overload;
 begin
@@ -614,11 +639,19 @@ begin
   LEtoN_Helper(Result, SizeOf(Double));
 end;
 
+{$IF SizeOf(Extended) = 10}
 function LEToN(AValue: Extended): Extended; overload;
 begin
   Result := AValue;
   LEtoN_Helper(Result, SizeOf(Extended));
 end;
+{$ELSE}
+function LEToN(AValue: TExtended10): TExtended10; overload;
+begin
+  Result := AValue;
+  LEToN_Helper(Result, SizeOf(TExtended10));
+end;
+{$IFEND}
 
 function LEToN(AValue: Real48): Real48; overload;
 begin
@@ -663,11 +696,19 @@ begin
   NtoBE_Helper(AValue, SizeOf(Double));
 end;
 
+{$IF SizeOf(Extended) = 10}
 function NtoBE(AValue: Extended): Extended;
 begin
   Result := AValue;
   NtoBE_Helper(AValue, SizeOf(Extended));
 end;
+{$ELSE}
+function NToBE(AValue: TExtended10): TExtended10;
+begin
+  Result := AValue;
+  NtoBE_HElper(AValue, SizeOf(TExtended10));
+end;
+{$IFEND}
 
 function NtoBE(AValue: Real48): Real48;
 begin
@@ -713,11 +754,19 @@ begin
   NtoLE_Helper(AValue, SizeOf(Double));
 end;
 
+{$IF SizeOf(Extended) = 10}
 function NtoLE(AValue: Extended): Extended;
 begin
   Result := AValue;
   NtoLE_Helper(AValue, SizeOf(Extended));
 end;
+{$ELSE}
+function NtoLE(AValue: TExtended10): TExtended10;
+begin
+  Result := AValue;
+  NtoLE_Helper(AValue, SizeOf(TExtended10));
+end;
+{$IFEND}
 
 function NtoLE(AValue: Real48): Real48;
 begin
@@ -751,6 +800,68 @@ begin
 end;
 {$ENDIF}
 
+{ Is needed in cases like Win-64bit where "extended" maps to "double". }
+
+function ExtendedToDouble(x: TExtended10): Double;
+type
+  TExtendedRec = record
+    Significand: Int64;
+    Exponent: Word;
+  end;
+var
+  xr: TExtendedRec absolute x;
+  sgn: Integer;
+  exponent: Integer;
+  mantissa: Extended;
+  tmp: Int64;
+  factor: Int64;
+  i: Integer;
+  signBit: Word;
+  exponentBits: Word;
+  sigBits63_62: byte;
+  sigBits61_0: Int64;
+begin
+  signBit := xr.Exponent and $8000;
+  exponentBits := xr.Exponent and $7FFF;
+
+  // Get sign: highest bit
+  if signBit = 0 then
+    sgn := +1
+  else
+    sgn := -1;
+
+  // Special cases: NaN, Infinity, NegInfinity
+  if exponentBits = $7FFF then  // all bits in exponent part set
+  begin
+    sigBits63_62 := (xr.Significand and $C000000000000000) shr (4*15 + 2);
+    sigBits61_0 := (xr.Significand and $3000000000000000);
+    case sigBits63_62 of
+      0: if sigBits61_0 = 0 then Result := sgn * Infinity else Result := NaN;
+      1: Result := NaN;
+      2: if sigBits61_0 = 0 then Result := sgn * Infinity else Result := NaN;
+      3: Result := NaN;
+    end;
+    exit;
+  end;
+
+  // Get exponent: 15 bit, offset by 16383
+  exponent := exponentBits - 16383;
+
+  // Get mantissa
+  mantissa := 0.0;
+  tmp := xr.Significand;
+  factor := 1;
+  for i := 0 to 63 do
+  begin
+    if tmp and $8000000000000000 <> 0 then
+      mantissa := mantissa + 1.0 / factor;
+    tmp := tmp shl 1;
+    factor := factor shl 1;
+  end;
+
+  // Product
+  Result := sgn * mantissa * IntPower(2.0, exponent);
+end;
 
 {==============================================================================}
 {    Data types                                                                }
@@ -824,6 +935,11 @@ end;
 function ExtendedToBytes(AValue: Extended; BigEndian: Boolean): TBytes;
 begin
   Result := NumberToBytes(@AValue, SizeOf(Extended), BigEndian);
+end;
+
+function ExtendedToBytes(AValue: TExtended10; BigEndian: Boolean): TBytes;
+begin
+  Result := NumberToBytes(@AValue, SizeOf(TExtended10), BigEndian);
 end;
 
 function Real48ToBytes(AValue: Real48; BigEndian: Boolean): TBytes;

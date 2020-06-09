@@ -3,6 +3,8 @@ inherited RecordViewerFrame: TRecordViewerFrame
   ClientWidth = 469
   Color = clForm
   ParentColor = False
+  ParentShowHint = False
+  ShowHint = True
   DesignLeft = 582
   DesignTop = 345
   inherited lblHeader: TLabel
@@ -162,44 +164,49 @@ inherited RecordViewerFrame: TRecordViewerFrame
     object acAdd: TAction
       Category = 'Record'
       Caption = 'Add...'
+      Hint = 'New element|New record element'
       ImageIndex = 7
       OnExecute = acAddExecute
     end
     object acEdit: TAction
       Category = 'Record'
       Caption = 'Edit...'
+      Hint = 'Edit element|Edit record element'
       ImageIndex = 9
       OnExecute = acEditExecute
     end
     object acDelete: TAction
       Category = 'Record'
       Caption = 'Delete'
+      Hint = 'Delete element|Delete record element'
       ImageIndex = 23
       OnExecute = acDeleteExecute
     end
     object acLoad: TAction
       Category = 'Record'
       Caption = 'Open record file...'
+      Hint = 'Load|Load record definition'
       ImageIndex = 0
       OnExecute = acLoadExecute
     end
     object acSaveAs: TAction
       Category = 'Record'
       Caption = 'Save record as...'
+      Hint = 'Save as|Save record definition under a new name'
       ImageIndex = 4
       OnExecute = acSaveAsExecute
     end
     object acMoveUp: TAction
       Category = 'Record'
       Caption = 'Move up'
-      Hint = 'Move selected element up'
+      Hint = 'Move up|Move selected element up'
       ImageIndex = 11
       OnExecute = acMoveUpExecute
     end
     object acMoveDown: TAction
       Category = 'Record'
       Caption = 'Move down'
-      Hint = 'Move selected element down'
+      Hint = 'Move down|Move selected element down'
       ImageIndex = 10
       OnExecute = acMoveDownExecute
     end
@@ -241,24 +248,28 @@ inherited RecordViewerFrame: TRecordViewerFrame
     object acAddPage: TAction
       Category = 'Record'
       Caption = 'Add page'
+      Hint = 'Add record page'
       ImageIndex = 24
       OnExecute = acAddPageExecute
     end
     object acDeletePage: TAction
       Category = 'Record'
       Caption = 'Delete page'
+      Hint = 'Delete record page'
       ImageIndex = 26
       OnExecute = acDeletePageExecute
     end
     object acEditPage: TAction
       Category = 'Record'
       Caption = 'Edit page'
+      Hint = 'Edit record page'
       ImageIndex = 27
       OnExecute = acEditPageExecute
     end
     object acClearPages: TAction
       Category = 'Record'
       Caption = 'Clear pages'
+      Hint = 'Clear all pages'
       ImageIndex = 25
       OnExecute = acClearPagesExecute
     end

@@ -128,7 +128,7 @@ begin
     FDataList.Add(TDataItem.Create(dtSingle, 4, HexParams.BigEndian));
   if (dtDouble in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtDouble, 8, HexParams.BigEndian));
-  if (dtExtended in HexParams.DataViewerDataTypes) and (SizeOf(Extended) = 10) then
+  if (dtExtended in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtExtended, 10, HexParams.BigEndian));
   if (dtReal48 in HexParams.DataViewerDataTypes) then
     FDataList.Add(TDataItem.Create(dtReal48, 6, HexParams.BigEndian));

@@ -899,6 +899,8 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  cInputQueryEditSizePercents := 0; // Reduce width of InputQuery dialogs
+
   FRecentFilesManager := TMRUMenuManager.Create(self);
   FRecentFilesManager.MenuCaptionMask := '%0:x - %s';
   FRecentFilesManager.MenuItem := mnuRecentlyOpened;
