@@ -41,14 +41,14 @@ object MainForm: TMainForm
       AnchorSideLeft.Control = CoolBar1
       AnchorSideTop.Control = CoolBar1
       Left = 22
-      Height = 22
+      Height = 24
       Top = 3
       Width = 302
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
       BorderSpacing.Top = 3
-      ButtonHeight = 22
+      ButtonHeight = 24
       ButtonWidth = 24
       Caption = 'ToolBar'
       EdgeBorders = []
@@ -74,7 +74,7 @@ object MainForm: TMainForm
       end
       object tbDivider1: TToolButton
         Left = 61
-        Height = 22
+        Height = 24
         Top = 0
         Caption = 'tbDivider1'
         Style = tbsDivider
@@ -86,7 +86,7 @@ object MainForm: TMainForm
       end
       object tbDivider2: TToolButton
         Left = 114
-        Height = 22
+        Height = 24
         Top = 0
         Caption = 'tbDivider2'
         Style = tbsDivider
@@ -98,7 +98,7 @@ object MainForm: TMainForm
       end
       object tbDivider3: TToolButton
         Left = 273
-        Height = 22
+        Height = 24
         Top = 0
         Caption = 'tbDivider3'
         Style = tbsDivider
@@ -120,7 +120,7 @@ object MainForm: TMainForm
       end
       object ToolButton4: TToolButton
         Left = 244
-        Height = 22
+        Height = 24
         Top = 0
         Caption = 'ToolButton4'
         Style = tbsDivider
@@ -142,7 +142,7 @@ object MainForm: TMainForm
       end
       object ToolButton8: TToolButton
         Left = 191
-        Height = 22
+        Height = 24
         Top = 0
         Caption = 'ToolButton8'
         Style = tbsDivider
@@ -165,8 +165,8 @@ object MainForm: TMainForm
   object ActionList: TActionList
     Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
-    left = 112
-    top = 163
+    Left = 112
+    Top = 163
     object acFileNew: TAction
       Category = 'File'
       Caption = 'New'
@@ -677,8 +677,8 @@ object MainForm: TMainForm
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
-    left = 112
-    top = 104
+    Left = 112
+    Top = 104
     object mnuFile: TMenuItem
       Caption = '&File'
       object mnuFileNew: TMenuItem
@@ -965,15 +965,15 @@ object MainForm: TMainForm
     end
   end
   object OpenDialog: TOpenDialog
-    left = 386
-    top = 104
+    Left = 386
+    Top = 104
   end
   object RecentFilesPopup: TPopupMenu
-    left = 112
-    top = 232
+    Left = 112
+    Top = 232
   end
   object SaveDialog: TSaveDialog
-    left = 386
-    top = 163
+    Left = 386
+    Top = 163
   end
 end

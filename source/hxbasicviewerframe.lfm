@@ -16,7 +16,7 @@ object BasicViewerFrame: TBasicViewerFrame
     Align = alTop
     Caption = 'Title'
     Color = clBtnShadow
-    Font.Color = clBtnFace
+    Font.Color = clBtnText
     Font.Height = -16
     Font.Style = [fsBold]
     ParentColor = False
