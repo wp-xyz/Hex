@@ -5334,9 +5334,6 @@ var
   cLoop,
     cInc: Cardinal;
   LPTblFind: PMPHFindTable;
-
-  //wp
-  ch: Char;
 begin
   if Assigned(FOnFind) then
     FOnFind(self, aBuffer, aCount, aStart, aEnd, IgnoreCase, #0, Result)
@@ -5380,8 +5377,6 @@ begin
 
         if LIntCurPos > LIntEnd then
           Exit;
-
-        ch := char(Data[LIntCurPos]);  // wp
 
         LChrCurrent := LPTblFind^[char(Data[LIntCurPos])];
 
@@ -8391,7 +8386,7 @@ begin
         end;
       ufKindByteRemoved:
         begin
-          FEditor.InternalInsertBuffer(Pointer(Cardinal(Memory) + Position - 1),
+          FEditor.InternalInsertBuffer(Pointer(PtrUInt(Memory) + Position - 1),
             LRecUndo.Count, LRecUndo.Pos);
           PopulateUndo(LRecUndo);
           FEditor.AdjustBookmarks(LRecUndo.Pos - LRecUndo.Count,
@@ -8420,7 +8415,7 @@ begin
       ufKindAllData:
         begin
           FEditor.FDataStorage.Size := LRecUndo.Count;
-          FEditor.FDataStorage.WriteBufferAt(Pointer(Cardinal(Memory) + Position
+          FEditor.FDataStorage.WriteBufferAt(Pointer(PtrUInt(Memory) + Position
             - 1)^, 0,
             LRecUndo.Count);
           FEditor.CalcSizes;
@@ -8431,7 +8426,7 @@ begin
         begin
           FEditor.InternalDelete(LRecUndo.Pos, LRecUndo.Pos + LRecUndo.Count,
             -1, 0);
-          FEditor.InternalInsertBuffer(Pointer(Cardinal(Memory) + Position - 1),
+          FEditor.InternalInsertBuffer(Pointer(PtrUInt(Memory) + Position - 1),
             LRecUndo.ReplCount, LRecUndo.Pos);
           PopulateUndo(LRecUndo);
           FEditor.AdjustBookmarks(LRecUndo.Pos + LRecUndo.ReplCount,
@@ -8864,11 +8859,11 @@ begin
     Position := Size - 4;
     Read(LIntRecOffset, 4);
     Seek(-LIntRecOffset, soFromCurrent);
-    P := Pointer(Cardinal(Memory) + Position);
+    P := Pointer(PtrUInt(Memory) + Position);
     if not (ufFlagHasSelection in P^.Flags) then
     begin
       Size := Size + SizeOf(TUndoSelRec);
-      P := Pointer(Cardinal(Memory) + Position);
+      P := Pointer(PtrUInt(Memory) + Position);
       Include(P^.Flags, ufFlagHasSelection);
       Inc(P^.DataLen, sizeof(TUndoSelRec));
       Inc(LIntRecOffset, sizeof(TUndoSelRec));
@@ -8876,7 +8871,7 @@ begin
       WriteBuffer(LIntRecOffset, 4);
     end;
     P^.CurPos := APos;
-    PSel := Pointer(Cardinal(Memory) + size - 4 - sizeof(TUndoSelRec));
+    PSel := Pointer(PtrUInt(Memory) + size - 4 - sizeof(TUndoSelRec));
     PSel^.SelStart := APos;
     if aCount = 0 then
       PSel^.SelEnd := -1
@@ -8947,7 +8942,7 @@ function TMPHMemoryStream.GetAddress(const Index, Count: integer): PByte;
 begin
   if (Index < 0) or ((Index+Count) > Size) then
     raise EMPHexEditor.Create(ERR_DATA_BOUNDS);
-  Result := Pointer(PtrInt(Memory) + PtrInt(Index));
+  Result := Pointer(PtrUInt(Memory) + PtrUInt(Index));
 end;
 {$ENDIF}
 
