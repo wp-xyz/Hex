@@ -8947,7 +8947,7 @@ function TMPHMemoryStream.GetAddress(const Index, Count: integer): PByte;
 begin
   if (Index < 0) or ((Index+Count) > Size) then
     raise EMPHexEditor.Create(ERR_DATA_BOUNDS);
-  Result := Pointer(Cardinal(Memory)+Cardinal(Index));
+  Result := Pointer(PtrInt(Memory) + PtrInt(Index));
 end;
 {$ENDIF}
 
