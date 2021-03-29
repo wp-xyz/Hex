@@ -9,7 +9,7 @@ uses
   hxGlobal, hxHexEditor;
 
 type
-  TExtended10 = array[0..9] of byte;     // covers that case that "extended" is not 10 bytes
+  TExtended10 = packed array[0..9] of byte;     // covers that case that "extended" is not 10 bytes
   PExtended10 = ^TExtended10;
 
 // Ini file
@@ -804,7 +804,7 @@ end;
 
 function ExtendedToDouble(x: TExtended10): Double;
 type
-  TExtendedRec = record
+  TExtendedRec = packed record
     Significand: Int64;
     Exponent: Word;
   end;
