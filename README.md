@@ -12,10 +12,10 @@ Hex is an open source hex editor with some features which are useful for analyzi
 ## Compilation
 
 The application is distributed as Pascal source code only. It can be compiled with Lazarus v2.0+/FPC3.0+.
+Third-party componets used are created at runtime and thus do not need installation of extra packages.
 
 Tested on Windows 32bit/64 bit and Linux 64 bit, but it should work also on other platforms supported by Lazarus.
 
-It depends on the package _OMultiPanel_ which can be installed from https://sourceforge.net/p/omultipanel/code/HEAD/tree/.
 
 ## Acknowledgements
 
@@ -24,4 +24,4 @@ Besides the Lazarus LCL, the application uses the following third-party componen
 * OMultiPanel: http://www.kluug.net/omultipanel.php
 * MPHexEditor: https://github.com/michalgw/mphexeditor/blob/master/hexeditor.html
 
-Most of the icons are taken from https://icons8.com, style "Office" (https://icons8.com/icons/office).
+Most of the icons are taken from https://icons8.com, style "Office" (https://icons8.com/icons/office) and style "Simple small" (https://icons8.com/icons/small).
