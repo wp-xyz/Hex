@@ -42,10 +42,10 @@ object SettingsForm: TSettingsForm
     Height = 581
     Top = 6
     Width = 794
-    ActivePage = pgViewer
+    ActivePage = pgGUI
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 3
+    TabIndex = 4
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
@@ -1146,7 +1146,7 @@ object SettingsForm: TSettingsForm
           Top = 11
           Width = 124
           BorderSpacing.Left = 16
-          Caption = 'Office (icons3.com)'
+          Caption = 'Office (icons8.com)'
           Checked = True
           TabOrder = 1
           TabStop = True
@@ -1160,7 +1160,7 @@ object SettingsForm: TSettingsForm
           Top = 47
           Width = 159
           BorderSpacing.Left = 16
-          Caption = 'Simple small (icons3.com)'
+          Caption = 'Simple small (icons8.com)'
           TabOrder = 0
         end
         object pbOffice: TPaintBox

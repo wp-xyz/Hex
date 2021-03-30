@@ -238,9 +238,9 @@ object AboutForm: TAboutForm
       Height = 15
       Hint = 'www.icons8.com'
       Top = 83
-      Width = 91
+      Width = 61
       BorderSpacing.Bottom = 8
-      Caption = 'www.icons8.com'
+      Caption = 'icons8.com'
       Font.Color = clBlue
       ParentColor = False
       ParentFont = False

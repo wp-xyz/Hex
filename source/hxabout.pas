@@ -72,7 +72,7 @@ begin
   else if Sender = lblLazarus then
     OpenURL('https://www.lazarus-ide.org/')
   else if Sender = lblIcons8 then
-    OpenURL('http://www.icons8.com')
+    OpenURL('https://icons8.com')
   else if Sender = lblOndrej then
     OpenURL('http://www.kluug.net/omultipanel.php')
   else if Sender = lblMichal then
