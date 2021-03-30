@@ -205,7 +205,7 @@ object AboutForm: TAboutForm
       Cursor = crHandPoint
       Left = 166
       Height = 15
-      Hint = 'www.kluug.net'
+      Hint = 'http://www.kluug.net/omultipanel.php'
       Top = 68
       Width = 80
       Caption = 'www.kluug.net'
@@ -236,7 +236,7 @@ object AboutForm: TAboutForm
       Cursor = crHandPoint
       Left = 166
       Height = 15
-      Hint = 'www.icons8.com'
+      Hint = 'https://icons8.com'
       Top = 83
       Width = 61
       BorderSpacing.Bottom = 8

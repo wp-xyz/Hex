@@ -62,21 +62,13 @@ begin
     Picture.Assign(Application.Icon);
     Picture.Icon.Current := Picture.Icon.GetBestIndexForSize(Size(Width, Height));
   end;
-  lblVersion.Caption :='Version: ' + GetVersionStr();
+  lblVersion.Caption := 'Version: ' + GetVersionStr();
 end;
 
 procedure TAboutForm.lblURLClick(Sender: TObject);
 begin
-  if Sender = lblFPC then
-    OpenURL('https://www.freepascal.org/')
-  else if Sender = lblLazarus then
-    OpenURL('https://www.lazarus-ide.org/')
-  else if Sender = lblIcons8 then
-    OpenURL('https://icons8.com')
-  else if Sender = lblOndrej then
-    OpenURL('http://www.kluug.net/omultipanel.php')
-  else if Sender = lblMichal then
-    OpenURL('https://github.com/michalgw/mphexeditor');
+  if Sender is TLabel then
+    OpenURL(TLabel(Sender).Hint);
 end;
 
 procedure TAboutForm.lblURLMouseEnter(Sender: TObject);
