@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics,
-  Forms, Controls, StdCtrls, ComCtrls, ExtCtrls, Dialogs, Menus, ActnList,
-  //MPHexEditor,
+  Forms, Controls, ComCtrls, ExtCtrls, Dialogs, Menus, ActnList,
   OMultiPanel,
   hxGlobal, hxHexEditor,
   hxBasicViewerFrame, hxDataViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
@@ -17,14 +16,14 @@ type
   { THexEditorFrame }
 
   THexEditorFrame = class(TFrame)
+    SaveDialog: TSaveDialog;
+  private
     MainPanel: TOMultiPanel;
     LeftPanel: TOMultiPanel;
     CenterPanel: TOMultiPanel;
+    RightPanel: TOMultiPanel;
     BottomPanel: TOMultiPanel;
     HexPanel: TPanel;
-    RightPanel: TOMultiPanel;
-    SaveDialog: TSaveDialog;
-  private
     FHexEditor: THxHexEditor;
     FDataViewer: TDataViewerFrame;
     FRecordViewer: TRecordViewerFrame;
@@ -37,8 +36,9 @@ type
     FOnUpdateStatusBar: TNotifyEvent;
 
     FExtractorAborted: Boolean;
-    FExtractorIsSearching: Boolean;
     FExtractorIndex: Integer;
+
+    procedure CreateMultiPanels;
 
     function GetFileName: String;
 
@@ -144,6 +144,7 @@ uses
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
   inherited;
+  CreateMultiPanels;
   FExtractorIndex := -1;
 end;
 
@@ -154,8 +155,6 @@ begin
 end;
 
 procedure THexEditorFrame.ActiveColors(var AParams: TColorParams);
-var
-  i: Integer;
 begin
   AParams := ColorParams;
   if Assigned(HexEditor) then
@@ -313,6 +312,51 @@ begin
   with panel.PanelCollection.Add do
     Control := FDataViewer;
   UpdateViewerPanelVisible(panel);
+end;
+
+procedure THexEditorFrame.CreateMultiPanels;
+begin
+  MainPanel := TOMultiPanel.Create(self);
+  with MainPanel do
+  begin
+    Align := alClient;
+    Parent := self;
+  end;
+
+  LeftPanel := TOMultiPanel.Create(MainPanel);
+  with LeftPanel do
+    PanelType := ptVertical;
+
+  CenterPanel :=TOMultiPanel.Create(MainPanel);
+  with CenterPanel do
+    PanelType := ptVertical;
+
+  RightPanel := TOMultiPanel.Create(MainPanel);
+  with RightPanel do
+  begin
+    PanelType := ptVertical;
+  end;
+
+  BottomPanel := TOMultiPanel.Create(CenterPanel);
+  HexPanel := TPanel.Create(CenterPanel);
+
+  MainPanel.PanelCollection.AddControl(LeftPanel);
+  MainPanel.PanelCollection.AddControl(CenterPanel);
+  MainPanel.PanelCollection.AddControl(RightPanel);
+  CenterPanel.PanelCollection.AddControl(HexPanel);
+  CenterPanel.PanelCollection.AddControl(BottomPanel);
+
+  LeftPanel.Parent := MainPanel;
+  CenterPanel.Parent := MainPanel;
+  RightPanel.Parent := MainPanel;
+  HexPanel.Parent := CenterPanel;
+  BottomPanel.Parent := CenterPanel;
+
+  MainPanel.PanelCollection[0].Position := 0.25;
+  MainPanel.PanelCollection[1].Position := 0.75;
+  MainPanel.PanelCollection[2].Position := 1.00;
+  CenterPanel.PanelCollection[0].Position := 0.75;
+  CenterPanel.PanelCollection[1].Position := 1.00;
 end;
 
 procedure THexEditorFrame.CreateRecordViewer;
@@ -585,18 +629,6 @@ begin
     HexEditor.LoadFromFile(AFileName);
     HexEditor.ReadOnlyFile := WriteProtected;
     UpdateCaption;
-    (*
-    EnableActions(true);
-    AdjustWidth;
-    ico := TIcon.Create;
-    try
-      idx := CommonData.SystemImages.GetImageIndex(AFileName, false, false, []);
-      CommonData.SystemImages.GetIcon(idx, ico);
-      Icon.Assign(ico);
-    finally
-      ico.Free;
-    end;
-    *)
   end;
 end;
 
@@ -715,7 +747,6 @@ end;
 procedure THexEditorFrame.SetShowObjectViewer(AValue: Boolean);
 var
   panel: TOMultiPanel;
-  idx: Integer;
 begin
   if AValue then
   begin
@@ -883,7 +914,7 @@ end;
 
 procedure THexEditorFrame.UpdateStatusbarPanelWidths(AStatusBar: TStatusBar);
 var
-  p, n: integer;
+  n: integer;
   s: String;
   hexPrefix: String;
 begin
@@ -939,54 +970,6 @@ begin
   // Hint texts
   AStatusBar.Panels.Add.Width := 200;
 end;
-
-
-{
-  p := 2;
-  if sbPos in FStatusbarItems then
-  begin
-    if Assigned(HexEditor) then
-    begin
-      case FStatusbarPosDisplay of
-        odbDec: s := Format('%.0n', [1.0*HexEditor.DataSize]);
-        odbHex: s := Format('%s%x', [hexprefix, HexEditor.DataSize]);
-        odbOct: s := Format('&%s', [IntToOctal(HexEditor.DataSize)]);
-      end;
-      s := Format(SMaskPos, [s]);
-      AStatusbar.Panels[p].Width := AStatusbar.Canvas.TextWidth(s) + 10;
-    end else
-      AStatusbar.Panels[p].Width := 120;
-    inc(p);
-  end;
-
-  if sbSel in FStatusbarItems then
-  begin
-    if Assigned(FHexEditor) then
-    begin
-      n := HexEditor.DataSize;
-      case FStatusbarSelDisplay of
-        odbDec: s := Format('%.0n ... %.0n (%.0n)', [1.0*n, 1.0*n, 1.0*n]);
-        odbHex: s := Format('%0:s%1:x ... %0:s%2:x (%0:s%3:x)', [hexPrefix, n, n, n]);
-        odbOct: s := Format('&%s ... &%s (&%s)', [IntToOctal(n), IntToOctal(n), IntToOctal(n)]);
-      end;
-      AStatusbar.Panels[p].Width := AStatusbar.Canvas.TextWidth(s) + 10;
-    end else
-      AStatusbar.Panels[p].Width := 250;
-    inc(p);
-  end;
-
-  if sbSize in FStatusbarItems then
-  begin
-    if Assigned(HexEditor) then
-    begin
-      s := Format('%.0n', [1.0 * HexEditor.DataSize]);
-      s := Format(SMaskSize, [s]);
-      AStatusBar.Panels[p].Width := AStatusBar.Canvas.TextWidth(s) + 10;
-    end else
-      AStatusbar.Panels[p].Width := 150;
-  end;
-end;
-}
 
 procedure THexEditorFrame.UpdateViewerPanelVisible(APanel: TOMultiPanel);
 var

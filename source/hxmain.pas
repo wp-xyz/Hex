@@ -231,7 +231,7 @@ type
     FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
 
-    function AppendToObjectsMenu(AParentMenu: TMenuItem): TMenuItem;
+    procedure AppendToObjectsMenu(AParentMenu: TMenuItem);
     procedure ApplyParams(const AParams: THexParams);
     procedure EvalCmdLine;
     procedure FindObjectHandler(Sender: TObject);
@@ -732,7 +732,7 @@ end;
 
 { Attaches the "Search ..." entries to the "Objects" menu, after the item
   identified by TAG_OBJECTS }
-function TMainForm.AppendToObjectsMenu(AParentMenu: TMenuItem): TMenuItem;
+procedure TMainForm.AppendToObjectsMenu(AParentMenu: TMenuItem);
 
   function CreateExtractorAction(AIndex: Integer; AFileExt: string): TAction;
   begin
@@ -766,11 +766,6 @@ var
   i, i0: integer;
   item: TMenuItem;
 begin
-  {
-  i0 := FindPrevItem;
-  if i0 = -1 then
-    raise Exception.CreateFmt('Objects menu item with Tag=%s is missing.', [TAG_FIND_OBJECTS]);
-  }
   i0 := 0;
 
   for i := 0 to NumExtractors - 1 do

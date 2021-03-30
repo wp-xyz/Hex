@@ -3,110 +3,11 @@ object HexEditorFrame: THexEditorFrame
   Height = 395
   Top = 0
   Width = 812
-  ClientHeight = 395
-  ClientWidth = 812
   TabOrder = 0
   DesignLeft = 340
   DesignTop = 128
-  object MainPanel: TOMultiPanel
-    Left = 0
-    Height = 395
-    Top = 0
-    Width = 812
-    PanelCollection = <    
-      item
-        Control = LeftPanel
-        Position = 0.25
-        Visible = False
-        Index = 0
-      end    
-      item
-        Control = CenterPanel
-        Position = 0.75
-        Visible = True
-        Index = 1
-      end    
-      item
-        Control = RightPanel
-        Position = 1
-        Visible = False
-        Index = 2
-      end>
-    MinPosition = 0.02
-    Align = alClient
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 0
-    object LeftPanel: TOMultiPanel
-      Left = 0
-      Height = 395
-      Top = 0
-      Width = 203
-      PanelType = ptVertical
-      PanelCollection = <>
-      MinPosition = 0.02
-      Anchors = []
-      TabOrder = 0
-      Visible = False
-    end
-    object CenterPanel: TOMultiPanel
-      Left = 206
-      Height = 395
-      Top = 0
-      Width = 403
-      PanelType = ptVertical
-      PanelCollection = <      
-        item
-          Control = HexPanel
-          Position = 0.75
-          Visible = True
-          Index = 0
-        end      
-        item
-          Control = BottomPanel
-          Position = 1
-          Visible = False
-          Index = 1
-        end>
-      MinPosition = 0.02
-      Anchors = []
-      TabOrder = 1
-      object BottomPanel: TOMultiPanel
-        Left = 0
-        Height = 96
-        Top = 299
-        Width = 403
-        PanelCollection = <>
-        MinPosition = 0.02
-        Anchors = []
-        TabOrder = 1
-        Visible = False
-      end
-      object HexPanel: TPanel
-        Left = 0
-        Height = 296
-        Top = 0
-        Width = 403
-        Anchors = []
-        BevelOuter = bvNone
-        TabOrder = 0
-      end
-    end
-    object RightPanel: TOMultiPanel
-      Left = 612
-      Height = 395
-      Top = 0
-      Width = 200
-      PanelType = ptVertical
-      PanelCollection = <>
-      MinPosition = 0.02
-      Anchors = []
-      TabOrder = 2
-      Visible = False
-    end
-  end
   object SaveDialog: TSaveDialog
-    left = 326
-    top = 78
+    Left = 326
+    Top = 78
   end
 end
