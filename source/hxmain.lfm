@@ -4,7 +4,7 @@ object MainForm: TMainForm
   Top = 236
   Width = 914
   AllowDropFiles = True
-  Caption = 'MainForm'
+  Caption = 'Hex'
   ClientHeight = 465
   ClientWidth = 914
   Menu = MainMenu

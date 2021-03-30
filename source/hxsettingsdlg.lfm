@@ -767,7 +767,7 @@ object SettingsForm: TSettingsForm
         AutoSize = True
         BorderSpacing.Left = 16
         BorderSpacing.Top = 16
-        Caption = 'Data viewer'
+        Caption = 'Numeric viewer'
         ClientHeight = 222
         ClientWidth = 229
         TabOrder = 0
