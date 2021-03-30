@@ -1,13 +1,13 @@
 object AboutForm: TAboutForm
   Left = 340
-  Height = 299
+  Height = 350
   Top = 127
-  Width = 652
+  Width = 381
   AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About Hex'
-  ClientHeight = 299
-  ClientWidth = 652
+  ClientHeight = 350
+  ClientWidth = 381
   OnCreate = FormCreate
   Position = poMainFormCenter
   ShowHint = True
@@ -16,22 +16,23 @@ object AboutForm: TAboutForm
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     Left = 12
-    Height = 256
+    Height = 128
     Top = 12
-    Width = 256
+    Width = 128
     BorderSpacing.Around = 12
+    Proportional = True
   end
   object lblHex: TLabel
     AnchorSideLeft.Control = Image1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
-    Left = 292
-    Height = 65
+    Left = 164
+    Height = 59
     Top = 0
-    Width = 90
+    Width = 80
     BorderSpacing.Left = 24
     Caption = 'Hex'
-    Font.Height = -48
+    Font.Height = -43
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -40,20 +41,22 @@ object AboutForm: TAboutForm
     AnchorSideLeft.Control = lblHex
     AnchorSideTop.Control = lblHex
     AnchorSideTop.Side = asrBottom
-    Left = 292
-    Height = 15
-    Top = 65
-    Width = 55
+    Left = 164
+    Height = 21
+    Top = 59
+    Width = 71
     Caption = 'Hex Editor'
+    Font.Height = -16
     ParentColor = False
+    ParentFont = False
   end
   object lblAcknowledgements: TLabel
-    AnchorSideLeft.Control = lblHexEditor
-    AnchorSideTop.Control = lblHexEditor
+    AnchorSideLeft.Control = Image1
+    AnchorSideTop.Control = Image1
     AnchorSideTop.Side = asrBottom
-    Left = 292
+    Left = 12
     Height = 15
-    Top = 104
+    Top = 164
     Width = 114
     BorderSpacing.Top = 24
     Caption = 'Acknowledgements:'
@@ -65,9 +68,9 @@ object AboutForm: TAboutForm
     AnchorSideLeft.Control = lblAcknowledgements
     AnchorSideTop.Control = lblAcknowledgements
     AnchorSideTop.Side = asrBottom
-    Left = 292
+    Left = 12
     Height = 110
-    Top = 123
+    Top = 183
     Width = 346
     AutoSize = True
     BorderSpacing.Top = 4
@@ -247,19 +250,46 @@ object AboutForm: TAboutForm
     end
   end
   object BitBtn1: TBitBtn
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Panel1
     AnchorSideRight.Side = asrBottom
-    Left = 563
+    Left = 283
     Height = 26
-    Top = 240
+    Top = 301
     Width = 75
     Anchors = [akTop, akRight]
     AutoSize = True
+    BorderSpacing.Top = 8
     BorderSpacing.Bottom = 12
     Caption = 'Close'
     ModalResult = 11
     Images = CommonData.Images_Office
     ImageIndex = 5
     TabOrder = 1
+  end
+  object lblVersion: TLabel
+    AnchorSideLeft.Control = lblHex
+    AnchorSideTop.Control = lblHexEditor
+    AnchorSideTop.Side = asrBottom
+    Left = 164
+    Height = 15
+    Top = 96
+    Width = 38
+    BorderSpacing.Top = 16
+    Caption = 'Version'
+    ParentColor = False
+  end
+  object lblCopyright: TLabel
+    AnchorSideLeft.Control = lblHex
+    AnchorSideTop.Control = lblVersion
+    AnchorSideTop.Side = asrBottom
+    Left = 164
+    Height = 15
+    Top = 115
+    Width = 137
+    BorderSpacing.Top = 4
+    Caption = 'Copyright: Werner Pamler'
+    ParentColor = False
   end
 end

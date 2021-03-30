@@ -15,6 +15,8 @@ type
   TAboutForm = class(TForm)
     BitBtn1: TBitBtn;
     Image1: TImage;
+    lblVersion: TLabel;
+    lblCopyright: TLabel;
     lblOMultiPanelComponent: TLabel;
     lblIcons: TLabel;
     lblMarkus: TLabel;
@@ -48,15 +50,19 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLIntf,
-  hxGlobal;
+  LCLIntf, Types,
+  hxGlobal, hxUtils;
 
 { TAboutForm }
 
 procedure TAboutForm.FormCreate(Sender: TObject);
 begin
-  Image1.Picture.Assign(Application.Icon);
-  Image1.Picture.Icon.Current := 0;
+  with Image1 do
+  begin
+    Picture.Assign(Application.Icon);
+    Picture.Icon.Current := Picture.Icon.GetBestIndexForSize(Size(Width, Height));
+  end;
+  lblVersion.Caption :='Version: ' + GetVersionStr();
 end;
 
 procedure TAboutForm.lblURLClick(Sender: TObject);
