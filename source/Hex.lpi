@@ -17,6 +17,12 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="1"/>
+      <StringTable LegalCopyright="(c) 2021, Werner Pamler" OriginalFilename="hex" ProductName="Hex"/>
+    </VersionInfo>
     <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>
       <Item2 Name="Debug">
@@ -288,7 +294,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="4">
+    <Exceptions Count="5">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -301,6 +307,9 @@
       <Item4>
         <Name Value="ELayoutException"/>
       </Item4>
+      <Item5>
+        <Name Value="PNGImageException"/>
+      </Item5>
     </Exceptions>
   </Debugging>
 </CONFIG>

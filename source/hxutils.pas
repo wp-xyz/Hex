@@ -93,12 +93,13 @@ function BytesToHex(AValue: TBytes): String;
 // misc
 procedure Exchange(var A, B: Integer);
 procedure EnsureOrder(var A, B: Integer);
+function GetVersionStr: String;
 
 
 implementation
 
 uses
-  LCLType, Math, TypInfo, LazFileUtils, Dialogs;
+  LCLType, Math, TypInfo, LazFileUtils, FileInfo, Dialogs;
 
 
 {==============================================================================}
@@ -987,6 +988,14 @@ end;
 procedure EnsureOrder(var A, B: Integer);
 begin
   if A > B then Exchange(A, B);
+end;
+
+function GetVersionStr: String;
+var
+  ver: TProgramVersion;
+begin
+  GetProgramVersion(ver);
+  Result := Format('v%d.%d.%d', [ver.Major, ver.Minor, ver.Revision]);
 end;
 
 end.

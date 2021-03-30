@@ -822,14 +822,22 @@ end;
 
 initialization
   RegisteredExtractors := TExtractorList.Create;
-  RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp', ['BM']);
-  RegisterExtractor(TGraphicExtractor, TGifImage, 'gif', ['GIF']);
-  RegisterExtractor(TIconExtractor, TIcon, 'ico', [#0#0#1#0]);
-  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe', [#$FF#$D8]);
-  RegisterExtractor(TGraphicExtractor, TPortableAnyMapGraphic, 'pnm|pbm|pgm|ppm', ['P1','P2','P3','P4','P5','P6']);
-  RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png', [#137'PNG'#13#10#26#10]);
-  RegisterExtractor(TGraphicExtractor, TTiffImage, 'tif|tiff', ['II'#42#00, 'MM'#00#42]);
-  RegisterExtractor(TGraphicExtractor, TPixMap, 'xpm', ['/* XPM */']);
+  RegisterExtractor(TGraphicExtractor, TBitmap, 'bmp',
+    ['BM']);
+  RegisterExtractor(TGraphicExtractor, TGifImage, 'gif',
+    ['GIF']);
+  RegisterExtractor(TIconExtractor, TIcon, 'ico',
+    [#0#0#1#0]);
+  RegisterExtractor(TGraphicExtractor, TJpegImage, 'jpg|jpeg|jfe',
+    [#$FF#$D8#$FF#$E0#$00#$10'JFIF'#0, #$FF#$D8#$FF#$E1]);
+  RegisterExtractor(TGraphicExtractor, TPortableAnyMapGraphic, 'pnm|pbm|pgm|ppm',
+    ['P1','P2','P3','P4','P5','P6']);
+  RegisterExtractor(TGraphicExtractor, TPortableNetworkGraphic, 'png',
+    [#137'PNG'#13#10#26#10]);
+  RegisterExtractor(TGraphicExtractor, TTiffImage, 'tif|tiff',
+    ['II'#42#00, 'MM'#00#42]);
+  RegisterExtractor(TGraphicExtractor, TPixMap, 'xpm',
+    ['/* XPM */']);
 
   {
   RegisterRipper(TPcxRipper, rtGraphics, 'PCX', #10,

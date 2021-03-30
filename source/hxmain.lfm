@@ -16,8 +16,8 @@ object MainForm: TMainForm
   LCLVersion = '2.1.0.0'
   object PageControl: TPageControl
     Left = 0
-    Height = 414
-    Top = 28
+    Height = 412
+    Top = 30
     Width = 914
     Align = alClient
     TabOrder = 0
@@ -25,7 +25,7 @@ object MainForm: TMainForm
   end
   object CoolBar1: TCoolBar
     Left = 0
-    Height = 28
+    Height = 30
     Top = 0
     Width = 914
     AutoSize = True
@@ -673,6 +673,7 @@ object MainForm: TMainForm
       Caption = 'Find next'
       Hint = 'Find next embedded object'
       OnExecute = acObjectsFindNextExecute
+      ShortCut = 117
     end
   end
   object MainMenu: TMainMenu
