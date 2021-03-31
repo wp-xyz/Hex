@@ -316,6 +316,9 @@ var
     IconSet: isOffice
   );
 
+const
+  ALL_FILES_MASK = 'All files|*.*;*';
+
 
 implementation
 

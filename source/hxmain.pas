@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ActnList,
-  StdCtrls, ComCtrls, mrumanager,
+  ComCtrls, mrumanager,
   hxGlobal, hxHexEditor, hxHexEditorFrame;
 
 type
@@ -490,8 +490,7 @@ begin
           begin
             InitialDir := ExtractFileDir(F.Filename);
             FileName := ExtractFileName(F.Filename);
-            DefaultExt := '';
-            Filter := 'All files (*.*)|*.*';
+            Filter := ALL_FILES_MASK;
             if Execute then
             begin
               Application.ProcessMessages;
@@ -532,7 +531,7 @@ begin
         InitialDir := ExtractFileDir(F.Filename);
         FileName := ExtractFileName(F.Filename);
         DefaultExt := '';
-        Filter := 'All files (*.*)|*.*';
+        Filter := ALL_FILES_MASK;
         if Execute then
         begin
           Application.ProcessMessages;
@@ -569,9 +568,8 @@ var
   i : integer;
 begin
   with OpenDialog do begin
-    FileName := '*.*';
-    Filter := 'All files (*.*)|*.*';
-    DefaultExt := '';
+    FileName := '';
+    Filter := ALL_FILES_MASK;
     if Execute then
     begin
       Application.ProcessMessages;
@@ -598,8 +596,7 @@ begin
     begin
       InitialDir := ExtractFileDir(F.Filename);
       FileName := ExtractFileName(F.Filename);
-      DefaultExt := '';
-      Filter := 'All files (*.*)|*.*';
+      Filter := ALL_FILES_MASK;
       if Execute then
       begin
         Application.ProcessMessages;
