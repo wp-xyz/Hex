@@ -160,12 +160,13 @@ begin
 end;
 
 procedure TRecordEditorForm.FormShow(Sender: TObject);
-var
-  H: Integer;
 begin
-  H := Height;
   AutoSize := false;
-  Height := H;
+  MainPanel.Constraints.MinHeight := gbCharCount.Top + gbCharCount.Height + 2*gbCharCount.BorderSpacing.Bottom;
+  MainPanel.AdjustSize;
+  Height := MainPanel.Height + 2*MainPanel.BorderSpacing.Around +
+    ButtonPanel.Height + ButtonPanel.BorderSpacing.Around;
+  Width := MainPanel.Width + 2*MainPanel.BorderSpacing.Around;
   rgDataTypesClick(nil);
 end;
 
@@ -192,8 +193,7 @@ begin
       lblSizeInfo.Caption := 'w/o length byte';
     dtPChar:
       lblSizeInfo.Caption := 'w/o terminating zero byte';
-    dtCharArray,
-    dtWideCharArray:
+    dtCharArray, dtWideCharArray:
       lblSizeInfo.Caption := 'all characters';
     dtWideString:
       lblSizeInfo.Caption := 'w/o length word';
@@ -201,8 +201,8 @@ begin
       lblSizeInfo.Caption := 'w/o terminating zero word';
   end;
   gbCharCount.Visible := dt in StringDataTypes;
-  rbUnlimited.Visible := not (dt in [dtCharArray, dtWideCharArray]);
-  rbAtMost.Visible := rbUnlimited.Visible;
+  rbUnlimited.Enabled := not (dt in [dtCharArray, dtWideCharArray]);
+  rbAtMost.Enabled := rbUnlimited.Visible;
 end;
 
 procedure TRecordEditorForm.seCharCountChange(Sender: TObject);
