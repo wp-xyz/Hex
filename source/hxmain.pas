@@ -858,9 +858,9 @@ begin
   for i:=1 to ParamCount do
   begin
     s := UpperCase(ParamStr(i));
-    if (s[1]='/') or (s[1]='-') then
+    if (s[1]='-') then
     begin
-      //
+      // to do: evaluation of cmd line parameters to be added...
     end else
       if FileExists(ParamStr(i)) then CreateEditor(ParamStr(i), HexParams.WriteProtected);
   end;

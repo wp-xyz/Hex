@@ -5,7 +5,7 @@ object MainForm: TMainForm
   Width = 914
   AllowDropFiles = True
   Caption = 'Hex'
-  ClientHeight = 465
+  ClientHeight = 485
   ClientWidth = 914
   Menu = MainMenu
   OnCloseQuery = FormCloseQuery
@@ -13,10 +13,10 @@ object MainForm: TMainForm
   OnDropFiles = FormDropFiles
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '2.1.0.0'
+  LCLVersion = '2.3.0.0'
   object PageControl: TPageControl
     Left = 0
-    Height = 412
+    Height = 432
     Top = 30
     Width = 914
     Align = alClient
@@ -152,7 +152,7 @@ object MainForm: TMainForm
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 442
+    Top = 462
     Width = 914
     AutoHint = True
     Panels = <    
