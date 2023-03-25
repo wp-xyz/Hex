@@ -2,7 +2,7 @@
 
 Hex is an open source hex editor with some features which are useful for analyzing binary files ("reverse-engineering"):
 
-* **Numeric viewer**: displays the byte selected by the cursor and the following bytes to standard Pascal numeric data types (byte, shortint, word, ..., singe, double, real48) as a usual number.
+* **Numeric viewer**: displays the byte selected by the cursor and the following bytes of standard Pascal numeric data types (byte, shortint, word, ..., singe, double, real48) as a usual number.
 * **Record viewer**: allows to construct "records" from the basic Pascal types. The record elements are displayed in "human-readable" form. Commands are available to scroll through the file record by record.
 * **Object viewer**: displays embedded images.
 
