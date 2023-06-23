@@ -74,6 +74,7 @@ type
     acObjectsSelect: TAction;
     acObjectsExport: TAction;
     acObjectsFindNext: TAction;
+    acFileReload: TAction;
     acViewOffsetHex: TAction;
     acViewOffsetDec: TAction;
     acViewOffsetOctal: TAction;
@@ -94,6 +95,7 @@ type
     MenuItem23: TMenuItem;
     MenuItem24: TMenuItem;
     MenuItem25: TMenuItem;
+    MenuItem26: TMenuItem;
     N1: TMenuItem;
     mnuObjectsExport: TMenuItem;
     mnuObjectsSelect: TMenuItem;
@@ -189,6 +191,7 @@ type
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
     ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
     procedure acAboutExecute(Sender: TObject);
     procedure acBookmarkClear(Sender: TObject);
     procedure acBookmarkGoto(Sender: TObject);
@@ -210,6 +213,7 @@ type
     procedure acFileNewExecute(Sender: TObject);
     procedure acFileOpenExecute(Sender: TObject);
     procedure acFileQuitExecute(Sender: TObject);
+    procedure acFileReloadExecute(Sender: TObject);
     procedure acFileSaveAsExecute(Sender: TObject);
     procedure acFileSaveExecute(Sender: TObject);
     procedure acGoToExecute(Sender: TObject);
@@ -582,6 +586,26 @@ end;
 procedure TMainForm.acFileQuitExecute(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TMainForm.acFileReloadExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+  res: TModalResult;
+begin
+  F := GetActiveHexEditorFrame;
+  if Assigned(F) then
+  begin
+    if F.HexEditor.Modified then
+    begin
+      res := MessageDlg('The file has been modified. Changes will be lost when ' +
+        'the file is reloaded.'#13#13'Continue reloading?',
+        mtConfirmation, [mbYes, mbNo], 0);
+      if res <> mrYes then
+        exit;
+    end;
+    F.OpenFile(F.FileName, F.WriteProtected);
+  end;
 end;
 
 procedure TMainForm.acFileSaveAsExecute(Sender: TObject);

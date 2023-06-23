@@ -43,7 +43,7 @@ object MainForm: TMainForm
       Left = 22
       Height = 24
       Top = 3
-      Width = 302
+      Width = 326
       Align = alNone
       AutoSize = True
       BorderSpacing.Left = 22
@@ -63,89 +63,94 @@ object MainForm: TMainForm
         Style = tbsDropDown
       end
       object tbFileQuit: TToolButton
-        Left = 278
+        Left = 302
         Top = 0
         Action = acFileQuit
       end
       object tbSettings: TToolButton
-        Left = 249
+        Left = 273
         Top = 0
         Action = acCfgSettings
       end
       object tbDivider1: TToolButton
-        Left = 61
+        Left = 85
         Height = 24
         Top = 0
         Caption = 'tbDivider1'
         Style = tbsDivider
       end
       object tbSave: TToolButton
-        Left = 37
+        Left = 61
         Top = 0
         Action = acFileSave
       end
       object tbDivider2: TToolButton
-        Left = 114
+        Left = 138
         Height = 24
         Top = 0
         Caption = 'tbDivider2'
         Style = tbsDivider
       end
       object tbFind: TToolButton
-        Left = 196
+        Left = 220
         Top = 0
         Action = acEditFind
       end
       object tbDivider3: TToolButton
-        Left = 273
+        Left = 297
         Height = 24
         Top = 0
         Caption = 'tbDivider3'
         Style = tbsDivider
       end
       object ToolButton1: TToolButton
-        Left = 220
+        Left = 244
         Top = 0
         Action = acEditReplace
       end
       object ToolButton2: TToolButton
-        Left = 66
+        Left = 90
         Top = 0
         Action = acEditUndo
       end
       object ToolButton3: TToolButton
-        Left = 90
+        Left = 114
         Top = 0
         Action = acEditRedo
       end
       object ToolButton4: TToolButton
-        Left = 244
+        Left = 268
         Height = 24
         Top = 0
         Caption = 'ToolButton4'
         Style = tbsDivider
       end
       object ToolButton5: TToolButton
-        Left = 119
+        Left = 143
         Top = 0
         Action = acEditCut
       end
       object ToolButton6: TToolButton
-        Left = 143
+        Left = 167
         Top = 0
         Action = acEditCopy
       end
       object ToolButton7: TToolButton
-        Left = 167
+        Left = 191
         Top = 0
         Action = acEditPaste
       end
       object ToolButton8: TToolButton
-        Left = 191
+        Left = 215
         Height = 24
         Top = 0
         Caption = 'ToolButton8'
         Style = tbsDivider
+      end
+      object ToolButton9: TToolButton
+        Left = 37
+        Top = 0
+        Action = acFileReload
       end
     end
   end
@@ -563,6 +568,7 @@ object MainForm: TMainForm
     object acAbout: TAction
       Category = 'Help'
       Caption = 'About...'
+      ImageIndex = 28
       OnExecute = acAboutExecute
     end
     object acEditFind: TAction
@@ -675,6 +681,13 @@ object MainForm: TMainForm
       OnExecute = acObjectsFindNextExecute
       ShortCut = 117
     end
+    object acFileReload: TAction
+      Category = 'File'
+      Caption = 'Reload'
+      Hint = 'Reload current file'
+      ImageIndex = 20
+      OnExecute = acFileReloadExecute
+    end
   end
   object MainMenu: TMainMenu
     Images = CommonData.Images_Office
@@ -687,6 +700,9 @@ object MainForm: TMainForm
       end
       object mnuFileOpen: TMenuItem
         Action = acFileOpen
+      end
+      object MenuItem26: TMenuItem
+        Action = acFileReload
       end
       object mnuRecentlyOpened: TMenuItem
         Caption = 'Recently opened'
