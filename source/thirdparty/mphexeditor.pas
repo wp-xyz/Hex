@@ -2132,6 +2132,8 @@ const
   HEX_UPPER = '0123456789ABCDEF';
   HEX_ALLCHARS = HEX_LOWER + HEX_UPPER;
 
+  INVALID_HANDLE_VALUE = -1;
+
   // available undo descriptions
   STRS_UNDODESC: array[ufKindBytesChanged..ufKindAllData] of string =
   (UNDO_BYTESCHANGED, UNDO_REMOVED, UNDO_INSERT, UNDO_REPLACE, UNDO_APPEND,

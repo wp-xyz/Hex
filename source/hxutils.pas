@@ -5,7 +5,7 @@ unit hxUtils;
 interface
 
 uses
-  Classes, SysUtils, Graphics, IniFiles, Forms,
+  LCLIntf, LCLType, Classes, SysUtils, Graphics, IniFiles, Forms,
   hxGlobal, hxHexEditor;
 
 type
@@ -99,7 +99,7 @@ function GetVersionStr: String;
 implementation
 
 uses
-  LCLType, Math, TypInfo, LazFileUtils, FileInfo, Dialogs;
+  Math, TypInfo, LazFileUtils, FileInfo, Dialogs;
 
 
 {==============================================================================}
@@ -159,6 +159,7 @@ var
   s: String;
   ws: TWindowState;
   L, T, W, H: integer;
+  R: TRect;
 begin
   with AIniFile do
   begin
@@ -181,9 +182,17 @@ begin
         W := ReadInteger(ASection, 'Width',  AForm.Width);
         H := ReadInteger(ASection, 'Height', AForm.Height);
       end;
+      R := Screen.WorkAreaRect;
+      if W > R.Width then W := R.Width;
+      if H > R.Height then H := R.Height;
+      if L < R.Left then L := R.Left;
+      if T < R.Top then T := R.Top;
+      if L + W > R.Right then
+        L := R.Right - W - GetSystemMetrics(SM_CXSIZEFRAME);
+      if T + H > R.Bottom then
+        T := R.Bottom - H - GetSystemMetrics(SM_CYCAPTION) - GetSystemMetrics(SM_CYSIZEFRAME);
+      AForm.SetBounds(L, T, W, H);
       AForm.Position := poDesigned;
-      AForm.BoundsRect := Rect(L, T, L + W, T + H);
-      AForm.MakeFullyVisible;
     end;
   end;
 end;
@@ -328,8 +337,8 @@ begin
     begin
       WriteInteger(ASection, 'Left',   AForm.Left);
       WriteInteger(ASection, 'Top',    AForm.Top);
-      WriteInteger(ASection, 'Width',  AForm.Width);
-      WriteInteger(ASection, 'Height', AForm.Height);
+      WriteInteger(ASection, 'Width',  AForm.ClientWidth);
+      WriteInteger(ASection, 'Height', AForm.ClientHeight);
     end;
   end;
 end;

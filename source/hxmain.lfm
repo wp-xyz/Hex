@@ -8,12 +8,13 @@ object MainForm: TMainForm
   ClientHeight = 485
   ClientWidth = 914
   Menu = MainMenu
+  OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '2.3.0.0'
+  LCLVersion = '3.99.0.0'
   object PageControl: TPageControl
     Left = 0
     Height = 432

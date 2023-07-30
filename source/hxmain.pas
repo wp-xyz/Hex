@@ -225,6 +225,7 @@ type
     procedure acShowToolbarExecute(Sender: TObject);
     procedure ActionListUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
     procedure acViewOffsetFormatHandler(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDropFiles(Sender: TObject; const FileNames: Array of String);
@@ -232,6 +233,7 @@ type
     procedure PageControlChange(Sender: TObject);
     procedure StatusBarHint(Sender: TObject);
   private
+    FActivated: Boolean;
     FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
 
@@ -902,6 +904,16 @@ begin
   end;
 end;
 
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+  if not FActivated then
+  begin
+    ReadIni;
+    UpdateCmds;
+    FActivated := true;
+  end;
+end;
+
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := true;
@@ -926,9 +938,10 @@ begin
   FRecentFilesManager.IniSection := 'RecentFiles';
 
   AppendToObjectsMenu(mnuObjects);
-
+  {
   ReadIni;
   UpdateCmds;
+  }
 end;
 
 procedure TMainForm.FormDropFiles(Sender: TObject;
