@@ -278,10 +278,9 @@ begin
         begin
           ext10 := PExtended10(@buffer[0])^;
           if AItem.BigEndian then
-            dbl := ExtendedToDouble(BEToN(ext10))
+            Result := ExtendedToString(BEToN(ext10))
           else
-            dbl := ExtendedToDouble(LEToN(ext10));
-          Result := Format('%.15g', [dbl]);
+            Result := ExtendedToString(LEToN(ext10));
         end;
        {$IFEND}
       dtReal48:
@@ -412,12 +411,17 @@ procedure TViewerGrid.SetCheckboxState(const ACol, ARow: Integer;
   const aState: TCheckboxState);
 var
   item: TDataItem;
+  i: Integer;
 begin
   item := FDataList[ARow - FixedRows] as FDataItemClass;
   if AState = cbChecked then
     item.BigEndian := true
   else if AState = cbUnchecked then
     item.BigEndian := false;
+
+  // wp: Needed after Laz commit 7f6c15e911bb932d4fbf063c83c40d8f2c755103 (merge request !66)
+  for i := FixedCols to ColCount-1 do
+    InvalidateCell(i, ARow);
 end;
 
 procedure TViewerGrid.SetDataList(AValue: TDataList);

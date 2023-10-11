@@ -2132,7 +2132,9 @@ const
   HEX_UPPER = '0123456789ABCDEF';
   HEX_ALLCHARS = HEX_LOWER + HEX_UPPER;
 
-  INVALID_HANDLE_VALUE = -1;
+  {$IF NOT DECLARED(INVALID_HANDLE_VALUE)}
+  INVALID_HANDLE_VALUE = System.THandle(-1);
+  {$ENDIF}
 
   // available undo descriptions
   STRS_UNDODESC: array[ufKindBytesChanged..ufKindAllData] of string =

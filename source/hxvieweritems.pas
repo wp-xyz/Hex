@@ -68,7 +68,7 @@ begin
   FBigEndian := ASource.BigEndian;
 end;
 
-{ AIndex = 0 --> DataType , 1 --> DataSize, 2--> BigEndian }
+{ AIndex = 0 --> Value, 1 --> DataType, 2 --> DataSize, 3 --> BigEndian/LittleEndian }
 class function TDataItem.GetHeader(AIndex: Integer): String;
 begin
   case AIndex of

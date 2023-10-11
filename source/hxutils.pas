@@ -4,7 +4,7 @@ unit hxUtils;
 
 interface
 
-uses
+uses     LazLoggerbase,
   LCLIntf, LCLType, Classes, SysUtils, Graphics, IniFiles, Forms,
   hxGlobal, hxHexEditor;
 
@@ -73,7 +73,7 @@ function NtoBE(AValue: TExtended10): TExtended10; overload;
 function NtoLE(AValue: TExtended10): TExtended10; overload;
 {$IFEND}
 
-function ExtendedToDouble(x: TExtended10): Double;
+function ExtendedToString(x: TExtended10): String;
 
 // Data types
 procedure CreateDataTypeList(AList: TStrings; const ADataTypes: Array of TDataType);
@@ -810,9 +810,9 @@ begin
 end;
 {$ENDIF}
 
-{ Is needed in cases like Win-64bit where "extended" maps to "double". }
+{ Is needed in cases such as Win-64bit where "extended" maps to "double". }
 
-function ExtendedToDouble(x: TExtended10): Double;
+function ExtendedToString(x: TExtended10): String;
 type
   TExtendedRec = packed record
     Significand: Int64;
@@ -830,7 +830,10 @@ var
   exponentBits: Word;
   sigBits63_62: byte;
   sigBits61_0: Int64;
+  dbl: Double;
 begin
+  Result := 'N/A';
+
   signBit := xr.Exponent and $8000;
   exponentBits := xr.Exponent and $7FFF;
 
@@ -846,11 +849,12 @@ begin
     sigBits63_62 := (xr.Significand and $C000000000000000) shr (4*15 + 2);
     sigBits61_0 := (xr.Significand and $3000000000000000);
     case sigBits63_62 of
-      0: if sigBits61_0 = 0 then Result := sgn * Infinity else Result := NaN;
-      1: Result := NaN;
-      2: if sigBits61_0 = 0 then Result := sgn * Infinity else Result := NaN;
-      3: Result := NaN;
+      0: if sigBits61_0 = 0 then dbl := sgn * Infinity else exit;
+      1: exit;
+      2: if sigBits61_0 = 0 then dbl := sgn * Infinity else exit;
+      3: exit;
     end;
+    Result := FloatToStr(dbl);
     exit;
   end;
 
@@ -870,8 +874,17 @@ begin
   end;
 
   // Product
-  Result := sgn * mantissa * IntPower(2.0, exponent);
+  if (exponent >= -1022) and (exponent <= 1023) then
+  begin
+    dbl := sgn * mantissa * IntPower(2.0, exponent);
+    Result := Format('%.15g', [dbl]);
+  end else
+  begin
+    dbl := sgn * mantissa;
+    Result := Format('%.15g', [dbl]) + 'E' + IntToStr(exponent);
+  end;
 end;
+
 
 {==============================================================================}
 {    Data types                                                                }
