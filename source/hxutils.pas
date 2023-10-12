@@ -823,6 +823,7 @@ var
   sgn: Integer;
   exponent: Integer;
   mantissa: Extended;
+  exp10, mant10: Double;
   tmp: Int64;
   factor: Int64;
   i: Integer;
@@ -852,9 +853,19 @@ begin
       0: if sigBits61_0 = 0 then dbl := sgn * Infinity else exit;
       1: exit;
       2: if sigBits61_0 = 0 then dbl := sgn * Infinity else exit;
-      3: exit;
+      3: if sigBits61_0 = 0 then dbl := NaN else exit;
     end;
     Result := FloatToStr(dbl);
+    exit;
+  end;
+
+  // Special case zero:
+  if (xr.Significand = 0) and (exponentBits = 0) then
+  begin
+    if sgn = -1 then
+      Result := '-0'
+    else
+      Result := '0';
     exit;
   end;
 
@@ -880,8 +891,10 @@ begin
     Result := Format('%.15g', [dbl]);
   end else
   begin
-    dbl := sgn * mantissa;
-    Result := Format('%.15g', [dbl]) + 'E' + IntToStr(exponent);
+    // Convert m*2^exponent to m10*10^exp10
+    exp10 := exponent * log10(2.0);
+    mant10 := sgn * mantissa * Power(10, frac(exp10));
+    Result := Format('%.15g', [mant10]) + 'E' + IntToStr(trunc(exp10));
   end;
 end;
 
