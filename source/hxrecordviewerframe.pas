@@ -1,12 +1,12 @@
 unit hxRecordViewerFrame;
 
 {$mode objfpc}{$H+}
-
+{$WARN 6058 off : Call to subroutine "$1" marked as inline is not inlined}
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids, ActnList,
-  ComCtrls, StdCtrls, ExtCtrls, Contnrs,
+  ComCtrls, ExtCtrls, Contnrs,
   MPHexEditor,
   hxGlobal, hxViewerItems, hxViewerGrids, hxGridViewerFrame;
 
@@ -38,7 +38,6 @@ type
     procedure MakePascalRecord(AList: TStrings);
     procedure MoveItemDown;
     procedure MoveItemUp;
-//    procedure SaveRecordToFile(const AFileName: String);
     property FileName: String read FFileName;
     property RowItems[ARow: Integer]: TRecordDataItem read GetItem write SetItem;
   end;
@@ -124,6 +123,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure SelectDataList(AIndex: Integer);
+    procedure UpdateDataList;
     procedure UpdateIconSet; override;
   end;
 
@@ -220,6 +220,14 @@ begin
     lCol.ReadOnly := true;
 
     lCol := Columns.Add;
+    lCol.Tag := 3;  // TDataItem property with index 3: BigEndian
+    lCol.Title.Caption := 'BE';
+    lCol.Title.Alignment := taCenter;
+    lCol.Width := 24;
+    lCol.SizePriority := 0;
+    lCol.ButtonStyle := cbsCheckboxColumn;
+
+    lCol := Columns.Add;
     lCol.Tag := -1;  // Value column
     lCol.Title.Caption := 'Value';
     lCol.Width := 100;
@@ -251,7 +259,7 @@ function TRecordViewerGrid.DistanceToZero(AOffset: Integer; IsForWideString: Boo
 const
   BUFSIZE = 1024;
 var
-  buf: array of byte;
+  buf: array of byte = nil;
   n: Integer;
   P: PChar;
   Pend: PChar;
@@ -492,38 +500,7 @@ begin
   Row := Row - 1;
   UpdateData(HexEditor);
 end;
-                      (*
-procedure TRecordViewerGrid.SaveRecordToFile(const AFileName: String);
-var
-  i: integer;
-  L: TStringList;
-  Ls: TStringList;
-  item: TRecordDataItem;
-begin
-  FFileName := AFileName;
 
-  L := TStringList.Create;
-  Ls := TStringList.Create;
-  try
-    Ls.Delimiter := DATA_FIELD_SEPARATOR;
-    for i := 0 to FDataList.Count - 1 do
-    begin
-      item := FDataList[i] as TRecordDataItem;
-      Ls.Clear;
-      Ls.Add(item.Name);
-      Ls.Add(GetEnumName(TypeInfo(TDataType), Integer(item.DataType)));
-      Ls.Add(BigEndianStr[item.BigEndian]);
-      if item.DataType in StringDataTypes then
-        Ls.Add(IntToStr(item.DataSize));
-      L.Add(Ls.DelimitedText);
-    end;
-    L.SaveToFile(AFileName);
-  finally
-    Ls.Free;
-    L.Free;
-  end;
-end;
-*)
 function TRecordViewerGrid.SelectCell(ACol, ARow: Integer): Boolean;
 begin
   Result := inherited SelectCell(ACol, ARow);
@@ -781,7 +758,7 @@ end;
 
 procedure TRecordViewerFrame.LoadRecordsFromFile(const AFileName: String);
 var
-  i, i0, j: Integer;
+  i, j: Integer;
   sections, elements, parts: TStringList;
   item: TRecordDataItem;
   dt: TDataType;  // DataType
@@ -922,39 +899,6 @@ begin
     ini.Free;
   end;
 end;
-{
-
-
-var
-  i: integer;
-  L: TStringList;
-  Ls: TStringList;
-  item: TRecordDataItem;
-begin
-  FFileName := AFileName;
-
-  L := TStringList.Create;
-  Ls := TStringList.Create;
-  try
-    Ls.Delimiter := DATA_FIELD_SEPARATOR;
-    for i := 0 to FDataList.Count - 1 do
-    begin
-      item := FDataList[i] as TRecordDataItem;
-      Ls.Clear;
-      Ls.Add(item.Name);
-      Ls.Add(GetEnumName(TypeInfo(TDataType), Integer(item.DataType)));
-      Ls.Add(BigEndianStr[item.BigEndian]);
-      if item.DataType in StringDataTypes then
-        Ls.Add(IntToStr(item.DataSize));
-      L.Add(Ls.DelimitedText);
-    end;
-    L.SaveToFile(AFileName);
-  finally
-    Ls.Free;
-    L.Free;
-  end;
-end;
-}
 
 procedure TRecordViewerFrame.SelectDataList(AIndex: Integer);
 begin
@@ -984,6 +928,15 @@ end;
 procedure TRecordViewerFrame.TabControlChange(Sender: TObject);
 begin
   SelectDataList(TabControl.TabIndex);
+end;
+
+procedure TRecordViewerFrame.UpdateDataList;
+var
+  i: Integer;
+begin
+  for i := 0 to FGrid.DataCount-1 do
+    TDataItem(FGrid.DataList[i]).BigEndian := HexParams.BigEndian;
+  FGrid.Invalidate;
 end;
 
 procedure TRecordViewerFrame.UpdateIconSet;

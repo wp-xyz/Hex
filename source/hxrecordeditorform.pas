@@ -146,8 +146,6 @@ begin
 end;
 
 procedure TRecordEditorForm.FormCreate(Sender: TObject);
-var
-  dt: TDataType;
 begin
   with CommonData.Images do
   begin

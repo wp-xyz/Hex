@@ -373,16 +373,12 @@ begin
 
     if D.ShowModal = mrOK then
     begin
-      D.ParamsFromControls(params);
-      D.ColorsFromControls(colors);
-      HexParams.SettingsPageIndex := params.SettingsPageIndex;
+      D.ParamsFromControls(HexParams);
+      D.ColorsFromControls(ColorParams);
       if Assigned(F) then begin
-        F.ApplyHexParams(params);
-        ApplyColorsToHexEditor(colors, F.HexEditor);
+        F.ApplyHexParams(HexParams);
+        ApplyColorsToHexEditor(ColorParams, F.HexEditor);
         F.UpdateIconSet;
-      end else begin
-        HexParams := params;
-        ColorParams := colors;
       end;
       D.GuiParamsFromControls(GUIParams);
       UpdateIconSet;

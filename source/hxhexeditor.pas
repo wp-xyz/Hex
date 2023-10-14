@@ -15,7 +15,7 @@ type
     procedure SetSecondSelStart(AValue: Integer);
     procedure SetSecondSelEnd(AValue: Integer);
     procedure DrawCellHandler(Sender: TObject; ACanvas: TCanvas; ACol, ARow: Integer;
-      var AText: String; ARect: TRect; var ADefaultDraw: Boolean);
+      var {%H-}AText: String; {%H-}ARect: TRect; var {%H-}ADefaultDraw: Boolean);
 
   public
     constructor Create(AOwner: TComponent); override;

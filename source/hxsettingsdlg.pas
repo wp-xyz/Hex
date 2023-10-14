@@ -107,7 +107,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure OKButtonClick(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
-    procedure PageControlChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure PageControlChanging(Sender: TObject; var {%H-}AllowChange: Boolean);
     procedure pbOfficePaint(Sender: TObject);
     procedure pbSimpleSmallPaint(Sender: TObject);
   private
@@ -158,6 +158,7 @@ procedure TSettingsForm.FormatChanged(Sender: TObject);
 var
   params: THexParams;
 begin
+  params := Default(THexParams);
   ParamsFromControls(params);
   ApplyParamsToHexEditor(params, FSampleHexEditor);
 end;
@@ -198,16 +199,12 @@ procedure TSettingsForm.ColorChanged(Sender: TObject);
 var
   colors: TColorParams;
 begin
+  colors := Default(TColorParams);
   ColorsFromControls(colors);
   ApplyColorsToHexEditor(colors, FSampleHexEditor);
 end;
 
 procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
-var
-  dt: TDataType;
-  i: integer;
-  dir: string;
-  cmd: string;
 begin
   AParams := ColorParams;
   with AParams do
@@ -354,10 +351,6 @@ end;
 procedure TSettingsForm.ParamsFromControls(var AParams: THexParams);
 var
   dt: TDataType;
-  i: integer;
-  s: String;
-  dir: string;
-  cmd: string;
 begin
   AParams := HexParams;
   with AParams do
@@ -410,53 +403,12 @@ begin
     RecordViewerVisible := cbRecordViewerVisible.Checked;
     RecordViewerPosition := TViewerPosition(cmbRecordViewerPosition.ItemIndex);
     cbRecordViewerVisibleChange(nil);
-
-    {ViewerVisible[vtStdViewer] := cbDataViewerVisible.Checked;
-    ViewerVisible[vtRecordViewer] := CbRecordViewerVisible.Checked;
-    for i:=1 to 4 do begin
-      if FStdViewerPosRadioButtons[i].Checked
-        then ViewerPos[vtStdViewer] := FStdViewerPosRadioButtons[i].Tag;
-      if FRecordViewerPosRadioButtons[i].Checked
-        then ViewerPos[vtRecordViewer] := FRecordViewerPosRadioButtons[i].Tag;
-    end;
-    KeepViewerLayout := CbKeepViewerLayout.Checked;
-
-    RipperActive := CbRipperActive.Checked;
-    RipperImmediateShow := CbRipperImmediateShow.Checked;
-
-    with WinParams do begin
-      cmd := Format('"%s" "%%1"', [ParamStr(0)]);
-      AddToContextMenu := CbAddToContextMenu.Checked;
-      if AddToContextmenu
-        then AddToExplorerContextmenu('*', 'Hex-Editor', cmd)
-        else AddToExplorerContextmenu('*', 'Hex-Editor', '');
-(*
-      dir := ExtractFileDir(ParamStr(0));
-      cmd := dir+'\HexReg.exe';
-      try
-        if AddToContextMenu
-          then RunApp(cmd, ' /enable',  dir)
-          else RunApp(cmd, ' /disable', dir);
-      except
-      end;
-*)
-
-      AddToSendTo := CbAddToSendToMenu.Checked;
-      AddToSendToMenu(AddToSendTo);
-
-      AllowDragAndDrop := CbAllowDragAndDrop.Checked;
-      SingleInstance := CbSingleInstance.Checked;
-    end;
-    }
-
-    //CbStdViewerVisibleClick(self);
   end;
 end;
 
 procedure TSettingsForm.ParamsToControls(const AParams: THexParams);
 var
   i : integer;
-  stream: TStream;
 begin
   with AParams do
   begin
@@ -574,7 +526,6 @@ end;
 procedure TSettingsForm.SetViewerData(const AParams: THexParams);
 var
   dt: TDataType;
-  i: integer;
 begin
   with AParams do
   begin

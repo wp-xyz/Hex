@@ -2,6 +2,7 @@ inherited RecordViewerFrame: TRecordViewerFrame
   Width = 469
   ClientWidth = 469
   Color = clForm
+  ParentBackground = False
   ParentColor = False
   ParentShowHint = False
   ShowHint = True
@@ -159,8 +160,8 @@ inherited RecordViewerFrame: TRecordViewerFrame
   object ActionList: TActionList[3]
     Images = CommonData.Images_Office
     OnUpdate = ActionListUpdate
-    left = 114
-    top = 72
+    Left = 114
+    Top = 72
     object acAdd: TAction
       Category = 'Record'
       Caption = 'Add...'
@@ -277,13 +278,13 @@ inherited RecordViewerFrame: TRecordViewerFrame
   object OpenDialog: TOpenDialog[4]
     DefaultExt = '.hxr'
     Filter = 'Hex Record File (*.hxr)|*.hxr'
-    left = 114
-    top = 133
+    Left = 114
+    Top = 133
   end
   object SaveDialog: TSaveDialog[5]
     DefaultExt = '.hxr'
     Filter = 'Hex Record File (*.hxr)|*.hxr'
-    left = 208
-    top = 133
+    Left = 208
+    Top = 133
   end
 end

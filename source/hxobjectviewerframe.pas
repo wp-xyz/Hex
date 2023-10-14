@@ -25,7 +25,7 @@ type
     FOnCheckUserAbort: TCheckUserAbortEvent;
     function GetFirstFileExt: String;
   protected
-    function CreateView({%H-}AOwner: TWinControl; AOffset: Integer;
+    function CreateView({%H-}AOwner: TWinControl; {%H-}AOffset: Integer;
       out AInfo: String): TControl; virtual;
     function FindView(AParent: TWinControl): TControl;
     procedure HideView(AParent: TWinControl);
@@ -41,7 +41,7 @@ type
     property FirstFileExt: string read GetFirstFileExt;
     { class methods }
     class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
-      AEmbeddedClass: TClass; const ASignature: String): boolean; virtual;
+      {%H-}AEmbeddedClass: TClass; const ASignature: String): boolean; virtual;
     class function FindOffset(AHexEditor: THxHexEditor; AOffset: Integer;
       AEmbeddedClass: TClass; const ASignatures: TStringArray): Integer;
     { properties }
@@ -55,20 +55,22 @@ type
 
   TGraphicExtractor = class(TExtractor)
   protected
-    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
-      AEmbeddedClass: TClass; const ASignature: String): Boolean; override;
     function CreateInfo(APicture: TPicture): String; virtual;
     function CreateView(AOwner: TWinControl; AOffset: Integer;
       out AInfo: String): TControl; override;
+  public
+    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
+      AEmbeddedClass: TClass; const ASignature: String): Boolean; override;
   end;
 
   TIconExtractor = class(TExtractor)
   protected
-    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
-      AEmbeddedClass: TClass; const ASignature: String): Boolean; override;
     function CreateInfo(AIcon: TIcon): String;
     function CreateView(AOwner: TWinControl; AOffset: Integer;
       out AInfo: String): TControl; override;
+  public
+    class function CheckSignature(AHexEditor: THxHexEditor; AOffset: Integer;
+      AEmbeddedClass: TClass; const ASignature: String): Boolean; override;
   end;
 
   { ------ }
@@ -427,9 +429,8 @@ end;
 class function TExtractor.CheckSignature(AHexEditor: THxHexEditor;
   AOffset: Integer; AEmbeddedClass: TClass; const ASignature: String): Boolean;
 var
-  s: string;
+  s: string = '';
   n: integer;
-  P: Integer;
 begin
   Result := false;
   n := Length(ASignature);
@@ -675,7 +676,7 @@ type
   end;
 var
   P: Integer;
-  n, m: Word;
+  n: Word = 0;
   i: Integer;
   directory: TIconDirectory;
   totalSize: Integer;
@@ -691,6 +692,7 @@ begin
     n := LEToN(n);
     totalSize := 0;
     inc(P, 2);
+    directory := Default(TIconDirectory);
     for i := 1 to n do begin
       AHexEditor.ReadBuffer(directory, P, SizeOf(directory));
       if directory.Reserved <> 0 then
@@ -734,7 +736,6 @@ function TIconExtractor.CreateView(AOwner: TWinControl; AOffset: Integer;
   out AInfo: String): TControl;
 var
   ico: TIcon;
-  i: Integer;
 begin
   ico := TIcon.Create;
   try

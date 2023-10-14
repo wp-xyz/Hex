@@ -6,9 +6,9 @@ object SettingsForm: TSettingsForm
   Caption = 'Parameter configuration'
   ClientHeight = 480
   ClientWidth = 760
-  OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '3.99.0.0'
+  OnCreate = FormCreate
   object ButtonPanel: TButtonPanel
     AnchorSideTop.Control = Owner
     AnchorSideTop.Side = asrCenter
@@ -38,8 +38,8 @@ object SettingsForm: TSettingsForm
       AutoSize = True
       BorderSpacing.Top = 8
       Caption = 'Restore defaults'
-      OnClick = btnRestoreDefaultsClick
       TabOrder = 4
+      OnClick = btnRestoreDefaultsClick
     end
   end
   object PageControl: TPageControl
@@ -68,8 +68,8 @@ object SettingsForm: TSettingsForm
         BorderSpacing.Left = 24
         BorderSpacing.Top = 24
         Caption = 'View only, cannot modify'
-        OnChange = cbViewOnlyChange
         TabOrder = 0
+        OnChange = cbViewOnlyChange
       end
       object cbWriteProtected: TCheckBox
         AnchorSideLeft.Control = cbViewOnly
@@ -192,10 +192,10 @@ object SettingsForm: TSettingsForm
           '32'
           '64'
         )
-        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 0
         Text = '16'
+        OnChange = FormatChanged
       end
       object cbBytesPerColumn: TComboBox
         AnchorSideLeft.Control = lblBytesPerColumn
@@ -214,10 +214,10 @@ object SettingsForm: TSettingsForm
           '2'
           '4'
         )
-        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 1
         Text = '1'
+        OnChange = FormatChanged
       end
       object cbOffsetDisplayBase: TComboBox
         AnchorSideLeft.Control = cbBytesPerColumn
@@ -236,10 +236,10 @@ object SettingsForm: TSettingsForm
           'hexadecimal'
           'octal'
         )
-        OnChange = cbOffsetDisplayBaseChange
         Style = csDropDownList
         TabOrder = 2
         Text = 'hexadecimal'
+        OnChange = cbOffsetDisplayBaseChange
       end
       object cbHexPrefix: TComboBox
         AnchorSideLeft.Control = cbBytesPerColumn
@@ -257,10 +257,10 @@ object SettingsForm: TSettingsForm
           '$ (Pascal)'
           '0x (C)'
         )
-        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 3
         Text = '$ (Pascal)'
+        OnChange = FormatChanged
       end
       object cbRulerVisible: TCheckBox
         AnchorSideLeft.Control = cbBytesPerColumn
@@ -273,9 +273,9 @@ object SettingsForm: TSettingsForm
         BorderSpacing.Top = 32
         Caption = 'Visible'
         Checked = True
-        OnChange = FormatChanged
         State = cbChecked
         TabOrder = 4
+        OnChange = FormatChanged
       end
       object lblRuler: TLabel
         AnchorSideTop.Control = cbRulerVisible
@@ -306,10 +306,10 @@ object SettingsForm: TSettingsForm
           'hexadecimal'
           'octal'
         )
-        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 5
         Text = 'hexadecimal'
+        OnChange = FormatChanged
       end
       object lblRulerNumberbase: TLabel
         AnchorSideTop.Control = cmbRulerNumberBase
@@ -335,8 +335,8 @@ object SettingsForm: TSettingsForm
         Width = 152
         BorderSpacing.Left = 40
         Caption = 'Lowercase hex characters'
-        OnChange = FormatChanged
         TabOrder = 6
+        OnChange = FormatChanged
       end
       object edMaskChar: TEdit
         AnchorSideLeft.Control = cbHexPrefix
@@ -351,8 +351,8 @@ object SettingsForm: TSettingsForm
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 6
         MaxLength = 1
-        OnChange = FormatChanged
         TabOrder = 7
+        OnChange = FormatChanged
       end
       object lblMaskChar: TLabel
         AnchorSideTop.Control = edMaskChar
@@ -408,10 +408,10 @@ object SettingsForm: TSettingsForm
           '18'
           '20'
         )
-        OnChange = FormatChanged
         Style = csDropDownList
         TabOrder = 9
         Text = '10'
+        OnChange = FormatChanged
       end
       object lblFont: TLabel
         AnchorSideTop.Control = cmbFontSize
@@ -435,9 +435,9 @@ object SettingsForm: TSettingsForm
         AutoComplete = True
         AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
         ItemHeight = 15
-        OnChange = FormatChanged
         TabOrder = 10
         Text = 'cmbFontName'
+        OnChange = FormatChanged
       end
       object cbDrawGutter3D: TCheckBox
         AnchorSideLeft.Control = cbHexLowercase
@@ -448,8 +448,8 @@ object SettingsForm: TSettingsForm
         Top = 55
         Width = 97
         Caption = 'Draw 3D gutter'
-        OnChange = FormatChanged
         TabOrder = 11
+        OnChange = FormatChanged
       end
     end
     object pgColors: TTabSheet
@@ -787,9 +787,9 @@ object SettingsForm: TSettingsForm
           BorderSpacing.Top = 4
           Caption = 'Show'
           Checked = True
-          OnChange = cbDataViewerVisibleChange
           State = cbChecked
           TabOrder = 0
+          OnChange = cbDataViewerVisibleChange
         end
         object cmbDataViewerPosition: TComboBox
           AnchorSideLeft.Control = cbDataViewerVisible
@@ -1023,9 +1023,9 @@ object SettingsForm: TSettingsForm
           BorderSpacing.Top = 4
           Caption = 'Show'
           Checked = True
-          OnChange = cbRecordViewerVisibleChange
           State = cbChecked
           TabOrder = 0
+          OnChange = cbRecordViewerVisibleChange
         end
         object cmbRecordViewerPosition: TComboBox
           AnchorSideLeft.Control = cbRecordViewerVisible
@@ -1090,9 +1090,9 @@ object SettingsForm: TSettingsForm
           BorderSpacing.Top = 4
           Caption = 'Show'
           Checked = True
-          OnChange = cbObjectViewerVisibleChange
           State = cbChecked
           TabOrder = 0
+          OnChange = cbObjectViewerVisibleChange
         end
         object cmbObjectViewerPosition: TComboBox
           AnchorSideLeft.Control = cbObjectViewerVisible

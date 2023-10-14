@@ -240,6 +240,7 @@ begin
   ShowDataViewer := AParams.DataViewerVisible;         // this creates the NumViewer
   if Assigned(FDataViewer) then
   begin
+    FDataViewer.UpdateDataList;
     SetDataViewerPosition(AParams.DataViewerPosition);
     for i := 0 to High(AParams.DataViewerColWidths) do
       FDataViewer.ColWidths[i] := AParams.DataViewerColWidths[i];
@@ -254,6 +255,7 @@ begin
   ShowRecordViewer := AParams.RecordViewerVisible;   // this creates the RecordViewer
   if Assigned(FRecordViewer) then
   begin
+    FRecordViewer.UpdateDataList;
     SetRecordViewerPosition(AParams.RecordViewerPosition);
     for i := 0 to High(AParams.RecordViewerColWidths) do
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];

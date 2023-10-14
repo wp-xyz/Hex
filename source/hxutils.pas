@@ -292,10 +292,6 @@ begin
 end;
 
 procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
-var
-  s: String;
-  dt: TDataType;
-  i: Integer;
 begin
   with ColorParams do
   begin
@@ -440,8 +436,6 @@ end;
 
 procedure ApplyColorsToHexEditor(const AParams: TColorParams;
   AHexEditor: THxHexEditor);
-var
-  i: Integer;
 begin
   if Assigned(AHexEditor) then
   begin
@@ -559,7 +553,7 @@ begin
   {$ENDIF}
 end;
 
-procedure LEtoN_Helper(var AValue; NumBytes: Integer);
+procedure LEtoN_Helper(var {%H-}AValue; {%H-}NumBytes: Integer);
 begin
   {$IFDEF ENDIAN_BIG}
   SwapBytes(AValue, NumBytes);
@@ -573,7 +567,7 @@ begin
   {$ENDIF}
 end;
 
-procedure NtoLE_Helper(var AValue; NumBytes: Integer);
+procedure NtoLE_Helper(var {%H-}AValue; {%H-}NumBytes: Integer);
 begin
   {$IFDEF ENDIAN_BIG}
   SwapBytes(AValue, NumBytes);
@@ -628,6 +622,7 @@ var
   i: Integer;
   w: Word;
 begin
+  Result := '';
   SetLength(Result, Length(AValue));
   for i := 1 to Length(AValue) do begin
     w := PWord(@AValue[i])^;
@@ -742,6 +737,7 @@ var
   i: Integer;
   w: Word;
 begin
+  Result := '';
   SetLength(Result, Length(AValue));
   for i := 1 to Length(AValue) do
   begin
@@ -815,7 +811,7 @@ end;
 function ExtendedToString(x: TExtended10): String;
 type
   TExtendedRec = packed record
-    Significand: Int64;
+    Significand: QWord;
     Exponent: Word;
   end;
 var
@@ -924,6 +920,7 @@ function NumberToBytes(P: PByte; ANumBytes: Integer; BigEndian: Boolean): TBytes
 var
   i: Integer;
 begin
+  Result := nil;
   SetLength(Result, ANumBytes);
   if BigEndian then
     for i := 0 to ANumBytes - 1 do
@@ -934,6 +931,7 @@ end;
 
 function ByteToBytes(AValue: Byte): TBytes;
 begin
+  Result := nil;
   SetLength(Result, 1);
   Result[0] := AValue;
 end;

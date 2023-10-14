@@ -27,25 +27,25 @@ type
     procedure DoUpdateData; virtual;
     function GetCellText(ACol, ARow: Integer): String; virtual;
     function GetValueAsText(AItem: TDataItem): String;
-    procedure PopulateDataList; virtual;
     procedure Prepare; virtual;
     procedure SetValueAsText(AItem: TDataItem; const AText: String);
 
     // inherited methods
     procedure DrawTextInCell(ACol, ARow: Integer; ARect: TRect;
-      AState: TGridDrawState); override;
+      {%H-}AState: TGridDrawState); override;
     procedure EditorDoResetValue; override;
     procedure GetCheckBoxState(const ACol, ARow: Integer;
       var aState:TCheckboxState); override;
     function GetEditText(ACol, ARow: LongInt): String; override;
-    procedure SetCheckboxState(const ACol, ARow: Integer;
+    procedure SetCheckboxState(const {%H-}ACol, ARow: Integer;
       const aState: TCheckboxState); override;
-    procedure SetEditText(ACol, ARow: LongInt; const AText: String); override;
+    procedure SetEditText({%H-}ACol, {%H-}ARow: LongInt; const AText: String); override;
 
   public
     constructor Create(AOwner: TComponent; AOwnsData: Boolean); reintroduce; virtual;
     destructor Destroy; override;
     procedure EditingDone; override;
+    procedure PopulateDataList; virtual;
     procedure UpdateData(AHexEditor: THxHexEditor); virtual;
     property DataCount: Integer read GetDataCount;
     property DataItemClass: TDataItemClass read FDataItemClass;
@@ -197,11 +197,10 @@ end;
 
 function TViewerGrid.GetValueAsText(AItem: TDataItem): String;
 var
-  buffer: array of byte;
+  buffer: array of byte = nil;
   dbl: Double;
   len: Integer;
-  ws: WideString;
-  ext10: TExtended10;
+  ws: WideString = '';
 begin
   if AItem = nil then
   begin
@@ -455,7 +454,6 @@ var
   sng: Single;
   dbl: Double;
   ext: Extended;
-  ext10: TExtended10;
   r48: Real48;
   oldInsertMode: Boolean;
   fs: TFormatSettings;
@@ -565,7 +563,7 @@ begin
               dtExtended:
                 begin
                   if SizeOf(ext) <> 10 then
-                    raise Exception.Create('Cannot write non ISO-extended.');
+                    {%H-}raise Exception.Create('Cannot write non ISO-extended.');
                   if AItem.BigEndian then ext := NtoBE(ext) else ext := NtoLE(ext);
                   FHexEditor.WriteBuffer(ext, AItem.Offset, SizeOf(ext));
                 end;

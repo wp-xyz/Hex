@@ -39,8 +39,7 @@ implementation
 {$R *.lfm}
 
 uses
-  Clipbrd,
-  hxDataModule;
+  Clipbrd;
 
 { TPascalRecordForm }
 

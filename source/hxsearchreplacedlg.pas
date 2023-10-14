@@ -8,8 +8,7 @@ unit hxSearchReplaceDlg;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ButtonPanel, ExtCtrls,
-  StdCtrls, Buttons,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Buttons,
   hxGlobal, hxHexEditor;
 
 type
@@ -171,7 +170,7 @@ procedure TSearchReplaceForm.Execute(Sender: TObject);
 var
   foundAt: Integer;
   startPos: Integer;
-  s: String;
+  s: String = '';
   bufferIsText: Boolean;
   C: TWinControl;
   msg: String;
@@ -313,7 +312,6 @@ procedure TSearchReplaceForm.PrepareBuffer(const AExpression: String; ADataType:
   ABytesDisplay: TControl; out ABuffer: TBytes);
 var
   ws: WideString;
-  idx: Integer;
 begin
   if AExpression = '' then
   begin

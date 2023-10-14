@@ -8,9 +8,9 @@ object RecordEditorForm: TRecordEditorForm
   Caption = 'RecordEditorForm'
   ClientHeight = 500
   ClientWidth = 522
+  LCLVersion = '3.99.0.0'
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '2.2.4.0'
   object ButtonPanel: TButtonPanel
     Left = 6
     Height = 34
@@ -114,8 +114,8 @@ object RecordEditorForm: TRecordEditorForm
         'PWideChar'
         'WideChar array'
       )
-      OnClick = rgDataTypesClick
       TabOrder = 1
+      OnClick = rgDataTypesClick
     end
     object gbCharCount: TGroupBox
       AnchorSideLeft.Control = rgDataTypes
@@ -141,7 +141,7 @@ object RecordEditorForm: TRecordEditorForm
         Left = 16
         Height = 19
         Top = 4
-        Width = 72
+        Width = 70
         BorderSpacing.Left = 16
         BorderSpacing.Top = 4
         Caption = 'Unlimited'
@@ -154,7 +154,7 @@ object RecordEditorForm: TRecordEditorForm
         Left = 16
         Height = 19
         Top = 27
-        Width = 62
+        Width = 60
         BorderSpacing.Top = 4
         Caption = 'At most'
         TabOrder = 1
@@ -165,7 +165,7 @@ object RecordEditorForm: TRecordEditorForm
         AnchorSideTop.Control = rbAtMost
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Side = asrBottom
-        Left = 94
+        Left = 92
         Height = 23
         Top = 25
         Width = 100
@@ -176,15 +176,15 @@ object RecordEditorForm: TRecordEditorForm
         Constraints.MinWidth = 100
         MaxValue = 2147483647
         MinValue = -1
-        OnChange = seCharCountChange
         TabOrder = 2
         Value = -1
+        OnChange = seCharCountChange
       end
       object lblSizeInfo: TLabel
         AnchorSideLeft.Control = seCharCount
         AnchorSideTop.Control = seCharCount
         AnchorSideTop.Side = asrBottom
-        Left = 94
+        Left = 92
         Height = 15
         Top = 52
         Width = 54
@@ -198,7 +198,7 @@ object RecordEditorForm: TRecordEditorForm
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = seCharCount
         AnchorSideTop.Side = asrCenter
-        Left = 198
+        Left = 196
         Height = 15
         Top = 29
         Width = 54

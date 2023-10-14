@@ -8,13 +8,13 @@ object MainForm: TMainForm
   ClientHeight = 485
   ClientWidth = 914
   Menu = MainMenu
+  ShowHint = True
+  LCLVersion = '3.99.0.0'
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnShow = FormShow
-  ShowHint = True
-  LCLVersion = '3.99.0.0'
   object PageControl: TPageControl
     Left = 0
     Height = 432
@@ -177,24 +177,24 @@ object MainForm: TMainForm
       Category = 'File'
       Caption = 'New'
       Hint = 'New|Create new file'
-      OnExecute = acFileNewExecute
       ShortCut = 16462
+      OnExecute = acFileNewExecute
     end
     object acFileOpen: TAction
       Category = 'File'
       Caption = 'Open...'
       Hint = 'Open|Open a file'
       ImageIndex = 0
-      OnExecute = acFileOpenExecute
       ShortCut = 16463
+      OnExecute = acFileOpenExecute
     end
     object acFileQuit: TAction
       Category = 'File'
       Caption = 'Quit'
       Hint = 'Quit|Close application'
       ImageIndex = 1
-      OnExecute = acFileQuitExecute
       ShortCut = 32856
+      OnExecute = acFileQuitExecute
     end
     object acShowStatusbar: TAction
       Category = 'View'
@@ -243,8 +243,8 @@ object MainForm: TMainForm
       Caption = 'Save'
       Hint = 'Save|Save current file'
       ImageIndex = 3
-      OnExecute = acFileSaveExecute
       ShortCut = 16467
+      OnExecute = acFileSaveExecute
     end
     object acFileSaveAs: TAction
       Category = 'File'
@@ -259,8 +259,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 0'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24624
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark1: TAction
       Tag = 7001
@@ -268,8 +268,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 1'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24625
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark2: TAction
       Tag = 7002
@@ -277,8 +277,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 2'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24626
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark3: TAction
       Tag = 7003
@@ -286,8 +286,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 3'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24627
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark4: TAction
       Tag = 7004
@@ -295,8 +295,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 4'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24628
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark5: TAction
       Tag = 7005
@@ -304,8 +304,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 5'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24629
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark6: TAction
       Tag = 7006
@@ -313,8 +313,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 6'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24630
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark7: TAction
       Tag = 7007
@@ -322,8 +322,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 7'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24631
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark8: TAction
       Tag = 7008
@@ -331,8 +331,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 8'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24632
+      OnExecute = acBookmarkSet
     end
     object acSetBookmark9: TAction
       Tag = 7009
@@ -340,8 +340,8 @@ object MainForm: TMainForm
       AutoCheck = True
       Caption = 'Bookmark 9'
       Hint = 'Set bookmark'
-      OnExecute = acBookmarkSet
       ShortCut = 24633
+      OnExecute = acBookmarkSet
     end
     object acGotoBookmark0: TAction
       Tag = 7100
@@ -349,8 +349,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 0'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16432
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark1: TAction
       Tag = 7101
@@ -358,8 +358,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 1'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16433
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark2: TAction
       Tag = 7102
@@ -367,8 +367,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 2'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16434
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark3: TAction
       Tag = 7103
@@ -376,8 +376,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 3'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16435
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark4: TAction
       Tag = 7104
@@ -385,8 +385,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 4'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16436
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark5: TAction
       Tag = 7105
@@ -394,8 +394,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 5'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16437
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark6: TAction
       Tag = 7106
@@ -403,8 +403,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 6'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16438
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark7: TAction
       Tag = 7107
@@ -412,8 +412,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 7'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16439
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark8: TAction
       Tag = 7108
@@ -421,8 +421,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 8'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16440
+      OnExecute = acBookmarkGoto
     end
     object acGotoBookmark9: TAction
       Tag = 7109
@@ -430,8 +430,8 @@ object MainForm: TMainForm
       Caption = 'Bookmark 9'
       Enabled = False
       Hint = 'Go to bookmark'
-      OnExecute = acBookmarkGoto
       ShortCut = 16441
+      OnExecute = acBookmarkGoto
     end
     object acClearBookmark0: TAction
       Tag = 7200
@@ -517,8 +517,8 @@ object MainForm: TMainForm
       Category = 'Navigation'
       Caption = 'Go to...'
       Hint = 'Jump to a file position'
-      OnExecute = acGoToExecute
       ShortCut = 16455
+      OnExecute = acGoToExecute
     end
     object acEditEditingAllowed: TAction
       Category = 'Edit'
@@ -558,8 +558,8 @@ object MainForm: TMainForm
       Category = 'Navigation'
       Caption = 'Repeat go to'
       Hint = 'Repeat go to'
-      OnExecute = acGoToRepeatExecute
       ShortCut = 16466
+      OnExecute = acGoToRepeatExecute
     end
     object acGotoBackward: TAction
       Category = 'Navigation'
@@ -577,63 +577,63 @@ object MainForm: TMainForm
       Caption = 'Find...'
       Hint = 'Find|Find expression'
       ImageIndex = 18
-      OnExecute = acEditFindExecute
       ShortCut = 16454
+      OnExecute = acEditFindExecute
     end
     object acEditReplace: TAction
       Category = 'Edit'
       Caption = 'Find and replace...'
       Hint = 'Replace|Replace expression'
       ImageIndex = 19
-      OnExecute = acEditReplaceExecute
       ShortCut = 16466
+      OnExecute = acEditReplaceExecute
     end
     object acEditUndo: TAction
       Category = 'Edit'
       Caption = 'Undo'
       Hint = 'Undo|Undo last modification'
       ImageIndex = 21
-      OnExecute = acEditUndoExecute
       ShortCut = 16474
+      OnExecute = acEditUndoExecute
     end
     object acEditRedo: TAction
       Category = 'Edit'
       Caption = 'Redo'
       Hint = 'Revoke last undo'
       ImageIndex = 22
-      OnExecute = acEditRedoExecute
       ShortCut = 24666
+      OnExecute = acEditRedoExecute
     end
     object acEditSelectAll: TAction
       Category = 'Edit'
       Caption = 'Select all'
       Hint = 'Select all'
-      OnExecute = acEditSelectAllExecute
       ShortCut = 16449
+      OnExecute = acEditSelectAllExecute
     end
     object acEditCut: TAction
       Category = 'Edit'
       Caption = 'Cut'
       Hint = 'Cut|Cut to clipboard'
       ImageIndex = 15
-      OnExecute = acEditCutExecute
       ShortCut = 16472
+      OnExecute = acEditCutExecute
     end
     object acEditCopy: TAction
       Category = 'Edit'
       Caption = 'Copy'
       Hint = 'Copy|Copy selection to clipboard'
       ImageIndex = 16
-      OnExecute = acEditCopyExecute
       ShortCut = 16451
+      OnExecute = acEditCopyExecute
     end
     object acEditPaste: TAction
       Category = 'Edit'
       Caption = 'Paste'
       Hint = 'Paste|Paste clipboard into hex editor'
       ImageIndex = 17
-      OnExecute = acEditPasteExecute
       ShortCut = 16470
+      OnExecute = acEditPasteExecute
     end
     object acViewOffsetHex: TAction
       Tag = 16
@@ -679,8 +679,8 @@ object MainForm: TMainForm
       Category = 'Objects'
       Caption = 'Find next'
       Hint = 'Find next embedded object'
-      OnExecute = acObjectsFindNextExecute
       ShortCut = 117
+      OnExecute = acObjectsFindNextExecute
     end
     object acFileReload: TAction
       Category = 'File'

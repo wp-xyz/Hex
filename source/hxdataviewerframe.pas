@@ -5,7 +5,7 @@ unit hxDataViewerFrame;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Grids,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Grids,
   MPHexEditor,
   hxGlobal, hxViewerGrids, hxGridViewerFrame;
 
@@ -17,10 +17,10 @@ type
   protected
     procedure DefineColumns; override;
     procedure DoUpdateData; override;
-    procedure PopulateDataList; override;
     function SelectCell(ACol, ARow: Integer): Boolean; override;
   public
     constructor Create(AOwner: TComponent; AOwnsData: Boolean); override;
+    procedure PopulateDataList; override;
   end;
 
 
@@ -30,6 +30,8 @@ type
   protected
     function CreateViewerGrid: TViewerGrid; override;
     function GetDefaultColWidths(AIndex: Integer): Integer; override;
+  public
+    procedure UpdateDataList;
   end;
 
 
@@ -162,6 +164,12 @@ function TDataViewerFrame.GetDefaultColWidths(AIndex: Integer): Integer;
 begin
   Result := DefaultHexParams.DataViewerColWidths[AIndex];
 end;
+
+procedure TDataViewerFrame.UpdateDataList;
+begin
+  FGrid.PopulateDataList;
+end;
+
 
 end.
 
