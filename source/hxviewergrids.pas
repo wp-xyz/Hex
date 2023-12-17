@@ -201,6 +201,9 @@ var
   dbl: Double;
   len: Integer;
   ws: WideString = '';
+  {$IF SizeOf(extended) <> 10}
+  ext10: TExtended10;
+  {$IFEND}
 begin
   if AItem = nil then
   begin
