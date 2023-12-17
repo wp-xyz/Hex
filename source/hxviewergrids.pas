@@ -201,6 +201,7 @@ var
   dbl: Double;
   len: Integer;
   ws: WideString = '';
+  ext10: TExtended10; 
 begin
   if AItem = nil then
   begin
