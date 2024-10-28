@@ -11,12 +11,12 @@ permissions:
 on:
 
     push:
-        branches: [ main, gus-ci-cd ]
+        branches: [ main]
         tags: [ "*" ]
         paths-ignore: [ "README.md", "LICENSE" ]
 
     pull_request:
-        branches: [ main, gus-ci-cd ]
+        branches: [ main ]
 
 jobs:
 
