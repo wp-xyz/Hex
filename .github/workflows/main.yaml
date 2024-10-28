@@ -45,3 +45,10 @@ jobs:
 
         - name: Build Application
           run: lazbuild -B --bm=Release "source/Hex.lpi"
+
+        - name: Upload Application
+          uses: actions/upload-artifact@v4
+          with:
+            name: Hex-${{ matrix.operating-system }}
+            path: bin/Hex*
+            
