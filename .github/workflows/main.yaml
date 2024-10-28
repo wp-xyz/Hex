@@ -51,4 +51,47 @@ jobs:
           with:
             name: Hex-${{ matrix.operating-system }}
             path: bin/Hex*
-            
+    
+    release:
+        if: contains(github.ref_type, 'tag')
+
+        name: Release Application
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+              fetch-depth: 0
+              clean: true
+              set-safe-directory: true
+              
+        - name: Download the Release binaries
+          uses: actions/download-artifact@v4
+      
+        - name: Create archives
+          run: |
+            if [ -d "Hex-ubuntu-latest" ]; then
+              cd Hex-ubuntu-latest
+              tar zcvf ../Hex-linux-x86_64-v${{ github.ref_name }}.tgz Hex
+            fi
+            if [ -d "Hex-ubuntu-20.04" ]; then
+              cd Hex-ubuntu-20.04
+              tar zcvf ../Hex-ubuntu-20.04-x86_64-v${{ github.ref_name }}.tgz Hex
+            fi
+            if [ -d "Hex-windows-latest" ]; then
+              cd Hex-windows-latest
+              zip ../Hex-windows-x86_64-v${{ github.ref_name }}.zip Hex.exe
+            fi
+
+        - name: Create GitHub release
+          uses: softprops/action-gh-release@v1
+          with:
+              name: Hex ${{ github.ref_name }}
+              body: Needs to be changed
+              files: |
+                *.tgz
+                *.zip
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
