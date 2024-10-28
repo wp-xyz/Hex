@@ -73,9 +73,13 @@ jobs:
         - name: Create archives
           run: |
             cd Hex-ubuntu-latest
-            tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz Hex
+            mv Hex hex
+            chmod +x hex
+            tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz hex
             cd ../Hex-ubuntu-20.04
-            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz Hex
+            mv Hex hex
+            chmod +x hex
+            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz hex
             cd ../Hex-windows-latest
             zip ../Hex-windows-x86_64-${{ github.ref_name }}.zip Hex.exe
 
