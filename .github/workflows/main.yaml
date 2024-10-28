@@ -70,23 +70,14 @@ jobs:
         - name: Download the Release binaries
           uses: actions/download-artifact@v4
 
-        - name: List files
-          run: ls -alF
-      
         - name: Create archives
           run: |
-            if [ -d "Hex-ubuntu-latest" ]; then
-              cd Hex-ubuntu-latest
-              tar zcvf ../Hex-linux-x86_64-v${{ github.ref_name }}.tgz Hex
-            fi
-            if [ -d "Hex-ubuntu-20.04" ]; then
-              cd Hex-ubuntu-20.04
-              tar zcvf ../Hex-ubuntu-20.04-x86_64-v${{ github.ref_name }}.tgz Hex
-            fi
-            if [ -d "Hex-windows-latest" ]; then
-              cd Hex-windows-latest
-              zip ../Hex-windows-x86_64-v${{ github.ref_name }}.zip Hex.exe
-            fi
+            cd Hex-ubuntu-latest
+            tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz Hex
+            cd ../Hex-ubuntu-20.04
+            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz Hex
+            cd ../Hex-windows-latest
+            zip ../Hex-windows-x86_64-${{ github.ref_name }}.zip Hex.exe
 
         - name: Create GitHub release
           uses: softprops/action-gh-release@v1
