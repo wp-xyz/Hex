@@ -1,0 +1,47 @@
+name: LevelDB Object Pascal
+
+defaults:
+    run:
+        shell: bash
+
+
+permissions:
+    contents: write
+
+on:
+
+    push:
+        branches: [ main ]
+        tags: [ "*" ]
+        paths-ignore: [ "README.md", "LICENSE" ]
+
+    pull_request:
+        branches: [ main ]
+
+jobs:
+
+    build:
+        name: Build
+        runs-on: ${{ matrix.operating-system }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                operating-system: [ ubuntu-20.04, ubuntu-latest, windows-latest]
+                lazarus-versions: [ stable ]
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+              clean: true
+              set-safe-directory: true
+
+        - name: Install Lazarus
+          uses: gcarreno/setup-lazarus@v3
+          with:
+              lazarus-version: ${{ matrix.lazarus-versions }}
+              with-cache: false
+
+        - name: Build Application
+          run: lazbuild -B --bm=Release "source/Hex.lpi"
