@@ -255,6 +255,8 @@ type
     procedure UpdateCurrentHexEditor;
     procedure UpdateIconSet;
 
+    procedure InitShortcuts;
+
     procedure ReadIni;
     procedure WriteIni;
 
@@ -274,7 +276,7 @@ uses
   IniFiles, Math,
   MPHexEditor,
   hxStrings, hxUtils, {%H-}hxDataModule, hxObjectViewerFrame,
-  hxSettingsDlg, hxGotoDlg, hxAbout;
+  hxSettingsDlg, hxGotoDlg, hxAbout,LCLType;
 
 const
   PROG_NAME = 'Hex';
@@ -933,6 +935,8 @@ begin
   FRecentFilesManager.IniFileName := GetIniFileName;
   FRecentFilesManager.IniSection := 'RecentFiles';
 
+  InitShortcuts;
+
   AppendToObjectsMenu(mnuObjects);
   {
   ReadIni;
@@ -941,7 +945,7 @@ begin
 end;
 
 procedure TMainForm.FormDropFiles(Sender: TObject;
-  const FileNames: Array of String);
+  const FileNames: array of String);
 var
   fn: String;
 begin
@@ -1180,6 +1184,16 @@ begin
     F := GetHexEditorFrame(i);
     F.UpdateIconSet;
   end;
+end;
+
+procedure TMainForm.InitShortcuts;
+begin
+{$IFDEF UNIX}
+  acFileQuit.ShortCut := KeyToShortCut(VK_Q, [ssCtrl]);
+{$ENDIF}
+{$IFDEF WINDOWS}
+  acFileQuit.ShortCut := KeyToShortCut(VK_X, [ssAlt]);
+{$ENDIF}
 end;
 
 procedure TMainForm.WriteIni;

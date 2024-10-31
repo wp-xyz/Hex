@@ -1,0 +1,96 @@
+name: LevelDB Object Pascal
+
+defaults:
+    run:
+        shell: bash
+
+
+permissions:
+    contents: write
+
+on:
+
+    push:
+        branches: [ master ]
+        tags: [ "*" ]
+        paths-ignore: [ "README.md", "LICENSE" ]
+
+    pull_request:
+        branches: [ master ]
+
+jobs:
+
+    build:
+        name: Build
+        runs-on: ${{ matrix.operating-system }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                operating-system: [ ubuntu-20.04, ubuntu-latest, windows-latest]
+                lazarus-versions: [ stable ]
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+              clean: true
+              set-safe-directory: true
+
+        - name: Install Lazarus
+          uses: gcarreno/setup-lazarus@v3
+          with:
+              lazarus-version: ${{ matrix.lazarus-versions }}
+              with-cache: false
+
+        - name: Build Application
+          run: lazbuild -B --bm=Release "source/Hex.lpi"
+
+        - name: Upload Application
+          uses: actions/upload-artifact@v4
+          with:
+            name: Hex-${{ matrix.operating-system }}
+            path: bin/Hex*
+    
+    release:
+        if: contains(github.ref_type, 'tag')
+
+        name: Release Application
+        runs-on: ubuntu-latest
+        needs: build
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+              fetch-depth: 0
+              clean: true
+              set-safe-directory: true
+              
+        - name: Download the Release binaries
+          uses: actions/download-artifact@v4
+
+        - name: Create archives
+          run: |
+            cd Hex-ubuntu-latest
+            mv Hex hex
+            chmod +x hex
+            tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz hex
+            cd ../Hex-ubuntu-20.04
+            mv Hex hex
+            chmod +x hex
+            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz hex
+            cd ../Hex-windows-latest
+            zip ../Hex-windows-x86_64-${{ github.ref_name }}.zip Hex.exe
+
+        - name: Create GitHub release
+          uses: softprops/action-gh-release@v1
+          with:
+              name: Hex ${{ github.ref_name }}
+              body: Needs to be changed
+              files: |
+                *.tgz
+                *.zip
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
