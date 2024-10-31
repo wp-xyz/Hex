@@ -68,12 +68,12 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\Hex"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\Hex"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="thirdparty"/>
-            <UnitOutputDirectory Value="..\bin\lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="thirdparty;units;forms;frames"/>
+            <UnitOutputDirectory Value="..\ppu\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
@@ -117,7 +117,7 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="hxmain.pas"/>
+        <Filename Value="forms\hxmain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
@@ -125,7 +125,7 @@
         <UnitName Value="hxMain"/>
       </Unit1>
       <Unit2>
-        <Filename Value="hxhexeditorframe.pas"/>
+        <Filename Value="frames\hxhexeditorframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="HexEditorFrame"/>
         <HasResources Value="True"/>
@@ -133,17 +133,17 @@
         <UnitName Value="hxHexEditorFrame"/>
       </Unit2>
       <Unit3>
-        <Filename Value="hxglobal.pas"/>
+        <Filename Value="units\hxglobal.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxGlobal"/>
       </Unit3>
       <Unit4>
-        <Filename Value="hxstrings.pas"/>
+        <Filename Value="units\hxstrings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxStrings"/>
       </Unit4>
       <Unit5>
-        <Filename Value="hxutils.pas"/>
+        <Filename Value="units\hxutils.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxUtils"/>
       </Unit5>
@@ -157,7 +157,7 @@
         <UnitName Value="MPHexEditor"/>
       </Unit7>
       <Unit8>
-        <Filename Value="hxdatamodule.pas"/>
+        <Filename Value="forms\hxdatamodule.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="CommonData"/>
         <HasResources Value="True"/>
@@ -165,7 +165,7 @@
         <UnitName Value="hxDataModule"/>
       </Unit8>
       <Unit9>
-        <Filename Value="hxbasicviewerframe.pas"/>
+        <Filename Value="frames\hxbasicviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="BasicViewerFrame"/>
         <HasResources Value="True"/>
@@ -173,7 +173,7 @@
         <UnitName Value="hxBasicViewerFrame"/>
       </Unit9>
       <Unit10>
-        <Filename Value="hxdataviewerframe.pas"/>
+        <Filename Value="frames\hxdataviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="DataViewerFrame"/>
         <HasResources Value="True"/>
@@ -181,7 +181,7 @@
         <UnitName Value="hxDataViewerFrame"/>
       </Unit10>
       <Unit11>
-        <Filename Value="hxsettingsdlg.pas"/>
+        <Filename Value="forms\hxsettingsdlg.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SettingsForm"/>
         <HasResources Value="True"/>
@@ -189,7 +189,7 @@
         <UnitName Value="hxSettingsDlg"/>
       </Unit11>
       <Unit12>
-        <Filename Value="hxgotodlg.pas"/>
+        <Filename Value="forms\hxgotodlg.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="GotoForm"/>
         <HasResources Value="True"/>
@@ -197,7 +197,7 @@
         <UnitName Value="hxGotoDlg"/>
       </Unit12>
       <Unit13>
-        <Filename Value="hxrecordviewerframe.pas"/>
+        <Filename Value="frames\hxrecordviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="RecordViewerFrame"/>
         <HasResources Value="True"/>
@@ -205,7 +205,7 @@
         <UnitName Value="hxRecordViewerFrame"/>
       </Unit13>
       <Unit14>
-        <Filename Value="hxrecordeditorform.pas"/>
+        <Filename Value="forms\hxrecordeditorform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="RecordEditorForm"/>
         <HasResources Value="True"/>
@@ -213,17 +213,17 @@
         <UnitName Value="hxRecordEditorForm"/>
       </Unit14>
       <Unit15>
-        <Filename Value="hxvieweritems.pas"/>
+        <Filename Value="units\hxvieweritems.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerItems"/>
       </Unit15>
       <Unit16>
-        <Filename Value="hxviewergrids.pas"/>
+        <Filename Value="units\hxviewergrids.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxViewerGrids"/>
       </Unit16>
       <Unit17>
-        <Filename Value="hxobjectviewerframe.pas"/>
+        <Filename Value="frames\hxobjectviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ObjectViewerFrame"/>
         <HasResources Value="True"/>
@@ -231,7 +231,7 @@
         <UnitName Value="hxObjectViewerFrame"/>
       </Unit17>
       <Unit18>
-        <Filename Value="hxgridviewerframe.pas"/>
+        <Filename Value="frames\hxgridviewerframe.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="GridViewerFrame"/>
         <HasResources Value="True"/>
@@ -239,7 +239,7 @@
         <UnitName Value="hxGridViewerFrame"/>
       </Unit18>
       <Unit19>
-        <Filename Value="hxabout.pas"/>
+        <Filename Value="forms\hxabout.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="AboutForm"/>
         <HasResources Value="True"/>
@@ -247,7 +247,7 @@
         <UnitName Value="hxAbout"/>
       </Unit19>
       <Unit20>
-        <Filename Value="hxpascalrecordform.pas"/>
+        <Filename Value="forms\hxpascalrecordform.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="PascalRecordForm"/>
         <HasResources Value="True"/>
@@ -255,7 +255,7 @@
         <UnitName Value="hxPascalRecordForm"/>
       </Unit20>
       <Unit21>
-        <Filename Value="hxsearchreplacedlg.pas"/>
+        <Filename Value="forms\hxsearchreplacedlg.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SearchReplaceForm"/>
         <HasResources Value="True"/>
@@ -263,7 +263,7 @@
         <UnitName Value="hxSearchReplaceDlg"/>
       </Unit21>
       <Unit22>
-        <Filename Value="hxhexeditor.pas"/>
+        <Filename Value="units\hxhexeditor.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="hxHexEditor"/>
       </Unit22>
