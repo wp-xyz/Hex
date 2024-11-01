@@ -3,7 +3,9 @@ program hex_tests;
 {$mode objfpc}{$H+}
 
 uses
-  Interfaces, Forms, GuiTestRunner, UtilsTests, MPHexEditor, MPHexEditorEx;
+  Interfaces, Forms, GuiTestRunner, UtilsTests,
+  hxUtils;//, MPHexEditor,
+  //MPHexEditorEx;
 
 {$R *.res}
 

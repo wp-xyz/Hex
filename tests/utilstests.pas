@@ -1,3 +1,5 @@
+{ Tests functions in unit hxUtils }
+
 unit UtilsTests;
 
 {$mode objfpc}{$H+}

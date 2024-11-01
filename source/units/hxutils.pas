@@ -4,12 +4,13 @@ unit hxUtils;
 
 interface
 
-uses     LazLoggerbase,
+uses
+  LazLoggerbase,
   LCLIntf, LCLType, Classes, SysUtils, Graphics, IniFiles, Forms,
   hxGlobal, hxHexEditor;
 
 type
-  TExtended10 = packed array[0..9] of byte;     // covers that case that "extended" is not 10 bytes
+  TExtended10 = packed array[0..9] of byte;     // covers the case that "extended" is not 10 bytes
   PExtended10 = ^TExtended10;
 
 // Ini file
@@ -820,7 +821,7 @@ var
   exponent: Integer;
   mantissa: Extended;
   exp10, mant10: Double;
-  tmp: Int64;
+  tmp: QWord; //Int64;
   factor: Int64;
   i: Integer;
   signBit: Word;
