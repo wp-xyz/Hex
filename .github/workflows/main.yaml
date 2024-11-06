@@ -29,6 +29,16 @@ jobs:
             matrix:
                 operating-system: [ ubuntu-20.04, ubuntu-latest, windows-latest]
                 lazarus-versions: [ stable ]
+                include:
+                - operating-system: ubuntu-20.04
+                  folder: x86_64-linux
+                  binary: Hex
+                - operating-system: ubuntu-lates
+                  folder: x86_64-linux
+                  binary: Hex
+                - operating-system: windows-lates
+                  folder: x86_64-win64
+                  binary: Hex.exe
 
         steps:
         - name: Checkout repository
@@ -50,7 +60,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: Hex-${{ matrix.operating-system }}
-            path: bin/Hex*
+            path: bin/${{ matrix.operating-system.folder }}/${{ matrix.operating-system.binary }}
     
     release:
         if: contains(github.ref_type, 'tag')
