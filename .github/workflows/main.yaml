@@ -33,10 +33,10 @@ jobs:
                     - operating-system: ubuntu-20.04
                       folder: x86_64-linux
                       binary: Hex
-                    - operating-system: ubuntu-lates
+                    - operating-system: ubuntu-latest
                       folder: x86_64-linux
                       binary: Hex
-                    - operating-system: windows-lates
+                    - operating-system: windows-latest
                       folder: x86_64-win64
                       binary: Hex.exe
 
