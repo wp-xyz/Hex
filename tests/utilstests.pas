@@ -22,7 +22,7 @@ type
 implementation
 
 uses
-  hxUtils;
+  hxUtils_NonGUI;
 
 type
   TExtendedTestCase = record

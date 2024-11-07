@@ -34,7 +34,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="thirdparty"/>
+            <OtherUnitFiles Value="thirdparty;units;frames;forms"/>
             <UnitOutputDirectory Value="..\ppu\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -111,7 +111,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="24">
+    <Units Count="25">
       <Unit0>
         <Filename Value="Hex.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -272,6 +272,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="MPHexEditorEx"/>
       </Unit23>
+      <Unit24>
+        <Filename Value="units\hxutils_nongui.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="hxUtils_NonGui"/>
+      </Unit24>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -282,7 +287,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="thirdparty"/>
+      <OtherUnitFiles Value="thirdparty;units"/>
       <UnitOutputDirectory Value="..\ppu\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

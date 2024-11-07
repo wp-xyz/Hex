@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Buttons;
+  StdCtrls, Buttons,
+  hxGlobal, hxUtils_NonGUI;
 
 type
 
@@ -50,8 +51,7 @@ implementation
 {$R *.lfm}
 
 uses
-  LCLIntf, Types,
-  hxGlobal, hxUtils;
+  LCLIntf, Types;
 
 { TAboutForm }
 

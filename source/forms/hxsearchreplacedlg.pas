@@ -9,7 +9,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Buttons,
-  hxGlobal, hxHexEditor;
+  hxGlobal, hxUtils_NonGUI, hxUtils, hxHexEditor;
 
 type
   TSearchReplaceMode = (srmSearch, srmReplace);
@@ -98,7 +98,7 @@ implementation
 uses
   IniFiles,
   Real48Utils,
-  hxStrings, hxDatamodule, hxUtils;
+  hxStrings, hxDatamodule;
 
 
 { TSearchReplaceForm }
