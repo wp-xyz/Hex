@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  hxBasicViewerFrame, hxHexEditor;
+  hxUtils_NonGUI, hxBasicViewerFrame, hxHexEditor;
 
 type
   TCheckUserAbortEvent = procedure (Sender:TObject; var Aborted:boolean) of object;
@@ -112,7 +112,7 @@ implementation
 {$R *.lfm}
 
 uses
-  hxStrings, hxUtils;
+  hxStrings;
 
 const
   PIXEL_FORMATS: array[TPixelFormat] of string = (

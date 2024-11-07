@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, StdCtrls, Grids,
-  hxGlobal, hxHexEditor, hxViewerItems;
+  hxGlobal, hxUtils_NonGui, hxHexEditor, hxViewerItems;
 
 type
   TViewerGrid = class(TCustomDrawGrid)
@@ -60,8 +60,7 @@ implementation
 
 uses
   LCLIntf, Math, TypInfo, Dialogs,
-  real48utils,
-  hxUtils;
+  real48utils;
 
 constructor TViewerGrid.Create(AOwner: TComponent; AOwnsData: Boolean);
 begin
@@ -551,7 +550,7 @@ begin
                 if (abs(ext) >= MinSingle) and (abs(ext) <= MaxSingle) then
                 begin
                   sng := ext;
-                  if AItem.BigEndian then sng := hxUtils.NtoBE(sng) else sng := hxUtils.NtoLE(sng);
+                  if AItem.BigEndian then sng := hxUtils_NonGUI.NtoBE(sng) else sng := hxUtils_NonGUI.NtoLE(sng);
                   FHexEditor.WriteBuffer(sng, AItem.Offset, SizeOf(sng));
                 end else
                   err := errOutOfRange;

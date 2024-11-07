@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Graphics,
   Forms, Controls, ComCtrls, ExtCtrls, Dialogs, Menus, ActnList,
   OMultiPanel,
-  hxGlobal, hxHexEditor,
+  hxGlobal, hxUtils_NonGUI, hxUtils, hxHexEditor,
   hxBasicViewerFrame, hxDataViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
@@ -139,7 +139,7 @@ implementation
 
 uses
   StrUtils, IniFiles, Math,
-  hxStrings, hxUtils, hxSearchReplaceDlg;
+  hxStrings, hxSearchReplaceDlg;
 
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin

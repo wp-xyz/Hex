@@ -6,7 +6,7 @@ unit hxGlobal;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
+  Classes, SysUtils, GraphType;
 
 type
   TOffsetDisplayBase = (odbNone, odbDec, odbHex, odbOct);
@@ -191,18 +191,28 @@ type
   end;
 
   TColorParams = record
-    BackgroundColor: TColor;
-    ActiveFieldBackgroundColor: TColor;
-    OffsetBackgroundColor: TColor;
-    OffsetForegroundColor: TColor;
-    CurrentOffsetBackgroundColor: TColor;
-    CurrentOffsetForegroundColor: TColor;
-    EvenColumnForegroundColor: TColor;
-    OddColumnForegroundColor: TColor;
-    ChangedBackgroundColor: TColor;
-    ChangedForegroundColor: TColor;
-    CharFieldForegroundColor: TColor;
+    BackgroundColor: TGraphicsColor;
+    ActiveFieldBackgroundColor: TGraphicsColor;
+    OffsetBackgroundColor: TGraphicsColor;
+    OffsetForegroundColor: TGraphicsColor;
+    CurrentOffsetBackgroundColor: TGraphicsColor;
+    CurrentOffsetForegroundColor: TGraphicsColor;
+    EvenColumnForegroundColor: TGraphicsColor;
+    OddColumnForegroundColor: TGraphicsColor;
+    ChangedBackgroundColor: TGraphicsColor;
+    ChangedForegroundColor: TGraphicsColor;
+    CharFieldForegroundColor: TGraphicsColor;
   end;
+
+const       // Repeating the clXXXX values to keep Graphics out of this unit
+  clWindow = TGraphicsColor($80000005);
+  clWindowText = TGraphicsColor($80000008);
+  clBtnFace = TGraphicsColor($8000000F);
+  clBtnShadow = TGraphicsColor($80000010);
+  clBtnHighlight = TGraphicsColor($80000014);
+  clNavy = TGraphicsColor($00800000);
+  clBlue = TGraphicsColor($00FF0000);
+  clMaroon = TGraphicsColor($00000080);
 
 var
   HexParams: THexParams = (
