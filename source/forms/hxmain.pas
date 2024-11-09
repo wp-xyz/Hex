@@ -357,29 +357,29 @@ var
   D: TSettingsForm;
   F: THexEditorFrame;
   params: THexParams;
-  colors: TColorParams;
+  mode: TScreenMode;
 begin
+  mode := GetScreenMode;
   F := GetActiveHexEditorFrame;
   D := TSettingsForm.Create(nil);
   try
     params := HexParams;
-    colors := ColorParams;
     if Assigned(F) then begin
       F.ActiveHexParams(params{%H-});
-      F.ActiveColors(colors{%H-});
+      F.ActiveColors(ColorParams[mode]{%H-});
     end;
 
     D.ParamsToControls(params);
-    D.ColorsToControls(colors);
+    D.ColorsToControls(ColorParams[mode]);
     D.GuiParamsToControls(GUIParams);
 
     if D.ShowModal = mrOK then
     begin
       D.ParamsFromControls(HexParams);
-      D.ColorsFromControls(ColorParams);
+      D.ColorsFromControls(ColorParams[mode]);
       if Assigned(F) then begin
         F.ApplyHexParams(HexParams);
-        ApplyColorsToHexEditor(ColorParams, F.HexEditor);
+        ApplyColorsToHexEditor(ColorParams[mode], F.HexEditor);
         F.UpdateIconSet;
       end;
       D.GuiParamsFromControls(GUIParams);
@@ -862,7 +862,7 @@ begin
     F.OnChange := @HexEditorChanged;
     F.OnUpdateStatusBar := @HexEditorUpdateStatusBar;
     F.ApplyHexParams(HexParams);
-    ApplyColorsToHexEditor(ColorParams, F.HexEditor);
+    ApplyColorsToHexEditor(ColorParams[GetScreenMode], F.HexEditor);
     page.Caption := F.Caption;
     PageControl.ActivePage := page;
     PageControl.Show;
@@ -1026,7 +1026,8 @@ begin
     else
       AcEditOverwriteMode.Checked := true;
 
-    ReadColorsFromIni(ini, INI_COLORS);
+    ReadColorsFromIni(ini, INI_COLORS, smLightMode);
+    ReadColorsFromIni(ini, INI_COLORS_DARKMODE, smDarkMode);
 
     ReadGuiParamsFromIni(ini, INI_GUI);
     UpdateIconSet;
@@ -1204,7 +1205,7 @@ begin
   F := GetActiveHexEditorFrame;
   if F <> nil then begin
     F.ActiveHexParams(HexParams);
-    F.ActiveColors(ColorParams);
+    F.ActiveColors(ColorParams[GetScreenMode]);
   end;
 
   ini := CreateIniFile;
@@ -1213,7 +1214,10 @@ begin
     ini.WriteBool(INI_MAINFORM, 'ShowToolbar', acShowToolbar.Checked);
     ini.WriteBool(INI_MAINFORM, 'ShowStatusbar', acShowStatusbar.Checked);
     WriteParamsToIni(ini, INI_PARAMS);
-    WriteColorsToIni(ini, INI_COLORS);
+    if IsDarkMode then
+      WriteColorsToIni(ini, INI_COLORS_DARKMODE, smDarkMode)
+    else
+      WriteColorsToIni(ini, INI_COLORS, smLightMode);
     WriteGuiParamsToIni(ini, INI_GUI);
     ini.UpdateFile;
   finally

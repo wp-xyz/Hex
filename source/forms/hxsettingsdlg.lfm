@@ -1,21 +1,22 @@
 object SettingsForm: TSettingsForm
   Left = 718
-  Height = 480
+  Height = 496
   Top = 271
-  Width = 760
+  Width = 765
   Caption = 'Parameter configuration'
-  ClientHeight = 480
-  ClientWidth = 760
+  ClientHeight = 496
+  ClientWidth = 765
   Position = poMainFormCenter
-  LCLVersion = '3.99.0.0'
+  LCLVersion = '4.99.0.0'
+  OnActivate = FormActivate
   OnCreate = FormCreate
   object ButtonPanel: TButtonPanel
     AnchorSideTop.Control = Owner
     AnchorSideTop.Side = asrCenter
     Left = 6
     Height = 34
-    Top = 440
-    Width = 748
+    Top = 456
+    Width = 753
     OKButton.Name = 'OKButton'
     OKButton.DefaultCaption = True
     OKButton.OnClick = OKButtonClick
@@ -44,20 +45,20 @@ object SettingsForm: TSettingsForm
   end
   object PageControl: TPageControl
     Left = 6
-    Height = 428
+    Height = 444
     Top = 6
-    Width = 748
-    ActivePage = pgEditor
+    Width = 753
+    ActivePage = pgColors
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
     object pgEditor: TTabSheet
       Caption = 'Editor'
-      ClientHeight = 400
-      ClientWidth = 740
+      ClientHeight = 416
+      ClientWidth = 745
       object cbViewOnly: TCheckBox
         AnchorSideLeft.Control = pgEditor
         AnchorSideTop.Control = pgEditor
@@ -120,8 +121,8 @@ object SettingsForm: TSettingsForm
     end
     object pgFormat: TTabSheet
       Caption = 'Format'
-      ClientHeight = 400
-      ClientWidth = 740
+      ClientHeight = 416
+      ClientWidth = 745
       object lblBytesPerRow: TLabel
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = cbBytesPerRow
@@ -268,9 +269,9 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 144
         Height = 19
-        Top = 195
+        Top = 179
         Width = 52
-        BorderSpacing.Top = 32
+        BorderSpacing.Top = 16
         Caption = 'Visible'
         Checked = True
         State = cbChecked
@@ -283,7 +284,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Control = cbRulerVisible
         Left = 101
         Height = 15
-        Top = 197
+        Top = 181
         Width = 27
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 16
@@ -296,7 +297,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 144
         Height = 23
-        Top = 220
+        Top = 204
         Width = 100
         BorderSpacing.Top = 6
         ItemHeight = 15
@@ -317,7 +318,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Control = cmbRulerNumberBase
         Left = 29
         Height = 15
-        Top = 224
+        Top = 208
         Width = 99
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 16
@@ -367,22 +368,6 @@ object SettingsForm: TSettingsForm
         Caption = 'Mask character'
         ParentColor = False
       end
-      object gbSampleHexEditor: TGroupBox
-        AnchorSideLeft.Control = pgFormat
-        AnchorSideRight.Control = pgFormat
-        AnchorSideRight.Side = asrBottom
-        Left = 16
-        Height = 272
-        Top = 272
-        Width = 708
-        Anchors = [akTop, akLeft, akRight]
-        BorderSpacing.Left = 16
-        BorderSpacing.Right = 16
-        Caption = 'Sample'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 8
-      end
       object cmbFontSize: TComboBox
         AnchorSideLeft.Control = cmbFontName
         AnchorSideLeft.Side = asrBottom
@@ -409,7 +394,7 @@ object SettingsForm: TSettingsForm
           '20'
         )
         Style = csDropDownList
-        TabOrder = 9
+        TabOrder = 8
         Text = '10'
         OnChange = FormatChanged
       end
@@ -435,7 +420,7 @@ object SettingsForm: TSettingsForm
         AutoComplete = True
         AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
         ItemHeight = 15
-        TabOrder = 10
+        TabOrder = 9
         Text = 'cmbFontName'
         OnChange = FormatChanged
       end
@@ -448,20 +433,20 @@ object SettingsForm: TSettingsForm
         Top = 55
         Width = 97
         Caption = 'Draw 3D gutter'
-        TabOrder = 11
+        TabOrder = 10
         OnChange = FormatChanged
       end
     end
     object pgColors: TTabSheet
       Caption = 'Colors'
-      ClientHeight = 400
-      ClientWidth = 740
+      ClientHeight = 416
+      ClientWidth = 745
       object clbBackground: TColorButton
         AnchorSideLeft.Control = lblBackground
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = lblBackground
         AnchorSideTop.Side = asrBottom
-        Left = 382
+        Left = 384
         Height = 25
         Top = 27
         Width = 75
@@ -475,7 +460,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Control = clbBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = clbOffsetForeground
-        Left = 216
+        Left = 218
         Height = 15
         Top = 32
         Width = 44
@@ -489,7 +474,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 228
+        Left = 230
         Height = 15
         Top = 90
         Width = 32
@@ -501,7 +486,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbActiveFieldBackground
         AnchorSideTop.Side = asrBottom
-        Left = 382
+        Left = 384
         Height = 25
         Top = 85
         Width = 75
@@ -515,7 +500,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Control = Bevel1
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = Bevel1
-        Left = 289
+        Left = 291
         Height = 15
         Top = 8
         Width = 65
@@ -529,7 +514,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = Bevel1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = lblForeground
-        Left = 386
+        Left = 388
         Height = 15
         Top = 8
         Width = 67
@@ -542,7 +527,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = lblForeground
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOffsetBackground
-        Left = 284
+        Left = 286
         Height = 25
         Top = 89
         Width = 75
@@ -557,7 +542,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 187
+        Left = 189
         Height = 15
         Top = 119
         Width = 73
@@ -570,7 +555,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOffsetForeground
         AnchorSideTop.Side = asrBottom
-        Left = 284
+        Left = 286
         Height = 25
         Top = 118
         Width = 75
@@ -584,7 +569,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbOffsetBackground
         AnchorSideTop.Side = asrBottom
-        Left = 382
+        Left = 384
         Height = 25
         Top = 114
         Width = 75
@@ -599,7 +584,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 186
+        Left = 188
         Height = 15
         Top = 193
         Width = 74
@@ -612,7 +597,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbChangedForeground
         AnchorSideTop.Side = asrBottom
-        Left = 284
+        Left = 286
         Height = 25
         Top = 188
         Width = 75
@@ -627,7 +612,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 188
+        Left = 190
         Height = 15
         Top = 222
         Width = 72
@@ -640,7 +625,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbEvenColumnForeground
         AnchorSideTop.Side = asrBottom
-        Left = 284
+        Left = 286
         Height = 25
         Top = 217
         Width = 75
@@ -655,7 +640,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 212
+        Left = 214
         Height = 15
         Top = 148
         Width = 48
@@ -668,7 +653,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbCurrentOffsetForeground
         AnchorSideTop.Side = asrBottom
-        Left = 284
+        Left = 286
         Height = 25
         Top = 147
         Width = 75
@@ -682,7 +667,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Control = clbBackground
         AnchorSideTop.Control = clbCurrentOffsetBackground
         AnchorSideTop.Side = asrBottom
-        Left = 382
+        Left = 384
         Height = 25
         Top = 143
         Width = 75
@@ -695,7 +680,7 @@ object SettingsForm: TSettingsForm
       object Bevel1: TBevel
         AnchorSideLeft.Control = pgColors
         AnchorSideLeft.Side = asrCenter
-        Left = 354
+        Left = 356
         Height = 8
         Top = 0
         Width = 32
@@ -705,7 +690,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Control = clbActiveFieldBackground
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = clbOffsetForeground
-        Left = 201
+        Left = 203
         Height = 15
         Top = 61
         Width = 59
@@ -719,7 +704,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbBackground
         AnchorSideTop.Side = asrBottom
-        Left = 382
+        Left = 384
         Height = 25
         Top = 56
         Width = 75
@@ -734,7 +719,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = lblWindowColor
         AnchorSideRight.Side = asrBottom
-        Left = 183
+        Left = 185
         Height = 15
         Top = 251
         Width = 77
@@ -747,7 +732,7 @@ object SettingsForm: TSettingsForm
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = clbOddColumnForeground
         AnchorSideTop.Side = asrBottom
-        Left = 284
+        Left = 286
         Height = 25
         Top = 246
         Width = 75
@@ -757,11 +742,33 @@ object SettingsForm: TSettingsForm
         ButtonColor = clBlack
         OnColorChanged = ColorChanged
       end
+      object gbSampleHexEditor: TGroupBox
+        AnchorSideLeft.Control = pgFormat
+        AnchorSideTop.Control = cmbRulerNumberBase
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pgFormat
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = pgColors
+        AnchorSideBottom.Side = asrBottom
+        Left = 16
+        Height = 157
+        Top = 243
+        Width = 713
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 16
+        BorderSpacing.Top = 16
+        BorderSpacing.Right = 16
+        BorderSpacing.Bottom = 16
+        Caption = 'Sample'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 0
+      end
     end
     object pgViewer: TTabSheet
       Caption = 'Viewer'
-      ClientHeight = 400
-      ClientWidth = 740
+      ClientHeight = 416
+      ClientWidth = 745
       object gbDataViewer: TGroupBox
         AnchorSideLeft.Control = pgViewer
         AnchorSideTop.Control = pgViewer
@@ -1122,25 +1129,25 @@ object SettingsForm: TSettingsForm
     end
     object pgGUI: TTabSheet
       Caption = 'User interface'
-      ClientHeight = 400
-      ClientWidth = 740
+      ClientHeight = 416
+      ClientWidth = 745
       object gbIcons: TGroupBox
         AnchorSideLeft.Control = pgGUI
         AnchorSideTop.Control = pgGUI
         AnchorSideRight.Control = pgGUI
         AnchorSideRight.Side = asrBottom
         Left = 16
-        Height = 104
+        Height = 112
         Top = 16
-        Width = 708
+        Width = 713
         Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BorderSpacing.Left = 16
         BorderSpacing.Top = 16
         BorderSpacing.Right = 16
         Caption = 'Icon style'
-        ClientHeight = 84
-        ClientWidth = 704
+        ClientHeight = 92
+        ClientWidth = 709
         TabOrder = 0
         object rbOfficeIconSet: TRadioButton
           AnchorSideLeft.Control = gbIcons
@@ -1162,7 +1169,7 @@ object SettingsForm: TSettingsForm
           AnchorSideTop.Side = asrCenter
           Left = 16
           Height = 19
-          Top = 47
+          Top = 55
           Width = 157
           BorderSpacing.Left = 16
           Caption = 'Simple small (icons8.com)'
@@ -1177,7 +1184,7 @@ object SettingsForm: TSettingsForm
           Left = 189
           Height = 32
           Top = 4
-          Width = 515
+          Width = 520
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Left = 16
           BorderSpacing.Top = 4
@@ -1192,11 +1199,11 @@ object SettingsForm: TSettingsForm
           AnchorSideRight.Side = asrBottom
           Left = 189
           Height = 32
-          Top = 40
-          Width = 515
+          Top = 48
+          Width = 520
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Left = 16
-          BorderSpacing.Top = 4
+          BorderSpacing.Top = 12
           BorderSpacing.Bottom = 12
           OnPaint = pbSimpleSmallPaint
         end

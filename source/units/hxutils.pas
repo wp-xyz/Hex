@@ -15,12 +15,12 @@ function GetIniFileName: String;
 
 procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String;
   APositionOnly: Boolean = false);
-procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
+procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 procedure ReadGuiParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
-procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
+procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 procedure WriteGuiParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 
@@ -33,6 +33,10 @@ procedure ErrorMsg(const AMsg: string);
 
 // Exception
 procedure ErrorFmt(const AMsg: string; AParams: Array of const);
+
+// Colors
+function IsDarkMode: Boolean;
+function GetScreenMode: TScreenMode;
 
 
 implementation
@@ -63,9 +67,9 @@ begin
     ChangeFileExt(ExtractFileName(Application.ExeName), '.cfg');
 end;
 
-procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String);
+procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 begin
-  with ColorParams do
+  with ColorParams[AMode] do
   begin
     BackgroundColor := TColor(AIniFile.ReadInteger(ASection,
       'BackgroundColor', Integer(BackgroundColor)));
@@ -230,9 +234,9 @@ begin
   end;
 end;
 
-procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String);
+procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 begin
-  with ColorParams do
+  with ColorParams[AMode] do
   begin
     AIniFile.EraseSection(ASection);
 
@@ -443,6 +447,24 @@ end;
 procedure ErrorFmt(const AMsg: string; AParams: Array of const);
 begin
   raise EHexError.CreateFmt(AMsg, AParams);
+end;
+
+
+{==============================================================================}
+{  Colors                                                                      }
+{==============================================================================}
+
+function IsDarkMode: Boolean;
+var
+  c: TColor;
+begin
+  c := ColorToRGB(clWindow);
+  Result := (Red(c) + Green(c) + blue(c)) div 3 < 128;
+end;
+
+function GetScreenMode: TScreenMode;
+begin
+  if IsDarkMode then Result := smDarkMode else Result := smLightMode;
 end;
 
 

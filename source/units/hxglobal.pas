@@ -125,6 +125,7 @@ const
   // Ini file sections
   INI_MAINFORM = 'MainForm';
   INI_COLORS = 'Colors';
+  INI_COLORS_DARKMODE = 'Colors_DarkMode';
   INI_PARAMS = 'Params';
   INI_SEARCH_REPLACE = 'SearchReplace';
   INI_GUI = 'UserInterface';
@@ -204,6 +205,9 @@ type
     CharFieldForegroundColor: TGraphicsColor;
   end;
 
+  TScreenMode = (smLightMode, smDarkMode);
+  TScreenColorParams = array[TScreenMode] of TColorParams;
+
 const       // Repeating the clXXXX values to keep Graphics out of this unit
   clWindow = TGraphicsColor($80000005);
   clWindowText = TGraphicsColor($80000008);
@@ -213,6 +217,8 @@ const       // Repeating the clXXXX values to keep Graphics out of this unit
   clNavy = TGraphicsColor($00800000);
   clBlue = TGraphicsColor($00FF0000);
   clMaroon = TGraphicsColor($00000080);
+  clYellow = TGraphicsColor($0000FFFF);
+  clOlive = TGraphicsColor($00008080);
 
 var
   HexParams: THexParams = (
@@ -256,20 +262,33 @@ var
   );
   DefaultHexParams: THexParams;
 
-  ColorParams: TColorParams = (
-    BackgroundColor: clWindow;
-    ActiveFieldBackgroundColor: clWindow;
-    OffsetBackgroundColor: clBtnFace;
-    OffsetForegroundColor: clWindowText;
-    CurrentOffsetBackgroundColor: clBtnShadow;
-    CurrentOffsetForegroundColor: clBtnHighlight;
-    EvenColumnForegroundColor: clNavy;
-    OddColumnForegroundColor: clBlue;
-    ChangedBackgroundColor: $00A8FFFF;
-    ChangedForegroundColor: clMaroon;
-    CharFieldForegroundColor: clWindowText
+  ColorParams: TScreenColorParams = (
+    ( BackgroundColor: clWindow;                 // light mode
+      ActiveFieldBackgroundColor: clWindow;
+      OffsetBackgroundColor: clBtnFace;
+      OffsetForegroundColor: clWindowText;
+      CurrentOffsetBackgroundColor: clBtnShadow;
+      CurrentOffsetForegroundColor: clBtnHighlight;
+      EvenColumnForegroundColor: clNavy;
+      OddColumnForegroundColor: clBlue;
+      ChangedBackgroundColor: $00A8FFFF;
+      ChangedForegroundColor: clMaroon;
+      CharFieldForegroundColor: clWindowText
+    ),
+    ( BackgroundColor: clWindow;               // dark mode
+      ActiveFieldBackgroundColor: clWindow;
+      OffsetBackgroundColor: clBtnFace;
+      OffsetForegroundColor: clWindowText;
+      CurrentOffsetBackgroundColor: clBtnShadow;
+      CurrentOffsetForegroundColor: clBtnHighlight;
+      EvenColumnForegroundColor: clOlive;
+      OddColumnForegroundColor: clYellow;
+      ChangedBackgroundColor: $00A8FFFF;
+      ChangedForegroundColor: clMaroon;
+      CharFieldForegroundColor: clWindowText
+    )
   );
-  DefaultColorParams: TColorParams;
+  DefaultColorParams: TScreenColorParams;
 
 type
   TGotoParams = record

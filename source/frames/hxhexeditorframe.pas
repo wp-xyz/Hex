@@ -156,7 +156,10 @@ end;
 
 procedure THexEditorFrame.ActiveColors(var AParams: TColorParams);
 begin
-  AParams := ColorParams;
+  if IsDarkMode then
+    AParams := ColorParams[smDarkMode]
+  else
+    AParams := ColorParams[smLightMode];
   if Assigned(HexEditor) then
   begin
     AParams.BackgroundColor := HexEditor.Colors.Background;
@@ -713,7 +716,7 @@ begin
   if (AParent <> nil) and (FHexEditor = nil) then
     CreateHexEditor;
   ApplyHexParams(HexParams);
-  ApplyColorsToHexEditor(ColorParams, FHexEditor);
+  ApplyColorsToHexEditor(ColorParams[GetScreenMode], FHexEditor);
   if HexEditor.CanFocus then HexEditor.SetFocus;
 end;
 

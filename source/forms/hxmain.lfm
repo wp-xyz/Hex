@@ -9,6 +9,7 @@ object MainForm: TMainForm
   ClientWidth = 914
   Menu = MainMenu
   ShowHint = True
+  LCLVersion = '4.99.0.0'
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -16,7 +17,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   object PageControl: TPageControl
     Left = 0
-    Height = 435
+    Height = 432
     Top = 30
     Width = 914
     Align = alClient
@@ -156,8 +157,8 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 20
-    Top = 465
+    Height = 23
+    Top = 462
     Width = 914
     AutoHint = True
     Panels = <    

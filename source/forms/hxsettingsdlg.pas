@@ -103,6 +103,7 @@ type
     procedure cbRecordViewerVisibleChange(Sender: TObject);
     procedure cbViewOnlyChange(Sender: TObject);
     procedure ColorChanged(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormatChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure OKButtonClick(Sender: TObject);
@@ -113,6 +114,7 @@ type
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
     FSampleHexEditor: THxHexEditor;
+    FColorParams: TScreenColorParams;
     procedure DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
     procedure PrepareSampleHexEditor;
     procedure SetEditorData(const AParams: THexParams);
@@ -129,7 +131,6 @@ type
 
     procedure ParamsFromControls(var AParams: THexParams);
     procedure ParamsToControls(const AParams: THexParams);
-
   end;
 
 var
@@ -148,7 +149,7 @@ var
 begin
   idx := PageControl.ActivePageIndex;
   if PageControl.ActivePage = pgColors then
-    ColorsToControls(DefaultColorParams)
+    ColorsToControls(DefaultColorParams[GetScreenMode])
   else
     ParamsToControls(DefaultHexParams);
   PageControl.ActivePageIndex := idx;
@@ -199,14 +200,17 @@ procedure TSettingsForm.ColorChanged(Sender: TObject);
 var
   colors: TColorParams;
 begin
-  colors := Default(TColorParams);
   ColorsFromControls(colors);
   ApplyColorsToHexEditor(colors, FSampleHexEditor);
 end;
 
+procedure TSettingsForm.FormActivate(Sender: TObject);
+begin
+//
+end;
+
 procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
 begin
-  AParams := ColorParams;
   with AParams do
   begin
     BackgroundColor := clbBackground.ButtonColor;
