@@ -114,7 +114,7 @@ type
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
     FSampleHexEditor: THxHexEditor;
-    FColorParams: TScreenColorParams;
+    procedure ApplyParamsToHexEditor(const AParams: THexParams);
     procedure DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
     procedure PrepareSampleHexEditor;
     procedure SetEditorData(const AParams: THexParams);
@@ -143,6 +143,12 @@ implementation
 uses
   hxDataModule, hxUtils;
 
+procedure TSettingsForm.ApplyParamsToHexEditor(const AParams: THexParams);
+begin
+  hxUtils.ApplyParamsToHexEditor(AParams, FSampleHexEditor);
+  FSampleHexEditor.ReadOnlyView := false;
+end;
+
 procedure TSettingsForm.btnRestoreDefaultsClick(Sender: TObject);
 var
   idx: Integer;
@@ -161,7 +167,7 @@ var
 begin
   params := Default(THexParams);
   ParamsFromControls(params);
-  ApplyParamsToHexEditor(params, FSampleHexEditor);
+  ApplyParamsToHexEditor(params);
 end;
 
 procedure TSettingsForm.cbDataViewerVisibleChange(Sender: TObject);
@@ -206,7 +212,7 @@ end;
 
 procedure TSettingsForm.FormActivate(Sender: TObject);
 begin
-//
+  Constraints.MinWidth := cbHexLowerCase.left + cbHexLowercase.Width + 16 + PageControl.BorderSpacing.Around * 2;
 end;
 
 procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
@@ -437,7 +443,7 @@ begin
   SetViewerData(AParams);
   //  SetWinData(WinParams);
 
-  ApplyParamsToHexEditor(AParams, FSampleHexEditor);
+  ApplyParamsToHexEditor(AParams);
 end;
 
 procedure TSettingsForm.pbOfficePaint(Sender: TObject);
