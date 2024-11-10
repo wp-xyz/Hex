@@ -4187,7 +4187,12 @@ begin
       end;
 
     VK_INSERT: if (Shift = []) then InsertMode := not InsertMode;
+
+    else
+      inherited;
   end;
+
+  Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #1)
 end;
 
 function TCustomMPHexEditor.HasChanged(aPos: integer): boolean;
