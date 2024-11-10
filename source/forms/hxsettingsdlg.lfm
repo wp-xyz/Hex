@@ -48,10 +48,10 @@ object SettingsForm: TSettingsForm
     Height = 444
     Top = 6
     Width = 767
-    ActivePage = pgFormat
+    ActivePage = pgEditor
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
@@ -744,15 +744,15 @@ object SettingsForm: TSettingsForm
       end
       object gbSampleHexEditor: TGroupBox
         AnchorSideLeft.Control = pgFormat
-        AnchorSideTop.Control = cmbRulerNumberBase
+        AnchorSideTop.Control = clbCharFieldForeground
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pgFormat
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = pgColors
         AnchorSideBottom.Side = asrBottom
         Left = 16
-        Height = 157
-        Top = 243
+        Height = 113
+        Top = 287
         Width = 727
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 16
