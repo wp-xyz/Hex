@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ActnList,
-  ComCtrls, mrumanager,
+  ComCtrls, mrumanager, exImgList,
   hxGlobal, hxHexEditor, hxHexEditorFrame;
 
 type
@@ -938,6 +938,8 @@ begin
   InitShortcuts;
 
   AppendToObjectsMenu(mnuObjects);
+
+  UpdateIconSet;
   {
   ReadIni;
   UpdateCmds;
@@ -950,7 +952,7 @@ var
   fn: String;
 begin
   for fn in FileNames do
-     CreateEditor(fn, HexParams.WriteProtected);
+    CreateEditor(fn, HexParams.WriteProtected);
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

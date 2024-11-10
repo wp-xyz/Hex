@@ -453,7 +453,10 @@ end;
 
 procedure TSettingsForm.pbSimpleSmallPaint(Sender: TObject);
 begin
-  DrawIcons(pbSimpleSmall, CommonData.Images_SimpleSmall);
+  if IsDarkMode then
+    DrawIcons(pbSimpleSmall, CommonData.Images_SimpleSmall_DarkMode)
+  else
+    DrawIcons(pbSimpleSmall, CommonData.Images_SimpleSmall);
 end;
 
 procedure TSettingsForm.PrepareSampleHexEditor;
