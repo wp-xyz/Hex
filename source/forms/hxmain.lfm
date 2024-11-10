@@ -1,15 +1,15 @@
 object MainForm: TMainForm
   Left = 372
-  Height = 437
+  Height = 450
   Top = 236
-  Width = 914
+  Width = 851
   AllowDropFiles = True
   Caption = 'Hex'
-  ClientHeight = 437
-  ClientWidth = 914
+  ClientHeight = 450
+  ClientWidth = 851
   Menu = MainMenu
   ShowHint = True
-  LCLVersion = '3.99.0.0'
+  LCLVersion = '4.99.0.0'
   OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -17,9 +17,9 @@ object MainForm: TMainForm
   OnShow = FormShow
   object PageControl: TPageControl
     Left = 0
-    Height = 389
+    Height = 397
     Top = 30
-    Width = 914
+    Width = 851
     Align = alClient
     TabOrder = 0
     OnChange = PageControlChange
@@ -28,7 +28,7 @@ object MainForm: TMainForm
     Left = 0
     Height = 30
     Top = 0
-    Width = 914
+    Width = 851
     AutoSize = True
     Bands = <    
       item
@@ -157,9 +157,9 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 18
-    Top = 419
-    Width = 914
+    Height = 23
+    Top = 427
+    Width = 851
     AutoHint = True
     Panels = <    
       item

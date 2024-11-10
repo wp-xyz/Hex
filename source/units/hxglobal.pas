@@ -219,8 +219,9 @@ const       // Repeating the clXXXX values to keep Graphics out of this unit
   clMaroon = TGraphicsColor($00000080);
   clYellow = TGraphicsColor($0000FFFF);
   clOlive = TGraphicsColor($00008080);
-  clBlack = TGraphicsColor($00000000);
-  clSilver = TGraphicsColor($00C0C0C0);
+  clSkyBlue = TGraphicsColor($00F0CAA6);
+
+  LINK_COLOR: array[TScreenMode] of TGraphicsColor = (clBlue, clSkyBlue);
 
 var
   HexParams: THexParams = (
@@ -281,8 +282,8 @@ var
       ActiveFieldBackgroundColor: clWindow;
       OffsetBackgroundColor: clBtnFace;
       OffsetForegroundColor: clWindowText;
-      CurrentOffsetBackgroundColor: clSilver;
-      CurrentOffsetForegroundColor: clBlack;
+      CurrentOffsetBackgroundColor: clBtnShadow;
+      CurrentOffsetForegroundColor: clBtnHighlight;
       EvenColumnForegroundColor: clOlive;
       OddColumnForegroundColor: clYellow;
       ChangedBackgroundColor: $00A8FFFF;

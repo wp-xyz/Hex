@@ -10,7 +10,7 @@ object AboutForm: TAboutForm
   ClientWidth = 381
   Position = poMainFormCenter
   ShowHint = True
-  LCLVersion = '3.99.0.0'
+  LCLVersion = '4.99.0.0'
   OnCreate = FormCreate
   object Image1: TImage
     AnchorSideLeft.Control = Owner

@@ -1,6 +1,6 @@
 object CommonData: TCommonData
   OldCreateOrder = False
-  Height = 448
+  Height = 180
   HorizontalOffset = 340
   VerticalOffset = 128
   Width = 300

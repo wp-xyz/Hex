@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, Buttons,
-  hxGlobal, hxUtils_NonGUI;
+  hxGlobal, hxUtils_NonGUI, hxUtils;
 
 type
 
@@ -56,6 +56,8 @@ uses
 { TAboutForm }
 
 procedure TAboutForm.FormCreate(Sender: TObject);
+var
+  mode: TScreenMode;
 begin
   with Image1 do
   begin
@@ -63,6 +65,12 @@ begin
     Picture.Icon.Current := Picture.Icon.GetBestIndexForSize(Size(Width, Height));
   end;
   lblVersion.Caption := 'Version: ' + GetVersionStr();
+  mode := GetScreenMode;
+  lblFPC.Font.Color := LINK_COLOR[mode];
+  lblLazarus.Font.Color := LINK_COLOR[mode];
+  lblMichal.Font.Color := LINK_COLOR[mode];
+  lblOndrej.Font.Color := LINK_COLOR[mode];
+  lblIcons8.Font.Color := LINK_COLOR[mode];
 end;
 
 procedure TAboutForm.lblURLClick(Sender: TObject);
