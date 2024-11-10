@@ -467,6 +467,10 @@ const
     )
     );
 
+{$IF NOT DECLARED(INVALID_HANDLE_VALUE)}
+  INVALID_HANDLE_VALUE = System.THandle(-1);
+{$ENDIF}
+
 type
   // custom Exception class
   EMPHexEditor = class(Exception);
@@ -1466,6 +1470,10 @@ type
     function GetAnyOffsetString(const Position: integer): string; virtual;
     // returns the height of one row in pixels
     function RowHeight: integer;
+    // returns the width of all columns
+    function DisplayWidth: Integer;
+    // returns the height of all rows
+    function DisplayHeight: Integer;
     // free the undo storage (discard all possible undo steps)
     procedure ResetUndo;
     // set the current position (like TStream.Seek)
@@ -1852,6 +1860,9 @@ type
   end;
 
   // @exclude(implements undo/redo)
+
+  { TMPHUndoStorage }
+
   TMPHUndoStorage = class(TMemoryStream)
   private
     FCount,
@@ -1874,7 +1885,7 @@ type
   public
     constructor Create(AEditor: TCustomMPHexEditor);
     destructor Destroy; override;
-    procedure SetSize(NewSize: longint); override;
+    procedure SetSize({$ifdef CPU64}const NewSize: Int64{$else}NewSize: LongInt{$endif}); override;
     procedure CreateUndo(aKind: TMPHUndoFlag; APosition, ACount, AReplaceCount:
       integer; const SDescription: string = '');
     function CanUndo: boolean;
@@ -2131,10 +2142,6 @@ const
   HEX_LOWER = '0123456789abcdef';
   HEX_UPPER = '0123456789ABCDEF';
   HEX_ALLCHARS = HEX_LOWER + HEX_UPPER;
-
-  {$IF NOT DECLARED(INVALID_HANDLE_VALUE)}
-  INVALID_HANDLE_VALUE = System.THandle(-1);
-  {$ENDIF}
 
   // available undo descriptions
   STRS_UNDODESC: array[ufKindBytesChanged..ufKindAllData] of string =
@@ -3939,6 +3946,7 @@ begin
             MoveColRow(LIntCol, LIntRow, True, True);
           end;
         end;
+        Key := 0;
       end;
 
     VK_NEXT:
@@ -3965,6 +3973,7 @@ begin
             MoveColRow(LIntCol, LIntRow, True, True);
           end;
         end;
+        Key := 0;
       end;
 
     VK_HOME:
@@ -3986,6 +3995,7 @@ begin
             MoveColRow(Max(GRID_FIXED, GetOtherFieldCol(GRID_FIXED)),
               Row, True, True);
         end;
+        Key := 0;
       end;
 
     VK_END:
@@ -4016,62 +4026,66 @@ begin
             MoveColRow(LgrcPosition.x, LgrcPosition.y, True, True);
           end
         end;
+        Key := 0;
       end;
 
     VK_LEFT, VK_BACK:
-      if (InsertMode and (not FReadOnlyView)) and (Key = VK_BACK) then
       begin
-        if SelCount > 0 then
-          DeleteSelection
-        else
-          InternalErase(True);
-      end
-      else if (not (ssCTRL in Shift)) then
-      begin
-        if FIsSelecting or (FUnicodeCharacters and FPosInCharField) then
-          LIntCol := GetPosAtCursor(Col, Row) - FBytesPerUnit
-        else
-          LIntCol := GetPosAtCursor(Col, Row) - 1;
-        if FPosInCharField then
+        if (InsertMode and (not FReadOnlyView)) and (Key = VK_BACK) then
         begin
-          if LIntCol < 0 then
-            LIntCol := 0;
-          LgrcPosition := GetCursorAtPos(LIntCol, FPosInCharField);
-          MoveColRow(LgrcPosition.x, LgrcPosition.y, True, True);
+          if SelCount > 0 then
+            DeleteSelection
+          else
+            InternalErase(True);
         end
-        else
+        else if (not (ssCTRL in Shift)) then
         begin
-          if FIsSelecting then
+          if FIsSelecting or (FUnicodeCharacters and FPosInCharField) then
+            LIntCol := GetPosAtCursor(Col, Row) - FBytesPerUnit
+          else
+            LIntCol := GetPosAtCursor(Col, Row) - 1;
+          if FPosInCharField then
           begin
-            CheckUnit(LIntCol);
+            if LIntCol < 0 then
+              LIntCol := 0;
             LgrcPosition := GetCursorAtPos(LIntCol, FPosInCharField);
             MoveColRow(LgrcPosition.x, LgrcPosition.y, True, True);
           end
           else
           begin
-            LIntCol := LIntCol + 1;
-            LgrcPosition := GetCursorAtPos(LIntCol, False);
-            if LgrcPosition.x < Col then
-              MoveColRow(Col - 1, Row, True, True)
+            if FIsSelecting then
+            begin
+              CheckUnit(LIntCol);
+              LgrcPosition := GetCursorAtPos(LIntCol, FPosInCharField);
+              MoveColRow(LgrcPosition.x, LgrcPosition.y, True, True);
+            end
             else
             begin
-              LIntCol := LIntCol - 1;
-              if LIntCol >= 0 then
+              LIntCol := LIntCol + 1;
+              LgrcPosition := GetCursorAtPos(LIntCol, False);
+              if LgrcPosition.x < Col then
+                MoveColRow(Col - 1, Row, True, True)
+              else
               begin
-                LgrcPosition := GetCursorAtPos(LIntCol, FPosInCharField);
-                MoveColRow(LgrcPosition.x + 1, LgrcPosition.y, True, True);
-              end;
-            end
+                LIntCol := LIntCol - 1;
+                if LIntCol >= 0 then
+                begin
+                  LgrcPosition := GetCursorAtPos(LIntCol, FPosInCharField);
+                  MoveColRow(LgrcPosition.x + 1, LgrcPosition.y, True, True);
+                end;
+              end
+            end;
+          end;
+        end
+        else
+        begin
+          if Key = VK_LEFT then
+          begin
+            LIntCol := GRID_FIXED;
+            MoveColRow(LIntCol, Row, True, True);
           end;
         end;
-      end
-      else
-      begin
-        if Key = VK_LEFT then
-        begin
-          LIntCol := GRID_FIXED;
-          MoveColRow(LIntCol, Row, True, True);
-        end;
+        Key := 0;
       end;
 
     VK_RIGHT:
@@ -4121,6 +4135,7 @@ begin
           LIntCol := GetLastCharCol;
           MoveColRow(LIntCol, Row, True, True);
         end;
+        Key := 0;
       end;
 
     VK_DOWN:
@@ -4133,9 +4148,9 @@ begin
           if LIntRow < RowCount then
           begin
             MoveColRow(LIntCol, LIntRow, True, True);
-            Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
           end
         end;
+        Key := 0;
       end;
 
     VK_UP:
@@ -4147,19 +4162,21 @@ begin
           if LIntRow >= GRID_FIXED then
           begin
             MoveColRow(LIntCol, LIntRow, True, True);
-            Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
           end
         end;
+        Key := 0;
       end;
 
     Word('T'): if (ssCtrl in Shift) then
       begin
         Col := Max(GRID_FIXED, GetOtherFieldCol(Col));
+        Key := 0;
       end;
 
     VK_TAB: if ((Shift = []) or (Shift = [ssShift])) then
       begin // tab-taste
         Col := Max(GRID_FIXED, GetOtherFieldCol(Col));
+        Key := 0;
       end;
 
     Word('0')..Word('9'): if ssCtrl in Shift then
@@ -4173,6 +4190,7 @@ begin
         begin
           GotoBookmark(Key - Ord('0'));
         end;
+        Key := 0;
       end;
 
     VK_SHIFT: if (Shift = [ssShift]) or (Shift = [ssShift, ssCtrl]) then
@@ -4185,11 +4203,16 @@ begin
         if (SelCount > 0) and (InsertMode or (Shift = [ssCtrl])) then
           DeleteSelection
         else if InsertMode or (Shift = [ssCtrl]) then
-          InternalErase(False)
+          InternalErase(False);
+        Key := 0;
       end;
 
-    VK_INSERT: if (Shift = []) then InsertMode := not InsertMode;
-
+    VK_INSERT:
+      if (Shift = []) then
+      begin
+        InsertMode := not InsertMode;
+        Key := 0;
+      end;
   end;
 end;
 
@@ -5255,7 +5278,15 @@ begin
   ShowCaret(Handle);
   // fix caret position if needed
   if Focused and (FCaretYOffset <> OldOffset) then
-    SetCaretPos(FCaretXPos, FCaretYPos + FCaretYOffset);
+  {$IF Defined(LCLGTK2) or Defined(LCLQT) or Defined(LCLQT5)}
+  begin
+    HideCaret(Handle);
+  {$ENDIF}
+    SetCaretPosEx(Handle, FCaretXPos, FCaretYPos + FCaretYOffset);
+  {$IF Defined(LCLGTK2) or Defined(LCLQT) or Defined(LCLQT5)}
+    ShowCaret(Handle);
+  end;
+  {$ENDIF}
 end;
 
 procedure TCustomMPHexEditor.SetBytesPerColumn(const Value: integer);
@@ -6090,7 +6121,7 @@ begin
     BookMarkChanged;
 end;
 
-procedure TCustomMPHexEditor.IntSetCaretPos(const X, Y, aCol: integer);
+procedure TCustomMPHexEditor.IntSetCaretPos(const X, Y, ACol: integer);
 begin
   if Focused then
   begin
@@ -6103,7 +6134,13 @@ begin
         Invalidate;
       end;
     end;
-    SetCaretPos(X, Y + FCaretYOffset);
+    {$IF Defined(LCLGTK2) or Defined(LCLQT) or Defined(LCLQT5)}
+    HideCaret(Handle);
+    {$ENDIF}
+    SetCaretPosEx(Handle, X, Y + FCaretYOffset);
+    {$IF Defined(LCLGTK2) or Defined(LCLQT) or Defined(LCLQT5)}
+    ShowCaret(Handle);
+    {$ENDIF}
     FCaretXPos := X;
     FCaretYPos := Y;
   end;
@@ -6327,6 +6364,20 @@ end;
 function TCustomMPHexEditor.RowHeight: integer;
 begin
   Result := DefaultRowHeight;
+end;
+
+function TCustomMPHexEditor.DisplayWidth: Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to ColCountRO - 1 do
+    Inc(Result, ColWidths[I]);
+end;
+
+function TCustomMPHexEditor.DisplayHeight: Integer;
+begin
+  Result := RowHeights[0] + RowHeights[1] + (RowCountRO - GRID_FIXED) * DefaultRowHeight;
 end;
 
 function TCustomMPHexEditor.GetBookmark(Index: byte): TMPHBookmark;
@@ -6959,6 +7010,10 @@ begin
 
 //  if UseRightToLeftAlignment then
 //    ChangeGridOrientation(False);
+
+  {$IF Defined(LCLGTK2) or Defined(LCLQT) or Defined(LCLQT5)}
+  CheckSetCaret;
+  {$ENDIF}
 
 end;
 
@@ -7834,8 +7889,7 @@ end;
 procedure TCustomMPHexEditor.MoveColRow(ACol, ARow: Longint; MoveAnchor,
   Show: Boolean);
 begin
-  Col := ACol;
-  Row := ARow;
+  MoveExtend(False, ACol, ARow);
   if Show then
     CheckSetCaret;
 end;
@@ -8535,7 +8589,7 @@ begin
     FLastUndoDesc := FDescription;
 
     // delete last undo record
-    SetSize(Max(0, Size - LIntRecOffs));
+    SetSize({$IFDEF CPU64}Int64{$ENDIF}(Max(0, Size - LIntRecOffs)));
     if FCount > 0 then
       Dec(FCount);
     if Size < sizeof(TMPHUndoRec) then
@@ -8567,7 +8621,7 @@ begin
   end;
 end;
 
-procedure TMPHUndoStorage.SetSize(NewSize: integer);
+procedure TMPHUndoStorage.SetSize({$ifdef CPU64}const NewSize: Int64{$else}NewSize: LongInt{$endif});
 begin
   inherited;
   if NewSize < sizeof(TMPHUndoRec) then
