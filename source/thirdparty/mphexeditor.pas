@@ -4192,7 +4192,7 @@ begin
       inherited;
   end;
 
-  Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #1)
+  Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
 end;
 
 function TCustomMPHexEditor.HasChanged(aPos: integer): boolean;
