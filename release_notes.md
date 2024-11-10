@@ -1,0 +1,2 @@
+- Improved color settings in Linux dark mode
+- Improved layout of settings dialog
