@@ -4133,8 +4133,9 @@ begin
           if LIntRow < RowCount then
           begin
             MoveColRow(LIntCol, LIntRow, True, True);
+            Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
           end
-          end;
+        end;
       end;
 
     VK_UP:
@@ -4146,8 +4147,9 @@ begin
           if LIntRow >= GRID_FIXED then
           begin
             MoveColRow(LIntCol, LIntRow, True, True);
+            Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
           end
-          end;
+        end;
       end;
 
     Word('T'): if (ssCtrl in Shift) then
@@ -4188,11 +4190,7 @@ begin
 
     VK_INSERT: if (Shift = []) then InsertMode := not InsertMode;
 
-    else
-      inherited;
   end;
-
-  Key := 0;  // Workaround for non-responding next down-arrow key in gtk2 (issue #7)
 end;
 
 function TCustomMPHexEditor.HasChanged(aPos: integer): boolean;
