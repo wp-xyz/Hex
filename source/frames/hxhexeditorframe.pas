@@ -826,10 +826,6 @@ procedure THexEditorFrame.SetWriteProtected(const AValue: Boolean);
 begin
   if Assigned(FHexEditor) then
     FHexEditor.ReadOnlyView := AValue;
-  if Assigned(FDataViewer) then
-    FDataViewer.WriteProtected := AValue;
-  if Assigned(FRecordViewer) then
-    FRecordViewer.WriteProtected := AValue;
 end;
 
 procedure THexEditorFrame.UpdateCaption;
