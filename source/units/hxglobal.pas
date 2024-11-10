@@ -211,6 +211,8 @@ type
 const       // Repeating the clXXXX values to keep Graphics out of this unit
   clWindow = TGraphicsColor($80000005);
   clWindowText = TGraphicsColor($80000008);
+  clHighlight = TGraphicsColor($8000000D);
+  clHighlightText = TGraphicsColor($8000000E);
   clBtnFace = TGraphicsColor($8000000F);
   clBtnShadow = TGraphicsColor($80000010);
   clBtnHighlight = TGraphicsColor($80000014);
@@ -270,8 +272,8 @@ var
       ActiveFieldBackgroundColor: clWindow;
       OffsetBackgroundColor: clBtnFace;
       OffsetForegroundColor: clWindowText;
-      CurrentOffsetBackgroundColor: clBtnShadow;
-      CurrentOffsetForegroundColor: clBtnHighlight;
+      CurrentOffsetBackgroundColor: clHighlight; //BtnShadow;
+      CurrentOffsetForegroundColor: clHighlightText; //clBtnHighlight;
       EvenColumnForegroundColor: clNavy;
       OddColumnForegroundColor: clBlue;
       ChangedBackgroundColor: $00A8FFFF;
@@ -282,8 +284,8 @@ var
       ActiveFieldBackgroundColor: clWindow;
       OffsetBackgroundColor: clBtnFace;
       OffsetForegroundColor: clWindowText;
-      CurrentOffsetBackgroundColor: clBtnShadow;
-      CurrentOffsetForegroundColor: clBtnHighlight;
+      CurrentOffsetBackgroundColor: clHighlight; //clBtnShadow;
+      CurrentOffsetForegroundColor: clHighlightText; //clBtnHighlight;
       EvenColumnForegroundColor: clOlive;
       OddColumnForegroundColor: clYellow;
       ChangedBackgroundColor: $00A8FFFF;

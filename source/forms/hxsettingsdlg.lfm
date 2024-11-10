@@ -48,10 +48,10 @@ object SettingsForm: TSettingsForm
     Height = 444
     Top = 6
     Width = 767
-    ActivePage = pgEditor
+    ActivePage = pgFormat
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
@@ -335,6 +335,7 @@ object SettingsForm: TSettingsForm
         Top = 26
         Width = 152
         BorderSpacing.Left = 40
+        BorderSpacing.Right = 16
         Caption = 'Lowercase hex characters'
         TabOrder = 6
         OnChange = FormatChanged

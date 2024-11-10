@@ -114,6 +114,7 @@ type
   private
     FDataTypeCheckBoxes : array[dtFirstNumericDataType..dtLastNumericDataType] of TCheckbox;
     FSampleHexEditor: THxHexEditor;
+    FActivated: Boolean;
     procedure ApplyParamsToHexEditor(const AParams: THexParams);
     procedure DrawIcons(APaintbox: TPaintbox; AImages: TImageList);
     procedure PrepareSampleHexEditor;
@@ -212,7 +213,12 @@ end;
 
 procedure TSettingsForm.FormActivate(Sender: TObject);
 begin
-  Constraints.MinWidth := cbHexLowerCase.left + cbHexLowercase.Width + 16 + PageControl.BorderSpacing.Around * 2;
+  if not FActivated then
+  begin
+    FActivated := true;
+    Constraints.MinWidth := cbHexLowerCase.left + cbHexLowercase.Width +
+      cbHexLowercase.BorderSpacing.Right + PageControl.BorderSpacing.Around * 2;
+  end;
 end;
 
 procedure TSettingsForm.ColorsFromControls(var AParams: TColorParams);
@@ -348,6 +354,10 @@ begin
     gbSampleHexEditor.Parent := PageControl.ActivePage;
     gbSampleHexEditor.AnchorSideLeft.Control := PageControl.ActivePage;
     gbSampleHexEditor.AnchorSideRight.Control := PageControl.ActivePage;
+    if PageControl.ActivePage = pgColors then
+      gbSampleHexEditor.AnchorSideTop.Control := clbCharfieldForeground
+    else
+      gbSampleHexEditor.AnchorSideTop.Control := cmbRulerNumberBase;
   end;
 end;
 
@@ -356,6 +366,7 @@ procedure TSettingsForm.PageControlChanging(Sender: TObject;
 begin
   gbSampleHexEditor.AnchorSideLeft.Control := nil;
   gbSampleHexEditor.AnchorSideRight.Control := nil;
+  gbSampleHexEditor.AnchorSideTop.Control := nil;
 end;
 
 procedure TSettingsForm.ParamsFromControls(var AParams: THexParams);
