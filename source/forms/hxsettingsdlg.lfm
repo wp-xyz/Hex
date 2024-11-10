@@ -48,10 +48,10 @@ object SettingsForm: TSettingsForm
     Height = 444
     Top = 6
     Width = 767
-    ActivePage = pgFormat
+    ActivePage = pgColors
     Align = alClient
     BorderSpacing.Around = 6
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 1
     OnChange = PageControlChange
     OnChanging = PageControlChanging
@@ -530,9 +530,8 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Control = clbOffsetBackground
         Left = 293
         Height = 25
-        Top = 89
+        Top = 85
         Width = 75
-        BorderSpacing.Top = 4
         BorderWidth = 2
         ButtonColorSize = 16
         ButtonColor = clBlack
@@ -558,7 +557,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 293
         Height = 25
-        Top = 118
+        Top = 114
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
@@ -587,7 +586,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Side = asrBottom
         Left = 195
         Height = 15
-        Top = 193
+        Top = 189
         Width = 74
         Anchors = [akTop, akRight]
         Caption = 'Even columns'
@@ -600,7 +599,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 293
         Height = 25
-        Top = 188
+        Top = 184
         Width = 75
         BorderSpacing.Top = 16
         BorderWidth = 2
@@ -615,7 +614,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Side = asrBottom
         Left = 197
         Height = 15
-        Top = 222
+        Top = 218
         Width = 72
         Anchors = [akTop, akRight]
         Caption = 'Odd columns'
@@ -628,7 +627,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 293
         Height = 25
-        Top = 217
+        Top = 213
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
@@ -656,7 +655,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 293
         Height = 25
-        Top = 147
+        Top = 143
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
@@ -722,7 +721,7 @@ object SettingsForm: TSettingsForm
         AnchorSideRight.Side = asrBottom
         Left = 192
         Height = 15
-        Top = 251
+        Top = 247
         Width = 77
         Anchors = [akTop, akRight]
         Caption = 'Character field'
@@ -735,7 +734,7 @@ object SettingsForm: TSettingsForm
         AnchorSideTop.Side = asrBottom
         Left = 293
         Height = 25
-        Top = 246
+        Top = 242
         Width = 75
         BorderSpacing.Top = 4
         BorderWidth = 2
@@ -752,8 +751,8 @@ object SettingsForm: TSettingsForm
         AnchorSideBottom.Control = pgColors
         AnchorSideBottom.Side = asrBottom
         Left = 16
-        Height = 113
-        Top = 287
+        Height = 117
+        Top = 283
         Width = 727
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Left = 16
