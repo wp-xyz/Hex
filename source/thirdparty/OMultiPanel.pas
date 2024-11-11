@@ -1009,6 +1009,15 @@ begin
       if PanelType = ptHorizontal then
       begin
         xDefaultSize := Round(xPanel.Position*ClientWidth)-xPosAbs;//MUST NOT BE CLIENT WIDTH!!!
+        if not(csDesigning in ComponentState) then
+        for L := I+1 to PanelCollection.Count-1 do
+        begin
+          if not PanelCollection[L].Visible then
+            xDefaultSize := Round(PanelCollection[L].Position*ClientWidth)-xPosAbs
+          else
+            Break;
+        end;
+
         xPanel.Control.SetBounds(xPosAbs, 0, xDefaultSize, ClientHeight);
         if xPanel.Control.Width <> xDefaultSize then
           xPanel.SetPositionOnlyWithCheck((xPosAbs+xPanel.Control.Width)/Max(ClientWidth, 1));//  <- Causes Stact Ovreflow when Position := ...; used
