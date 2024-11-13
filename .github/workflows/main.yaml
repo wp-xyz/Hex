@@ -63,7 +63,7 @@ jobs:
           run: |
             lazbuild -B --bm=Release "source/Hex.lpi"
             if [ "${{ matrix.operating-system }}" == "windows-latest" ] ; then
-              lazbuild -B --bm=Release --cpu=i386 --os=win32 "sources/Hex.lpi"
+              lazbuild -B --bm=Release --cpu=i386 --os=win32 "source/Hex.lpi"
             fi
 
         - name: Upload Application
