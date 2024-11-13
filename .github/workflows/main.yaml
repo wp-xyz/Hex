@@ -64,12 +64,9 @@ jobs:
             lazbuild -B --bm=Release "source/Hex.lpi"
             if [ "${{ matrix.operating-system }}" == "ubuntu-latest" ] ; then
               mv bin/${{ matrix.folder }}/${{ matrix.binary }} bin/${{ matrix.folder }}/${{ matrix.binary }}-gtk2
-              sudo apt install -y libqt5pas
+              sudo apt install -y libqt5pas-dev
               lazbuild -B --bm=Release --ws=qt5 "source/Hex.lpi"
               mv bin/${{ matrix.folder }}/${{ matrix.binary }} bin/${{ matrix.folder }}/${{ matrix.binary }}-qt5
-              sudo apt install -y libqt6pas
-              lazbuild -B --bm=Release --ws=qt6 "source/Hex.lpi"
-              mv bin/${{ matrix.folder }}/${{ matrix.binary }} bin/${{ matrix.folder }}/${{ matrix.binary }}-qt6
             fi
 
         - name: Upload Application
