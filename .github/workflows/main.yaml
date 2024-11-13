@@ -27,12 +27,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                operating-system: [ ubuntu-20.04, ubuntu-latest, windows-latest]
+                operating-system: [ ubuntu-latest, windows-latest]
                 lazarus-versions: [ stable ]
                 include:
-                    - operating-system: ubuntu-20.04
-                      folder: x86_64-linux
-                      binary: Hex
                     - operating-system: ubuntu-latest
                       folder: x86_64-linux
                       binary: Hex
@@ -92,10 +89,6 @@ jobs:
             mv Hex hex
             chmod +x hex
             tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz hex
-            cd ../Hex-ubuntu-20.04
-            mv Hex hex
-            chmod +x hex
-            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz hex
             cd ../Hex-windows-latest
             zip ../Hex-windows-x86_64-${{ github.ref_name }}.zip Hex.exe
 
