@@ -48,7 +48,7 @@ jobs:
               set-safe-directory: true
 
         - name: Install Lazarus
-          uses: gcarreno/setup-lazarus@v3.3.0
+          uses: gcarreno/setup-lazarus@v3
           with:
               lazarus-version: ${{ matrix.lazarus-versions }}
               with-cache: false
@@ -60,14 +60,7 @@ jobs:
           run: bin/hex_tests_cli --all --format=plain
 
         - name: Build Application
-          run: |
-            lazbuild -B --bm=Release "source/Hex.lpi"
-            if [ "${{ matrix.operating-system }}" == "ubuntu-lates" ] ; then
-              mv bin/${{ matrix.folder }}/${{ matrix.binary }} bin/${{ matrix.folder }}/${{ matrix.binary }}-gtk2
-              sudo apt install -y libqt5pas-dev
-              lazbuild -B --bm=Release --ws=qt5 "source/Hex.lpi"
-              mv bin/${{ matrix.folder }}/${{ matrix.binary }} bin/${{ matrix.folder }}/${{ matrix.binary }}-qt5
-            fi
+          run: lazbuild -B --bm=Release "source/Hex.lpi"
 
         - name: Upload Application
           uses: actions/upload-artifact@v4
