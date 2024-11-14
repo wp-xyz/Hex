@@ -361,7 +361,7 @@ begin
 end;
 
 { Main method to be called from outside.
-  Checks wheter an extractable embedded object exists at the "AOffset" of then
+  Checks wheter an extractable embedded object exists at the "AOffset" of the
   "AHexEditor".
   If yes, the viewing component is created which fits to the
   type of the embedded object; the component is inserted as a child of "AParent".
