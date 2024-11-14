@@ -27,12 +27,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                operating-system: [ ubuntu-20.04, ubuntu-latest, windows-latest]
+                operating-system: [ ubuntu-latest, windows-latest]
                 lazarus-versions: [ stable ]
                 include:
-                    - operating-system: ubuntu-20.04
-                      folder: x86_64-linux
-                      binary: Hex
                     - operating-system: ubuntu-latest
                       folder: x86_64-linux
                       binary: Hex
@@ -52,6 +49,12 @@ jobs:
           with:
               lazarus-version: ${{ matrix.lazarus-versions }}
               with-cache: false
+
+        - name: Build Test Application
+          run: lazbuild -B --bm=Release "tests/hex_tests_cli.lpi"
+
+        - name: Run Test Application
+          run: bin/hex_tests_cli --all --format=plain
 
         - name: Build Application
           run: lazbuild -B --bm=Release "source/Hex.lpi"
@@ -86,18 +89,14 @@ jobs:
             mv Hex hex
             chmod +x hex
             tar zcvf ../Hex-ubuntu-x86_64-${{ github.ref_name }}.tgz hex
-            cd ../Hex-ubuntu-20.04
-            mv Hex hex
-            chmod +x hex
-            tar zcvf ../Hex-ubuntu-20.04-x86_64-${{ github.ref_name }}.tgz hex
             cd ../Hex-windows-latest
             zip ../Hex-windows-x86_64-${{ github.ref_name }}.zip Hex.exe
 
         - name: Create GitHub release
-          uses: softprops/action-gh-release@v1
+          uses: softprops/action-gh-release@v2
           with:
               name: Hex ${{ github.ref_name }}
-              body: Needs to be changed
+              body_path: release_notes.md
               files: |
                 *.tgz
                 *.zip
