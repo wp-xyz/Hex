@@ -7,8 +7,7 @@ interface
 uses
   Classes, SysUtils, Graphics,
   Forms, Controls, ComCtrls, ExtCtrls, Dialogs, Menus, ActnList,
-  OMultiPanel,
-  hxGlobal, hxUtils_NonGUI, hxUtils, hxHexEditor,
+  hxGlobal, hxUtils_NonGUI, hxUtils, hxHexEditor, hxLayout,
   hxBasicViewerFrame, hxDataViewerFrame, hxRecordViewerFrame, hxObjectViewerFrame;
 
 type
@@ -18,12 +17,7 @@ type
   THexEditorFrame = class(TFrame)
     SaveDialog: TSaveDialog;
   private
-    MainPanel: TOMultiPanel;
-    LeftPanel: TOMultiPanel;
-    CenterPanel: TOMultiPanel;
-    RightPanel: TOMultiPanel;
-    BottomPanel: TOMultiPanel;
-    HexPanel: TPanel;
+    FLayout: TLayout;
     FHexEditor: THxHexEditor;
     FDataViewer: TDataViewerFrame;
     FRecordViewer: TRecordViewerFrame;
@@ -37,8 +31,6 @@ type
 
     FExtractorAborted: Boolean;
     FExtractorIndex: Integer;
-
-    procedure CreateMultiPanels;
 
     function GetFileName: String;
 
@@ -69,14 +61,12 @@ type
     procedure CreateRecordViewer;
     procedure CreateObjectViewer;
     procedure DoUpdateStatusBar;
-    function GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
     function GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
     function GetWriteProtected: Boolean;
     procedure HexEditorChanged(Sender: TObject);
     procedure SetParent(AParent: TWinControl); override;
     procedure SetViewerPosition(AViewer: TBasicViewerFrame; AValue: TViewerPosition);
     procedure SetWriteProtected(const AValue: Boolean);
-    procedure UpdateViewerPanelVisible(APanel: TOMultiPanel);
 
     procedure LoadFromIni;
     procedure SaveToIni;
@@ -144,13 +134,14 @@ uses
 constructor THexEditorFrame.Create(AOwner: TComponent);
 begin
   inherited;
-  CreateMultiPanels;
+  FLayout := TLayout.Create(Self);
   FExtractorIndex := -1;
 end;
 
 destructor THexEditorFrame.Destroy;
 begin
   SaveToIni;
+  FLayout.Free;
   inherited;
 end;
 
@@ -219,6 +210,7 @@ begin
   begin
     AParams.ObjectViewerVisible := GetShowObjectViewer;
     AParams.ObjectViewerPosition := GetObjectViewerPosition;
+    AParams.ObjectViewerInfoHeight := FObjectViewer.InfoHeight;
   end;
 
   if Assigned(FRecordViewer) then
@@ -253,6 +245,7 @@ begin
   if Assigned(FObjectViewer) then
   begin
     SetObjectViewerPosition(AParams.ObjectViewerPosition);
+    FObjectViewer.InfoHeight := AParams.ObjectViewerInfoHeight;
   end;
 
   ShowRecordViewer := AParams.RecordViewerVisible;   // this creates the RecordViewer
@@ -263,13 +256,6 @@ begin
     for i := 0 to High(AParams.RecordViewerColWidths) do
       FRecordViewer.ColWidths[i] := AParams.RecordViewerColWidths[i];
   end;
-
-//  LoadFromIni;                 // why this?
-
-  UpdateViewerPanelVisible(LeftPanel);
-  UpdateViewerPanelVisible(RightPanel);
-  UpdateViewerPanelVisible(BottomPanel);
-  MainPanel.ResizeControls;
 end;
 
 function THexEditorFrame.CanSaveFileAs(const AFileName: String): Boolean;
@@ -286,12 +272,12 @@ end;
 procedure THexEditorFrame.CreateHexEditor;
 begin
   FHexEditor := THxHexEditor.Create(self);
-  FHexEditor.Parent := HexPanel;
   FHexEditor.Align := alClient;
   FHexEditor.DrawGutter3D := false;
   FHexEditor.WantTabs := false;
   FHexEditor.OnChange := @HexEditorChanged;
   FHexEditor.OnSelectionChanged := @HexEditorChanged;
+  FLayout.AddCenterControl(FHexEditor);
 
   ApplyParamsToHexEditor(HexParams, FHexEditor);
 
@@ -302,102 +288,24 @@ begin
 end;
 
 procedure THexEditorFrame.CreateDataViewer;
-var
-  panel: TOMultiPanel;
 begin
   FDataViewer.Free;
   FDataViewer := TDataViewerFrame.Create(self);
   FDataViewer.Name := '';
-  panel := GetViewerPanel(HexParams.DataViewerPosition);
-  with (panel.Parent as TOMultiPanel) do begin
-    FindPanel(panel).Visible := true;
-    ResizeControls;
-  end;
-  FDataViewer.Parent := panel;
-  with panel.PanelCollection.Add do
-    Control := FDataViewer;
-  UpdateViewerPanelVisible(panel);
-end;
-
-procedure THexEditorFrame.CreateMultiPanels;
-begin
-  MainPanel := TOMultiPanel.Create(self);
-  with MainPanel do
-  begin
-    Align := alClient;
-    Parent := self;
-  end;
-
-  LeftPanel := TOMultiPanel.Create(MainPanel);
-  with LeftPanel do
-    PanelType := ptVertical;
-
-  CenterPanel :=TOMultiPanel.Create(MainPanel);
-  with CenterPanel do
-    PanelType := ptVertical;
-
-  RightPanel := TOMultiPanel.Create(MainPanel);
-  with RightPanel do
-  begin
-    PanelType := ptVertical;
-  end;
-
-  BottomPanel := TOMultiPanel.Create(CenterPanel);
-  HexPanel := TPanel.Create(CenterPanel);
-
-  MainPanel.PanelCollection.AddControl(LeftPanel);
-  MainPanel.PanelCollection.AddControl(CenterPanel);
-  MainPanel.PanelCollection.AddControl(RightPanel);
-  CenterPanel.PanelCollection.AddControl(HexPanel);
-  CenterPanel.PanelCollection.AddControl(BottomPanel);
-
-  LeftPanel.Parent := MainPanel;
-  CenterPanel.Parent := MainPanel;
-  RightPanel.Parent := MainPanel;
-  HexPanel.Parent := CenterPanel;
-  BottomPanel.Parent := CenterPanel;
-
-  MainPanel.PanelCollection[0].Position := 0.25;
-  MainPanel.PanelCollection[1].Position := 0.75;
-  MainPanel.PanelCollection[2].Position := 1.00;
-  CenterPanel.PanelCollection[0].Position := 0.75;
-  CenterPanel.PanelCollection[1].Position := 1.00;
 end;
 
 procedure THexEditorFrame.CreateRecordViewer;
-var
-  panel: TOMultiPanel;
 begin
   FRecordViewer.Free;
   FRecordViewer := TRecordViewerFrame.Create(self);
   FRecordViewer.Name := '';
-  panel := GetViewerPanel(HexParams.RecordViewerPosition);
-  with (panel.Parent as TOMultiPanel) do begin
-    FindPanel(panel).Visible := true;
-    ResizeControls;
-  end;
-  FRecordViewer.Parent := panel;
-  with panel.PanelCollection.Add do
-    Control := FRecordViewer;
-  UpdateViewerPanelVisible(panel);
 end;
 
 procedure THexEditorFrame.CreateObjectViewer;
-var
-  panel: TOMultiPanel;
 begin
   FObjectViewer.Free;
   FObjectViewer := TObjectViewerFrame.Create(self);
   FObjectViewer.Name := '';
-  panel := GetViewerPanel(HexParams.ObjectViewerPosition);
-  with (panel.Parent as TOMultiPanel) do begin
-    FindPanel(panel).Visible := true;
-    ResizeControls;
-  end;
-  FObjectViewer.Parent := panel;
-  with panel.PanelCollection.Add do
-    Control := FObjectViewer;
-  UpdateViewerPanelVisible(panel);
 end;
 
 procedure THexEditorFrame.ExportObject;
@@ -537,26 +445,15 @@ begin
   Result := (FRecordViewer <> nil) and FRecordViewer.Visible;
 end;
 
-function THexEditorFrame.GetViewerPanel(APosition: TViewerPosition): TOMultiPanel;
-begin
-  case APosition of
-    vpLeft: Result := LeftPanel;
-    vpRight: Result := RightPanel;
-    vpBottom: Result := BottomPanel;
-    else raise Exception.Create('[THexEditorFrame.GetViewerPanel] Unsupported ViewerPosition.');
-  end;
-end;
-
 function THexEditorFrame.GetViewerPosition(AViewer: TBasicViewerFrame): TViewerPosition;
+var
+  VP: Integer;
 begin
-  if AViewer.Parent = LeftPanel then
-    Result := vpLeft
-  else if AViewer.Parent = RightPanel then
-    Result := vpRight
-  else if AViewer.Parent = BottomPanel then
-    Result := vpBottom
+  VP := FLayout.GetViewerPosition(AViewer);
+  if VP > -1 then
+    Result := TViewerPosition(VP)
   else
-    raise Exception.Create('[THexEditorFrame.GetViewerPosition] Unsupported Parent.');
+    raise Exception.Create('Viewer not found.');
 end;
 
 function THexEditorFrame.GetWriteProtected: Boolean;
@@ -615,15 +512,14 @@ procedure THexEditorFrame.LoadFromIni;
 var
   ini: TCustomIniFile;
 begin
-  ini := CreateIniFile;
-  try
-    MainPanel.LoadPositionsFromIniFile(ini, 'MainPanel', 'Positions');
-    LeftPanel.LoadPositionsFromIniFile(ini, 'LeftPanel', 'Positions');
-    CenterPanel.LoadPositionsFromIniFile(ini, 'CenterPanel', 'Positions');
-    RightPanel.LoadPositionsFromIniFile(ini, 'RightPanel', 'Positions');
-    BottomPanel.LoadPositionsFromIniFile(ini, 'BottomPanel', 'Positions');
-  finally
-    ini.Free;
+  if Assigned(FLayout) then
+  begin
+    ini := CreateIniFile;
+    try
+      FLayout.LoadFromIni(ini);
+    finally
+      ini.Free;
+    end;
   end;
 end;
 
@@ -717,7 +613,10 @@ begin
     CreateHexEditor;
   ApplyHexParams(HexParams);
   ApplyColorsToHexEditor(ColorParams[GetScreenMode], FHexEditor);
-  if HexEditor.CanFocus then HexEditor.SetFocus;
+  if AParent <> nil then
+    LoadFromIni;
+  if HexEditor.CanFocus then
+    HexEditor.SetFocus;
 end;
 
 procedure THexEditorFrame.SetRecordViewerPosition(AValue: TViewerPosition);
@@ -726,8 +625,6 @@ begin
 end;
 
 procedure THexEditorFrame.SetShowDataViewer(AValue: Boolean);
-var
-  panel: TOMultiPanel;
 begin
   if AValue then
   begin
@@ -735,6 +632,7 @@ begin
     if Assigned(FDataViewer) then
       exit;
     CreateDataViewer;
+    FLayout.ShowControl(FDataViewer, HexParams.DataViewerPosition);
     FDataViewer.UpdateData(HexEditor);
     HexParams.DataViewerVisible := true;
   end else
@@ -742,16 +640,13 @@ begin
     // Hide number viewer
     if not Assigned(FDataViewer) then
       exit;
-    panel := FDataViewer.Parent as TOMultiPanel;
+    FLayout.HideControl(FDataViewer);
     FreeAndNil(FDataViewer);
-    UpdateViewerPanelVisible(panel);
     HexParams.DataViewerVisible := false;
   end;
 end;
 
 procedure THexEditorFrame.SetShowObjectViewer(AValue: Boolean);
-var
-  panel: TOMultiPanel;
 begin
   if AValue then
   begin
@@ -759,6 +654,8 @@ begin
     if Assigned(FObjectViewer) then
       exit;
     CreateObjectViewer;
+    FLayout.ShowControl(FObjectViewer, HexParams.ObjectViewerPosition);
+    FObjectViewer.InfoHeight := HexParams.ObjectViewerInfoHeight;
     FObjectViewer.UpdateData(HexEditor);
     HexParams.ObjectViewerVisible := true;
   end else
@@ -766,16 +663,13 @@ begin
     // Hide object viewer
     if not Assigned(FObjectViewer) then
       exit;
-    panel := FObjectViewer.Parent as TOMultiPanel;
+    FLayout.HideControl(FObjectViewer);
     FreeAndNil(FObjectViewer);
-    UpdateViewerPanelVisible(panel);
     HexParams.ObjectViewerVisible := false;
   end;
 end;
 
 procedure THexEditorFrame.SetShowRecordViewer(AValue: Boolean);
-var
-  panel: TOMultiPanel;
 begin
   if AValue then
   begin
@@ -783,6 +677,7 @@ begin
     if Assigned(FRecordViewer) then
       exit;
     CreateRecordViewer;
+    FLayout.ShowControl(FRecordViewer, HexParams.RecordViewerPosition);
     FRecordViewer.UpdateData(HexEditor);
     HexParams.RecordViewerVisible := true;
   end else
@@ -790,36 +685,16 @@ begin
     // Hide record viewer
     if not Assigned(FRecordViewer) then
       exit;
-    panel := FRecordViewer.Parent as TOMultiPanel;
+    FLayout.HideControl(FRecordViewer);
     FreeAndNil(FRecordViewer);
-    UpdateViewerPanelVisible(panel);
     HexParams.RecordViewerVisible := false;
   end;
 end;
 
 procedure THexEditorFrame.SetViewerPosition(AViewer: TBasicViewerFrame;
   AValue: TViewerPosition);
-var
-  oldPanel, newPanel: TOMultiPanel;
-  idx: Integer;
 begin
-  if csDestroying in ComponentState then
-    exit;
-
-  // Remove from old panel
-  oldPanel := AViewer.Parent as TOMultiPanel;
-  idx := oldPanel.PanelCollection.IndexOf(AViewer);
-  oldPanel.PanelCollection.Delete(idx);
-
-  // Insert into new panel
-  newPanel := GetViewerPanel(AValue);
-  AViewer.Parent := newPanel;
-  newPanel.PanelCollection.AddControl(AViewer);
-
-  UpdateViewerPanelVisible(newPanel);
-  if oldPanel <> newPanel then UpdateViewerPanelVisible(oldPanel);
-
-  //StatusBar.Top := Height * 2;
+  FLayout.ShowControl(AViewer, AValue);
 end;
 
 procedure THexEditorFrame.SetWriteProtected(const AValue: Boolean);
@@ -972,40 +847,13 @@ begin
   AStatusBar.Panels.Add.Width := 200;
 end;
 
-procedure THexEditorFrame.UpdateViewerPanelVisible(APanel: TOMultiPanel);
-var
-  i: Integer;
-  hasControls: Boolean;
-  item: TOMultiPanelItem;
-  parentPanel: TOMultiPanel;
-begin
-  hasControls := false;
-  for i := 0 to APanel.PanelCollection.Count-1 do
-    if APanel.PanelCollection[i].Visible and Assigned(APanel.PanelCollection[i].Control) then begin
-      hasControls := true;
-      break;
-    end;
-
-  parentPanel := APanel.Parent as TOMultiPanel;
-  item := parentPanel.FindPanel(APanel);
-  if Assigned(item) then
-    item.Visible := hasControls;
-
-  APanel.ResizeControls;
-  parentPanel.ResizeControls;
-end;
-
 procedure THexEditorFrame.SaveToIni;
 var
   ini: TCustomIniFile;
 begin
   ini := CreateIniFile;
   try
-    MainPanel.SavePositionsToIniFile(ini, 'MainPanel', 'Positions');
-    LeftPanel.SavePositionsToIniFile(ini, 'LeftPanel', 'Positions');
-    CenterPanel.SavePositionsToIniFile(ini, 'CenterPanel', 'Positions');
-    RightPanel.SavePositionsToIniFile(ini, 'RightPanel', 'Positions');
-    BottomPanel.SavePositionsToIniFile(ini, 'BottomPanel', 'Positions');
+    FLayout.SaveToIni(ini);
   finally
     ini.Free;
   end;

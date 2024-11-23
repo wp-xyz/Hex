@@ -180,6 +180,7 @@ type
 
     ObjectViewerVisible: Boolean;
     ObjectViewerPosition: TViewerPosition;
+    ObjectViewerInfoHeight: Integer;
 
     RecordViewerVisible: Boolean;
     RecordViewerPosition: TViewerPosition;
@@ -258,6 +259,7 @@ var
 
     ObjectViewerVisible: false;
     ObjectViewerPosition: vpRight;
+    ObjectViewerInfoHeight: 100;
 
     RecordViewerVisible: false;
     RecordViewerPosition: vpBottom;

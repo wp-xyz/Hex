@@ -18,7 +18,6 @@ type
     Image1: TImage;
     lblVersion: TLabel;
     lblCopyright: TLabel;
-    lblOMultiPanelComponent: TLabel;
     lblIcons: TLabel;
     lblMarkus: TLabel;
     lblMPHexEditor: TLabel;
@@ -30,7 +29,6 @@ type
     lblIDE: TLabel;
     lblHex: TLabel;
     lblMichal: TLabel;
-    lblOndrej: TLabel;
     lblIcons8: TLabel;
     Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
@@ -69,7 +67,6 @@ begin
   lblFPC.Font.Color := LINK_COLOR[mode];
   lblLazarus.Font.Color := LINK_COLOR[mode];
   lblMichal.Font.Color := LINK_COLOR[mode];
-  lblOndrej.Font.Color := LINK_COLOR[mode];
   lblIcons8.Font.Color := LINK_COLOR[mode];
 end;
 

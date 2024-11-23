@@ -19,9 +19,8 @@ Tested on Windows 32bit/64 bit and Linux 64 bit, but it should work also on othe
 
 ## Acknowledgements
 
-Besides the Lazarus LCL, the application uses the following third-party components
+Besides the Lazarus LCL, the application uses the following third-party component
 
-* OMultiPanel: http://www.kluug.net/omultipanel.php
 * MPHexEditor: https://github.com/michalgw/mphexeditor/blob/master/hexeditor.html
 
 Most of the icons are taken from https://icons8.com, style "Office" (https://icons8.com/icons/office) and style "Simple small" (https://icons8.com/icons/small).

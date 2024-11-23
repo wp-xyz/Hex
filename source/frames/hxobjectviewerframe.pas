@@ -86,6 +86,8 @@ type
     FExtractorControl: TControl;
     FLockUpdate: Integer;
     function GetAtObject: Boolean;
+    function GetInfoHeight: Integer;
+    procedure SetInfoHeight(AValue: Integer);
 
   public
     destructor Destroy; override;
@@ -93,6 +95,7 @@ type
     procedure UpdateData(AHexEditor: THxHexEditor); override;
     property AtObject: Boolean read GetAtObject;
     property Extractor: TExtractor read FExtractor;
+    property InfoHeight: Integer read GetInfoHeight write SetInfoHeight;
   end;
 
 function RegisterExtractor(AClass: TExtractorClass; AEmbeddedClass: TClass;
@@ -794,6 +797,16 @@ end;
 function TObjectViewerFrame.GetAtObject: Boolean;
 begin
   Result := Assigned(FExtractorControl);
+end;
+
+function TObjectViewerFrame.GetInfoHeight: Integer;
+begin
+  Result := mmoInfo.Height;
+end;
+
+procedure TObjectViewerFrame.SetInfoHeight(AValue: Integer);
+begin
+  mmoInfo.Height := AValue;
 end;
 
 procedure TObjectViewerFrame.UpdateData(AHexEditor: THxHexEditor);

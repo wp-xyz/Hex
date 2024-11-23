@@ -213,6 +213,7 @@ begin
     s := AIniFile.ReadString(ASection, 'ObjectViewer.Position', '');
     if s <> '' then
       ObjectViewerPosition := TViewerPosition(GetEnumValue(TypeInfo(TViewerPosition), s));
+    ObjectViewerInfoHeight := AIniFile.ReadInteger(ASection, 'ObjectViewer.InfoHeight', ObjectViewerInfoHeight);
 
     { RecordViewer }
 
@@ -363,6 +364,8 @@ begin
       ObjectViewerVisible);
     AIniFile.WriteString(ASection, 'ObjectViewer.Position',
       GetEnumName(TypeInfo(TViewerPosition), integer(ObjectViewerPosition)));
+    AIniFile.WriteInteger(ASection, 'ObjectViewer.InfoHeight',
+      ObjectViewerInfoHeight);
 
     { Record viewer }
 

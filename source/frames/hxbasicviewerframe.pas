@@ -5,7 +5,7 @@ unit hxBasicViewerFrame;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls,
+  Classes, SysUtils, IniFiles, Forms, Controls, StdCtrls,
   HxHexEditor;
 
 type
@@ -21,11 +21,9 @@ type
   end;
 
 
-
 implementation
 
 {$R *.lfm}
-
 
 { TBasicViewerFrame }
 

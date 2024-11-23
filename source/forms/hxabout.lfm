@@ -69,7 +69,7 @@ object AboutForm: TAboutForm
     AnchorSideTop.Control = lblAcknowledgements
     AnchorSideTop.Side = asrBottom
     Left = 12
-    Height = 110
+    Height = 95
     Top = 183
     Width = 346
     AutoSize = True
@@ -77,7 +77,7 @@ object AboutForm: TAboutForm
     BorderSpacing.Right = 12
     BevelOuter = bvNone
     BorderStyle = bsSingle
-    ClientHeight = 106
+    ClientHeight = 91
     ClientWidth = 342
     Color = clWindow
     ParentBackground = False
@@ -186,45 +186,14 @@ object AboutForm: TAboutForm
       OnMouseEnter = lblURLMouseEnter
       OnMouseLeave = lblURLMouseLeave
     end
-    object lblOMultiPanelComponent: TLabel
-      AnchorSideTop.Control = lblMichal
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = lblMPHexEditor
-      AnchorSideRight.Side = asrBottom
-      Left = 16
-      Height = 15
-      Top = 68
-      Width = 134
-      Anchors = [akTop, akRight]
-      Caption = 'OMultiPanel component:'
-      ParentColor = False
-    end
-    object lblOndrej: TLabel
-      AnchorSideLeft.Control = lblMarkus
-      AnchorSideTop.Control = lblMichal
-      AnchorSideTop.Side = asrBottom
-      Cursor = crHandPoint
-      Left = 166
-      Height = 15
-      Hint = 'http://www.kluug.net/omultipanel.php'
-      Top = 68
-      Width = 80
-      Caption = 'www.kluug.net'
-      Font.Color = clBlue
-      ParentColor = False
-      ParentFont = False
-      OnClick = lblURLClick
-      OnMouseEnter = lblURLMouseEnter
-      OnMouseLeave = lblURLMouseLeave
-    end
     object lblIcons: TLabel
-      AnchorSideTop.Control = lblOMultiPanelComponent
-      AnchorSideTop.Side = asrBottom
+      AnchorSideTop.Control = lblIcons8
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = lblMPHexEditor
       AnchorSideRight.Side = asrBottom
       Left = 77
       Height = 15
-      Top = 83
+      Top = 68
       Width = 73
       Anchors = [akTop, akRight]
       Caption = 'Toolbar icons:'
@@ -232,13 +201,13 @@ object AboutForm: TAboutForm
     end
     object lblIcons8: TLabel
       AnchorSideLeft.Control = lblMarkus
-      AnchorSideTop.Control = lblOndrej
+      AnchorSideTop.Control = lblMichal
       AnchorSideTop.Side = asrBottom
       Cursor = crHandPoint
       Left = 166
       Height = 15
       Hint = 'https://icons8.com'
-      Top = 83
+      Top = 68
       Width = 61
       BorderSpacing.Bottom = 8
       Caption = 'icons8.com'
@@ -257,7 +226,7 @@ object AboutForm: TAboutForm
     AnchorSideRight.Side = asrBottom
     Left = 283
     Height = 26
-    Top = 301
+    Top = 286
     Width = 75
     Anchors = [akTop, akRight]
     AutoSize = True
