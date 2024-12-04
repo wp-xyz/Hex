@@ -916,9 +916,9 @@ begin
   if (Parent <> nil) then begin
     case Parent.Align of
       alLeft, alRight:
-        Toolbar.Align := alTop;
-      alTop, alBottom:
         Toolbar.Align := alLeft;
+      alTop, alBottom:
+        Toolbar.Align := alTop;
     end;
     ToolBar.AutoSize := true;
     RestoreToolButtons;
