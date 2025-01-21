@@ -75,6 +75,7 @@ type
     acObjectsExport: TAction;
     acObjectsFindNext: TAction;
     acFileReload: TAction;
+    acFileSaveSelection: TAction;
     acViewOffsetHex: TAction;
     acViewOffsetDec: TAction;
     acViewOffsetOctal: TAction;
@@ -96,6 +97,7 @@ type
     MenuItem24: TMenuItem;
     MenuItem25: TMenuItem;
     MenuItem26: TMenuItem;
+    mnuSaveSelection: TMenuItem;
     N1: TMenuItem;
     mnuObjectsExport: TMenuItem;
     mnuObjectsSelect: TMenuItem;
@@ -221,6 +223,7 @@ type
     procedure acObjectsExportExecute(Sender: TObject);
     procedure acObjectsFindNextExecute(Sender: TObject);
     procedure acObjectsSelectExecute(Sender: TObject);
+    procedure acFileSaveSelectionExecute(Sender: TObject);
     procedure acShowStatusbarExecute(Sender: TObject);
     procedure acShowToolbarExecute(Sender: TObject);
     procedure ActionListUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
@@ -720,6 +723,21 @@ begin
     F.SelectObject;
 end;
 
+procedure TMainForm.acFileSaveSelectionExecute(Sender: TObject);
+var
+  F: THexEditorFrame;
+begin
+  with OpenDialog do begin
+    FileName := '';
+    if Execute then
+    begin
+      F := GetActiveHexEditorFrame;
+      if Assigned(F) then
+        F.SaveSelectionToFile(FileName);
+    end;
+  end;
+end;
+
 procedure TMainForm.acShowStatusbarExecute(Sender: TObject);
 begin
   ShowStatusbar(acShowStatusbar.Checked);
@@ -1109,6 +1127,7 @@ begin
   acFileCloseAll.Enabled := hasData;
   acFileSave.Enabled := hasdata;
   acFileSaveAs.Enabled := hasData;
+  acFileSaveSelection.Enabled := hasData and (F.HexEditor.SelCount > 0);
   acEditUndo.Enabled := hasData and F.HexEditor.CanUndo;
   acEditRedo.Enabled := hasData and F.HexEditor.CanRedo;
   acEditCut.Enabled := hasData and F.HexEditor.CanCut;

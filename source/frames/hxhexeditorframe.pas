@@ -86,6 +86,7 @@ type
     procedure ReplaceDlg;
     procedure SaveFile;
     procedure SaveFileAs(const AFileName: string);
+    procedure SaveSelectionToFile(const AFileName: string);
     procedure SelectObject;
     procedure UpdateCaption;
     procedure UpdateIconSet;
@@ -570,6 +571,23 @@ begin
     except
       on E: Exception do
         ErrorFmt(SErrorSavingFile + LineEnding + E.Message, [AFileName]);
+    end;
+  end;
+end;
+
+procedure THexEditorFrame.SaveSelectionToFile(const AFileName: String);
+var
+  stream: TFileStream;
+begin
+  if Assigned(FHexEditor) then
+  begin
+    if FHexEditor.SelCount = 0 then
+      exit;
+    stream := TFileStream.Create(AFileName, fmCreate);
+    try
+      FHexEditor.SaveRangeToStream(stream, FHexEditor.SelStart, FHexEditor.SelCount);
+    finally
+      stream.Free;
     end;
   end;
 end;
