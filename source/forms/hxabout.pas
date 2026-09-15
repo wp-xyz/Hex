@@ -5,7 +5,8 @@ unit hxAbout;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  Classes, SysUtils,
+  Interfacebase, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, Buttons,
   hxGlobal, hxUtils_NonGUI, hxUtils;
 
@@ -16,6 +17,7 @@ type
   TAboutForm = class(TForm)
     BitBtn1: TBitBtn;
     Image1: TImage;
+    lblWidgetset: TLabel;
     lblVersion: TLabel;
     lblCopyright: TLabel;
     lblIcons: TLabel;
@@ -63,6 +65,7 @@ begin
     Picture.Icon.Current := Picture.Icon.GetBestIndexForSize(Size(Width, Height));
   end;
   lblVersion.Caption := 'Version: ' + GetVersionStr();
+  lblWidgetset.Caption := 'Widgetset: ' + GetLCLWidgetTypeName;
   mode := GetScreenMode;
   lblFPC.Font.Color := LINK_COLOR[mode];
   lblLazarus.Font.Color := LINK_COLOR[mode];

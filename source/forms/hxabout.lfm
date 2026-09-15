@@ -42,11 +42,11 @@ object AboutForm: TAboutForm
     AnchorSideTop.Control = lblHex
     AnchorSideTop.Side = asrBottom
     Left = 164
-    Height = 21
+    Height = 23
     Top = 59
-    Width = 71
+    Width = 79
     Caption = 'Hex Editor'
-    Font.Height = -16
+    Font.Height = -17
     ParentColor = False
     ParentFont = False
   end
@@ -71,14 +71,14 @@ object AboutForm: TAboutForm
     Left = 12
     Height = 95
     Top = 183
-    Width = 346
+    Width = 345
     AutoSize = True
     BorderSpacing.Top = 4
     BorderSpacing.Right = 12
     BevelOuter = bvNone
     BorderStyle = bsSingle
     ClientHeight = 91
-    ClientWidth = 342
+    ClientWidth = 341
     Color = clWindow
     ParentBackground = False
     ParentColor = False
@@ -88,7 +88,7 @@ object AboutForm: TAboutForm
       AnchorSideTop.Control = Panel1
       AnchorSideRight.Control = lblMPHexEditor
       AnchorSideRight.Side = asrBottom
-      Left = 98
+      Left = 97
       Height = 15
       Top = 8
       Width = 52
@@ -100,7 +100,7 @@ object AboutForm: TAboutForm
     object lblFPC: TLabel
       AnchorSideLeft.Control = lblMarkus
       AnchorSideTop.Control = lblCompiler
-      Left = 166
+      Left = 165
       Height = 15
       Hint = 'https://www.freepascal.org/'
       Top = 8
@@ -117,7 +117,7 @@ object AboutForm: TAboutForm
       AnchorSideLeft.Control = lblMarkus
       AnchorSideTop.Control = lblFPC
       AnchorSideTop.Side = asrBottom
-      Left = 166
+      Left = 165
       Height = 15
       Hint = 'https://www.lazarus-ide.org/'
       Top = 23
@@ -135,7 +135,7 @@ object AboutForm: TAboutForm
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = lblMPHexEditor
       AnchorSideRight.Side = asrBottom
-      Left = 130
+      Left = 129
       Height = 15
       Top = 23
       Width = 20
@@ -150,7 +150,7 @@ object AboutForm: TAboutForm
       Left = 12
       Height = 15
       Top = 38
-      Width = 138
+      Width = 137
       BorderSpacing.Left = 12
       Caption = 'MPHexEditor component:'
       ParentColor = False
@@ -160,7 +160,7 @@ object AboutForm: TAboutForm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = lblLazarus
       AnchorSideTop.Side = asrBottom
-      Left = 166
+      Left = 165
       Height = 15
       Top = 38
       Width = 91
@@ -172,7 +172,7 @@ object AboutForm: TAboutForm
       AnchorSideLeft.Control = lblMarkus
       AnchorSideTop.Control = lblMarkus
       AnchorSideTop.Side = asrBottom
-      Left = 166
+      Left = 165
       Height = 15
       Hint = 'https://github.com/michalgw/mphexeditor'
       Top = 53
@@ -191,10 +191,10 @@ object AboutForm: TAboutForm
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = lblMPHexEditor
       AnchorSideRight.Side = asrBottom
-      Left = 77
+      Left = 75
       Height = 15
       Top = 68
-      Width = 73
+      Width = 74
       Anchors = [akTop, akRight]
       Caption = 'Toolbar icons:'
       ParentColor = False
@@ -204,7 +204,7 @@ object AboutForm: TAboutForm
       AnchorSideTop.Control = lblMichal
       AnchorSideTop.Side = asrBottom
       Cursor = crHandPoint
-      Left = 166
+      Left = 165
       Height = 15
       Hint = 'https://icons8.com'
       Top = 68
@@ -224,7 +224,7 @@ object AboutForm: TAboutForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Panel1
     AnchorSideRight.Side = asrBottom
-    Left = 283
+    Left = 282
     Height = 26
     Top = 286
     Width = 75
@@ -244,9 +244,9 @@ object AboutForm: TAboutForm
     AnchorSideTop.Side = asrBottom
     Left = 164
     Height = 15
-    Top = 96
+    Top = 92
     Width = 38
-    BorderSpacing.Top = 16
+    BorderSpacing.Top = 10
     Caption = 'Version'
     ParentColor = False
   end
@@ -256,10 +256,21 @@ object AboutForm: TAboutForm
     AnchorSideTop.Side = asrBottom
     Left = 164
     Height = 15
-    Top = 115
+    Top = 109
     Width = 137
-    BorderSpacing.Top = 4
+    BorderSpacing.Top = 2
     Caption = 'Copyright: Werner Pamler'
     ParentColor = False
+  end
+  object lblWidgetset: TLabel
+    AnchorSideLeft.Control = lblCopyright
+    AnchorSideTop.Control = lblCopyright
+    AnchorSideTop.Side = asrBottom
+    Left = 164
+    Height = 15
+    Top = 126
+    Width = 56
+    BorderSpacing.Top = 2
+    Caption = 'Widgetset:'
   end
 end
