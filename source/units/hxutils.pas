@@ -17,6 +17,7 @@ procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: Stri
   APositionOnly: Boolean = false);
 procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 procedure ReadGuiParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
+procedure ReadSessionFilesFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
@@ -144,11 +145,32 @@ procedure ReadGUIParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
 var
   s: String;
 begin
-  with AIniFile do
+  with GuiParams do
   begin
-    s := ReadString(ASection, 'IconSet', '');
+    s := AIniFile.ReadString(ASection, 'IconSet', '');
     if s <> '' then
-      GuiParams.IconSet := TIconSet(GetEnumValue(TypeInfo(TIconSet), s));
+      IconSet := TIconSet(GetEnumValue(TypeInfo(TIconSet), s));
+    OpenLastSession := AIniFile.ReadBool(ASection, 'OpenLastSession', True);
+  end;
+end;
+
+procedure ReadSessionFilesFromIni(AIniFile: TCustomIniFile; ASection: String);
+var
+  Count, i: Integer;
+  FN: String;
+begin
+  with GuiParams do
+  begin
+    if SessionFiles = Nil then
+      SessionFiles := TStringList.Create;
+    SessionFiles.Clear;
+    Count := AIniFile.ReadInteger(ASection,'Count',0);
+    For i := 1 to Count do
+    begin
+      FN := AIniFile.ReadString(ASection,Format('File%d',[i]),'');
+      If FN <> '' then
+        SessionFiles.Add(FN);
+    end;
   end;
 end;
 
@@ -292,6 +314,7 @@ begin
     AIniFile.EraseSection(ASection);
     s := GetEnumName(TypeInfo(TIconSet), Integer(IconSet));
     AIniFile.WriteString(ASection, 'IconSet', s);
+    AIniFile.WriteBool(ASection, 'OpenLastSession', OpenLastSession);
   end;
 end;
 

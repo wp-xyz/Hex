@@ -5,9 +5,9 @@ unit hxMain;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ActnList,
-  ComCtrls, ExtendedNotebook, mrumanager, exImgList,
-  hxGlobal, hxHexEditor, hxHexEditorFrame;
+  Classes, SysUtils, IniFiles, Math,
+  Forms, Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls, ExtendedNotebook,
+  mrumanager, hxGlobal, hxHexEditor, hxHexEditorFrame;
 
 type
 
@@ -263,6 +263,7 @@ type
 
     procedure ReadIni;
     procedure WriteIni;
+    procedure WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
 
   public
     procedure CreateEditor(const AFileName: String; WriteProtected: Boolean);
@@ -277,7 +278,6 @@ implementation
 {$R *.lfm}
 
 uses
-  IniFiles, Math,
   MPHexEditor,
   hxStrings, hxUtils, {%H-}hxDataModule, hxObjectViewerFrame,
   hxSettingsDlg, hxGotoDlg, hxAbout,LCLType;
@@ -922,11 +922,19 @@ begin
 end;
 
 procedure TMainForm.FormActivate(Sender: TObject);
+var
+  i: Integer;
 begin
   if not FActivated then
   begin
     ReadIni;
     UpdateCmds;
+    if GuiParams.OpenLastSession then
+    begin
+      Assert(Assigned(GuiParams.SessionFiles), 'TMainForm.FormActivate: SessionFiles=Nil');
+      for i := 0 to GuiParams.SessionFiles.Count-1 do
+        CreateEditor(GuiParams.SessionFiles[i], true);
+    end;
     FActivated := true;
   end;
 end;
@@ -1055,16 +1063,15 @@ begin
 
     ReadColorsFromIni(ini, INI_COLORS, smLightMode);
     ReadColorsFromIni(ini, INI_COLORS_DARKMODE, smDarkMode);
-
     ReadGuiParamsFromIni(ini, INI_GUI);
+    ReadSessionFilesFromIni(ini, INI_SESSION);
     UpdateIconSet;
   finally
     ini.Free;
   end;
 end;
 
-procedure TMainForm.RecentFileHandler(Sender: TObject;
-  const AFileName: String);
+procedure TMainForm.RecentFileHandler(Sender: TObject; const AFileName: String);
 begin
   CreateEditor(AFileName, HexParams.WriteProtected);
 end;
@@ -1249,9 +1256,32 @@ begin
     else
       WriteColorsToIni(ini, INI_COLORS, smLightMode);
     WriteGuiParamsToIni(ini, INI_GUI);
+    WriteSessionFilesToIni(ini, INI_SESSION);
     ini.UpdateFile;
   finally
     ini.Free;
+  end;
+end;
+
+// This must be in hxMain because of dependencies to PageControl and THexEditorFrame
+procedure TMainForm.WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
+var
+ i, n: integer;
+ ef: THexEditorFrame;
+begin
+  with GuiParams do
+  begin
+    AIniFile.EraseSection(ASection);
+    n := 0;
+    for i := 0 to PageControl.PageCount-1 do
+    begin
+      ef := GetHexEditorFrame(i);
+      if Assigned(ef) and ef.HexEditor.HasFile then begin
+        AIniFile.WriteString(ASection,Format('File%d',[n+1]), ef.FileName);
+        inc(n);
+      end;
+    end;
+    AIniFile.WriteInteger(ASection, 'Count', n);
   end;
 end;
 

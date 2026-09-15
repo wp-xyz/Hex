@@ -129,6 +129,7 @@ const
   INI_PARAMS = 'Params';
   INI_SEARCH_REPLACE = 'SearchReplace';
   INI_GUI = 'UserInterface';
+  INI_SESSION = 'SessionFiles';
 
   MAX_SEARCH_HISTORY = 10;
   DROP_DOWN_COUNT = 32;
@@ -345,11 +346,15 @@ type
 
   TGuiParams = record
     IconSet: TIconSet;
+    OpenLastSession: Boolean;
+    SessionFiles: TStrings;
   end;
 
 var
   GuiParams: TGuiParams = (
-    IconSet: isOffice
+    IconSet: isOffice;
+    OpenLastSession: True;
+    SessionFiles: Nil;
   );
 
 const
@@ -381,6 +386,9 @@ end;
 initialization
   DefaultHexParams := HexParams;
   DefaultColorParams := ColorParams;
+
+finalization
+  GuiParams.SessionFiles.Free;
 
 end.
 
