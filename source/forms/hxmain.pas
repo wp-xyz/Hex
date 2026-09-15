@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ActnList,
-  ComCtrls, mrumanager, exImgList,
+  ComCtrls, ExtendedNotebook, mrumanager, exImgList,
   hxGlobal, hxHexEditor, hxHexEditorFrame;
 
 type
@@ -172,7 +172,7 @@ type
     mnuFileOpen: TMenuItem;
     mnuFileQuit: TMenuItem;
     OpenDialog: TOpenDialog;
-    PageControl: TPageControl;
+    PageControl: TExtendedNotebook;
     RecentFilesPopup: TPopupMenu;
     SaveDialog: TSaveDialog;
     StatusBar: TStatusBar;
@@ -234,6 +234,7 @@ type
     procedure FormDropFiles(Sender: TObject; const FileNames: Array of String);
     procedure FormShow(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
+    procedure PageControlCloseTabClicked(Sender: TObject);
     procedure StatusBarHint(Sender: TObject);
   private
     FActivated: Boolean;
@@ -1024,6 +1025,12 @@ begin
   if Assigned(F) then begin
     F.UpdateStatusBarPanelWidths(StatusBar);
   end;
+end;
+
+procedure TMainForm.PageControlCloseTabClicked(Sender: TObject);
+begin
+  Assert(Sender is TTabSheet, 'TMainForm.PageControlCloseTabClicked, not TTabSheet');
+  TTabSheet(Sender).Free;
 end;
 
 procedure TMainForm.ReadIni;

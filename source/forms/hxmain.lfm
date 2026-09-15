@@ -15,14 +15,20 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnShow = FormShow
-  object PageControl: TPageControl
+  object PageControl: TExtendedNotebook
     Left = 0
     Height = 397
     Top = 30
     Width = 851
     Align = alClient
     TabOrder = 0
+    HotTrack = True
+    MultiLine = True
+    Options = [nboShowCloseButtons, nboMultiLine, nboKeyboardTabSwitch]
     OnChange = PageControlChange
+    OnCloseTabClicked = PageControlCloseTabClicked
+    TabDragMode = dmAutomatic
+    TabDragAcceptMode = dmAutomatic
   end
   object CoolBar1: TCoolBar
     Left = 0
