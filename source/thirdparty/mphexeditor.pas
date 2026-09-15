@@ -296,9 +296,8 @@ unit MPHexEditor;
 interface
 
 uses
-  {Windows, Messages, }SysUtils, Classes, Graphics, Controls, Forms,
-  LCLIntf, LCLType, LMessages, LCLVersion, Types, {gridhelper,}
-  Grids;
+  SysUtils, Classes, Types, Graphics, Controls, Forms, Grids,
+  LCLIntf, LCLType, LMessages, LCLVersion;
 
 type
   // @exclude
@@ -2267,7 +2266,7 @@ end;
 
 function CanOpenFile(const aName: TFileName; var ReadOnly: boolean): boolean;
 var
-  LHdlFile: THandle;
+  LHdlFile: system.THandle;
 begin
   Result := False;
   ReadOnly := True;
