@@ -10,7 +10,6 @@ object MainForm: TMainForm
   Menu = MainMenu
   ShowHint = True
   LCLVersion = '4.99.0.0'
-  OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
@@ -21,10 +20,10 @@ object MainForm: TMainForm
     Top = 30
     Width = 851
     Align = alClient
-    TabOrder = 0
     HotTrack = True
     MultiLine = True
     Options = [nboShowCloseButtons, nboMultiLine, nboKeyboardTabSwitch]
+    TabOrder = 0
     OnChange = PageControlChange
     OnCloseTabClicked = PageControlCloseTabClicked
     TabDragMode = dmAutomatic

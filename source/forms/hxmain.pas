@@ -228,7 +228,6 @@ type
     procedure acShowToolbarExecute(Sender: TObject);
     procedure ActionListUpdate({%H-}AAction: TBasicAction; var {%H-}Handled: Boolean);
     procedure acViewOffsetFormatHandler(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDropFiles(Sender: TObject; const FileNames: Array of String);
@@ -237,7 +236,7 @@ type
     procedure PageControlCloseTabClicked(Sender: TObject);
     procedure StatusBarHint(Sender: TObject);
   private
-    FActivated: Boolean;
+    FAlreadyShown: Boolean;
     FCurrentHexEditor: THxHexEditor;
     FRecentFilesManager: TMRUMenuManager;
 
@@ -249,7 +248,7 @@ type
     function GetHexEditorFrame(APageIndex: Integer): THexEditorFrame;
     procedure HexEditorChanged(Sender: TObject);
     procedure HexEditorUpdateStatusBar(Sender: TObject);
-
+    procedure LoadSessionFiles;
     procedure RecentFileHandler(Sender: TObject; const AFileName: String);
     procedure ShowStatusbar(AEnable: boolean);
     procedure ShowNumViewer(AEnable: Boolean);
@@ -258,12 +257,12 @@ type
     procedure UpdateCmds;
     procedure UpdateCurrentHexEditor;
     procedure UpdateIconSet;
+    procedure UpdateSessionFiles;
 
     procedure InitShortcuts;
 
     procedure ReadIni;
     procedure WriteIni;
-    procedure WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
 
   public
     procedure CreateEditor(const AFileName: String; WriteProtected: Boolean);
@@ -856,7 +855,7 @@ var
   c: TCursor;
   page: TTabSheet;
 begin
-  if not FileExists(AFileName) then
+  if (AFileName <> '') and not FileExists(AFileName) then
   begin
     MessageDlg(Format('File "%s" not found.', [AFileName]), mtError, [mbOK], 0);
     exit;
@@ -921,24 +920,6 @@ begin
   end;
 end;
 
-procedure TMainForm.FormActivate(Sender: TObject);
-var
-  i: Integer;
-begin
-  if not FActivated then
-  begin
-    ReadIni;
-    UpdateCmds;
-    if GuiParams.OpenLastSession then
-    begin
-      Assert(Assigned(GuiParams.SessionFiles), 'TMainForm.FormActivate: SessionFiles=Nil');
-      for i := 0 to GuiParams.SessionFiles.Count-1 do
-        CreateEditor(GuiParams.SessionFiles[i], true);
-    end;
-    FActivated := true;
-  end;
-end;
-
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := true;
@@ -984,7 +965,15 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-  EvalCmdLine;
+  if not FAlreadyShown then
+  begin
+    FAlreadyShown := true;
+    EvalCmdLine;
+    ReadIni;
+    UpdateCmds;
+    if GuiParams.OpenLastSession then
+      LoadSessionFiles;
+  end;
 end;
 
 function TMainForm.GetActiveHexEditorFrame: THexEditorFrame;
@@ -1021,6 +1010,19 @@ end;
 procedure TMainForm.HexEditorUpdateStatusBar(Sender: TObject);
 begin
   (Sender as THexEditorFrame).UpdateStatusBar(StatusBar);
+end;
+
+procedure TMainForm.LoadSessionFiles;
+var
+  i: Integer;
+begin
+  Hide;  // Avoid unnecessary repaints (flicker) when many files are loaded
+  try
+    for i := 0 to High(GuiParams.SessionFiles) do
+      CreateEditor(GuiParams.SessionFiles[i], true);
+  finally
+    Show;
+  end;
 end;
 
 procedure TMainForm.PageControlChange(Sender: TObject);
@@ -1224,6 +1226,25 @@ begin
   end;
 end;
 
+procedure TMainForm.UpdateSessionFiles;
+var
+  i, n: Integer;
+  ef: THexEditorFrame;
+begin
+  SetLength(GuiParams.SessionFiles, PageControl.PageCount);
+  n := 0;
+  for i := 0 to PageControl.PageCount-1 do
+  begin
+    ef := GetHexEditorFrame(i);
+    if Assigned(ef) and ef.HexEditor.HasFile then
+    begin
+      GuiParams.SessionFiles[n] := ef.FileName;
+      inc(n);
+    end;
+  end;
+  SetLength(GuiParams.SessionFiles, n);
+end;
+
 procedure TMainForm.InitShortcuts;
 begin
 {$IFDEF UNIX}
@@ -1244,6 +1265,7 @@ begin
     F.ActiveHexParams(HexParams);
     F.ActiveColors(ColorParams[GetScreenMode]);
   end;
+  UpdateSessionFiles;
 
   ini := CreateIniFile;
   try
@@ -1263,27 +1285,6 @@ begin
   end;
 end;
 
-// This must be in hxMain because of dependencies to PageControl and THexEditorFrame
-procedure TMainForm.WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
-var
- i, n: integer;
- ef: THexEditorFrame;
-begin
-  with GuiParams do
-  begin
-    AIniFile.EraseSection(ASection);
-    n := 0;
-    for i := 0 to PageControl.PageCount-1 do
-    begin
-      ef := GetHexEditorFrame(i);
-      if Assigned(ef) and ef.HexEditor.HasFile then begin
-        AIniFile.WriteString(ASection,Format('File%d',[n+1]), ef.FileName);
-        inc(n);
-      end;
-    end;
-    AIniFile.WriteInteger(ASection, 'Count', n);
-  end;
-end;
 
 end.
 

@@ -347,7 +347,7 @@ type
   TGuiParams = record
     IconSet: TIconSet;
     OpenLastSession: Boolean;
-    SessionFiles: TStrings;
+    SessionFiles: TStringArray;
   end;
 
 var
@@ -386,9 +386,6 @@ end;
 initialization
   DefaultHexParams := HexParams;
   DefaultColorParams := ColorParams;
-
-finalization
-  GuiParams.SessionFiles.Free;
 
 end.
 

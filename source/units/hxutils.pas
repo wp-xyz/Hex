@@ -17,13 +17,14 @@ procedure ReadFormFromIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: Stri
   APositionOnly: Boolean = false);
 procedure ReadColorsFromIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 procedure ReadGuiParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
-procedure ReadSessionFilesFromIni(AIniFile: TCustomIniFile; ASection: String);
 procedure ReadParamsFromIni(AIniFile: TCustomIniFile; ASection: String);
+procedure ReadSessionFilesFromIni(AIniFile: TCustomIniFile; ASection: String);
 
 procedure WriteFormToIni(AIniFile: TCustomIniFile; AForm: TForm; ASection: String);
 procedure WriteColorsToIni(AIniFile: TCustomIniFile; ASection: String; AMode: TScreenMode);
 procedure WriteGuiParamsToIni(AIniFile: TCustomIniFile; ASection: String);
 procedure WriteParamsToIni(AIniFile: TCustomIniFile; ASection: String);
+procedure WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
 
 procedure ApplyColorsToHexEditor(const AParams: TColorParams; AHexEditor: THxHexEditor);
 procedure ApplyParamsToHexEditor(const AParams: THexParams; AHexEditor: THxHexEditor);
@@ -156,21 +157,24 @@ end;
 
 procedure ReadSessionFilesFromIni(AIniFile: TCustomIniFile; ASection: String);
 var
-  Count, i: Integer;
+  Count, i, n: Integer;
   FN: String;
 begin
+  n := 0;
   with GuiParams do
   begin
-    if SessionFiles = Nil then
-      SessionFiles := TStringList.Create;
-    SessionFiles.Clear;
     Count := AIniFile.ReadInteger(ASection,'Count',0);
-    For i := 1 to Count do
+    SetLength(SessionFiles, Count);
+    for i := 1 to Count do
     begin
-      FN := AIniFile.ReadString(ASection,Format('File%d',[i]),'');
-      If FN <> '' then
-        SessionFiles.Add(FN);
+      FN := AIniFile.ReadString(ASection, Format('File%d',[i]), '');
+      if FN <> '' then
+      begin
+        SessionFiles[n] := FN;
+        inc(n);
+      end;
     end;
+    SetLength(SessionFiles, n);
   end;
 end;
 
@@ -364,7 +368,6 @@ begin
     AIniFile.WriteBool(ASection, 'DrawGutter3D',
       DrawGutter3D);
 
-
     { Data viewer }
 
     AIniFile.WriteBool(ASection, 'DataViewer.Visible',
@@ -400,6 +403,19 @@ begin
     for i := 1 to High(TRecordViewerColWidths) do
       s := s + ',' + IntToStr(HexParams.RecordViewerColWidths[i]);
     AIniFile.WriteString(ASection, 'RecordViewer.ColWidths', s);
+  end;
+end;
+
+procedure WriteSessionFilesToIni(AIniFile: TCustomIniFile; ASection: String);
+var
+ i: integer;
+begin
+  with GuiParams do
+  begin
+    AIniFile.EraseSection(ASection);
+    AIniFile.WriteInteger(ASection, 'Count', Length(GuiParams.SessionFiles));
+    for i := 0 to High(GuiParams.SessionFiles) do
+      AIniFile.WriteString(ASection, Format('File%d', [i+1]), GuiParams.SessionFiles[i]);
   end;
 end;
 
