@@ -234,6 +234,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
     procedure PageControlCloseTabClicked(Sender: TObject);
+    procedure PageControlMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure StatusBarHint(Sender: TObject);
   private
     FAlreadyShown: Boolean;
@@ -242,6 +243,8 @@ type
 
     procedure AppendToObjectsMenu(AParentMenu: TMenuItem);
     procedure ApplyParams(const AParams: THexParams);
+    procedure AppShowHintHandler(var HintStr: string; var CanShow: Boolean;
+      var HintInfo: THintInfo);
     procedure EvalCmdLine;
     procedure FindObjectHandler(Sender: TObject);
     function GetActiveHexEditorFrame: THexEditorFrame;
@@ -833,6 +836,32 @@ begin
   end;
 end;
 
+// Prevent displaying the tab hint on the tab sheet.
+// See also: PageControlMouseMove.
+procedure TMainForm.AppShowHintHandler(var HintStr: string; var CanShow: Boolean;
+  var HintInfo: THintInfo);
+var
+  P: TPoint;
+  IsChildOfPageControl: Boolean;
+begin
+  // Check whether the control requesting the hint is the PageControl or one
+  // of the controls sitting on the PageControl
+  IsChildOfPageControl :=
+    (HintInfo.HintControl = PageControl) or (PageControl.IsParentOf(HintInfo.HintControl));
+
+  if IsChildOfPageControl then
+  begin
+    P := PageControl.ScreenToClient(Mouse.CursorPos);
+
+    // Mouse not on a tab? Disallow the hint.
+    if PageControl.IndexOfTabAt(P.X, P.Y) = -1 then
+    begin
+      CanShow := False;
+      Application.CancelHint;
+    end;
+  end;
+end;
+
 procedure TMainForm.CreateEditor(const AFileName: String; WriteProtected: Boolean);
 
   function CountEmpty: integer;
@@ -882,6 +911,7 @@ begin
     F.ApplyHexParams(HexParams);
     ApplyColorsToHexEditor(ColorParams[GetScreenMode], F.HexEditor);
     page.Caption := F.Caption;
+    page.Hint := F.FileName;
     PageControl.ActivePage := page;
     PageControl.Show;
     FCurrentHexEditor := F.HexEditor;
@@ -933,6 +963,8 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  Application.OnShowHint := @AppShowHintHandler;
+
   cInputQueryEditSizePercents := 0; // Reduce width of InputQuery dialogs
 
   FRecentFilesManager := TMRUMenuManager.Create(self);
@@ -1041,6 +1073,36 @@ procedure TMainForm.PageControlCloseTabClicked(Sender: TObject);
 begin
   Assert(Sender is TTabSheet, 'TMainForm.PageControlCloseTabClicked, not TTabSheet');
   TTabSheet(Sender).Free;
+end;
+
+{ Show a hint on the tabs with the full file path.
+  See also: AppShowHintHandler. }
+procedure TMainForm.PageControlMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+  tabIdx: Integer;
+  newHint: String;
+begin
+  tabIdx := PageControl.IndexOfTabAt(X, Y);
+  if tabIdx <> -1 then
+  begin
+    newHint := PageControl.Pages[tabIdx].Hint;
+
+    // Mouse is on a tab --> set Hint
+    if PageControl.Hint <> newHint then
+    begin
+      Application.CancelHint;
+      PageControl.Hint := newHint;
+      PageControl.ShowHint := True;
+      Application.ActivateHint(Mouse.CursorPos);
+    end;
+  end else
+  begin
+    // Mouse is on the pagecontrol, but not on a tab (in gray area at the right)
+    PageControl.Hint := '';
+    PageControl.ShowHint := False;
+    Application.CancelHint;
+  end;
 end;
 
 procedure TMainForm.ReadIni;

@@ -26,6 +26,7 @@ object MainForm: TMainForm
     TabOrder = 0
     OnChange = PageControlChange
     OnCloseTabClicked = PageControlCloseTabClicked
+    OnMouseMove = PageControlMouseMove
     TabDragMode = dmAutomatic
     TabDragAcceptMode = dmAutomatic
   end

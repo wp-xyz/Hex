@@ -821,7 +821,7 @@ begin
   AStatusBar.Panels.Add.Width := 40;
 
   // "ReadOnly" flag
-  AStatusBar.Panels.Add.Width := 30;
+  AStatusBar.Panels.Add.Width := 40;
 
   // Position
   if (sbPos in FStatusBarItems) then
