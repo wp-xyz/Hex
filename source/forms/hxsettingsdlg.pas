@@ -61,6 +61,7 @@ type
     cmbFontSize: TComboBox;
     cmbFontName: TComboBox;
     clbIconColor: TColorButton;
+    cbOpenLastSession: TCheckBox;
     edMaskChar: TEdit;
     gbDataViewer: TGroupBox;
     gbRecordViewer: TGroupBox;
@@ -331,6 +332,7 @@ begin
     AParams.IconSet := isOffice;
   if rbSimpleSmallIconSet.Checked then
     AParams.IconSet := isSimpleSmall;
+  AParams.OpenLastSession := cbOpenLastSession.Checked;
 end;
 
 procedure TSettingsForm.GuiParamsToControls(const AParams: TGuiParams);
@@ -339,6 +341,7 @@ begin
     isOffice: rbOfficeIconSet.Checked := true;
     isSimpleSmall: rbSimpleSmallIconSet.Checked := true;
   end;
+  cbOpenLastSession.Checked := AParams.OpenLastSession;
 end;
 
 procedure TSettingsForm.OKButtonClick(Sender: TObject);
@@ -502,7 +505,10 @@ begin
     cbViewOnly.Checked := ViewOnly;
     cbWriteProtected.Checked := WriteProtected;
     cbAllowInsertMode.Checked := AllowInsertMode;
-    if BigEndian then rgByteOrder.ItemIndex := 1 else rgByteOrder.ItemIndex := 0;
+    if BigEndian then
+      rgByteOrder.ItemIndex := 1
+    else
+      rgByteOrder.ItemIndex := 0;
   end;
   cbViewOnlyChange(nil);
 end;
