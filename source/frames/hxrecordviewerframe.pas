@@ -136,6 +136,9 @@ uses
   TypInfo, Math, IniFiles,
   hxDataModule, hxHexEditor, hxRecordEditorForm, hxPascalRecordForm;
 
+const
+  NO_NAME = 'no name';
+
 {------------------------------------------------------------------------------}
 {                           TRecordViewerGrid                                  }
 {------------------------------------------------------------------------------}
@@ -574,6 +577,7 @@ procedure TRecordViewerFrame.acAddPageExecute(Sender: TObject);
 var
   idx: Integer;
   lName: String;
+  i: Integer;
 begin
   lName := '';
   if InputQuery('New set of record elements', 'Name', lName) then
@@ -582,8 +586,19 @@ begin
       MessageDlg('Specify a name for the new set of record elements.', mtError, [mbOK], 0);
       exit;
     end;
-    idx := TabControl.Tabs.Add(lName);
-    FDataLists.Add(TDataList.Create);
+    idx := -1;
+    for i := 0 to TabControl.Tabs.Count-1 do
+      if TabControl.Tabs[i] = No_NAME then
+      begin
+        idx := i;
+        TabControl.Tabs[idx] := lName;
+        break;
+      end;
+    if idx = -1 then
+    begin
+      idx := TabControl.Tabs.Add(lName);
+      FDataLists.Add(TDataList.Create);
+    end;
     SelectDataList(idx);
   end;
 end;
@@ -600,7 +615,7 @@ begin
   TabControl.Tabs.Clear;
   FDataLists.Clear;
 
-  TabControl.Tabs.Add('no name');
+  TabControl.Tabs.Add(NO_NAME);
   FDataLists.Add(TDataList.Create);
 
   SelectDataList(0);
@@ -710,10 +725,10 @@ end;
 
 procedure TRecordViewerFrame.acSaveExecute(Sender: TObject);
 begin
-  if RecordViewerGrid.FileName = '' then
+  if FFileName = '' then
     acSaveAsExecute(nil)
   else
-    SaveRecordsToFile(RecordViewerGrid.FileName);
+    SaveRecordsToFile(FFileName);
 end;
 
 procedure TRecordViewerFrame.ActionListUpdate(AnAction: TBasicAction;
@@ -875,7 +890,17 @@ var
   lDataList: TDataList;
   item: TRecordDataItem;
   L: TStrings;
+  backup: String;
 begin
+  // ini file must be empty to avoid carry-over of old items.
+  // Rename existing file for a backup. This way the new file is empty.
+  if FileExists(AFileName) then
+  begin
+    backup := AFileName + '.bak';
+    if FileExists(backup) then DeleteFile(backup);
+    RenameFile(AFileName, backup);
+  end;
+
   ini := TMemIniFile.Create(AFileName);
   L := TStringList.Create;
   try
@@ -894,6 +919,7 @@ begin
         ini.WriteString(TabControl.Tabs[j], item.Name, L.DelimitedText);
       end;
     end;
+    FFileName := AFileName;
   finally
     L.Free;
     ini.Free;
